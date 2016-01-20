@@ -2,8 +2,6 @@
 
 Planera första möte
 
-Styleguide för kod, exempel finns
-
 Setup i GIT
 
 Trello?
