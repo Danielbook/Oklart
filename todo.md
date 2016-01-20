@@ -15,3 +15,5 @@ Struktur över hur vi kommer arbeta
 WebGL?
 
 Kan det här api asså/ EMPAN
+
+SKRIVA PROJEKTPLAN!
