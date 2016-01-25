@@ -13,3 +13,6 @@ Struktur över hur vi kommer arbeta
 WebGL?
 
 Kan det här api asså/ EMPAN
+
+Göra analys av vår systemarkitektur, lecture - 05.
+	Trade off analys 
