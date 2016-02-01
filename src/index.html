@@ -9,6 +9,8 @@
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <!-- Bootstrap -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
@@ -49,14 +51,14 @@
 
 	<div class="container-fluid">
 		<div class="row"> <!-- OUTER DIVS -->
-	    	<div class="col-md-6 divBorder"> <!-- MAP -->
+	    	<div class="col-md-6"> <!-- MAP -->
 	    		<img src="assets/img/map.png" class="img-responsive center" alt="map">
 	    	</div> <!-- MAP -->
-	    	<div class="col-md-6 divBorder"> <!-- GRAPH AND TABLE -->
-	    		<div class ="row center divBorder"> <!-- GRAPH -->
-	    			<img src="assets/img/graph.jpg" class="img-responsive center" alt="map">
+	    	<div class="col-md-6"> <!-- GRAPH AND TABLE -->
+	    		<div class ="center row"> <!-- GRAPH -->
+	    			<div id="graph_div"></div>
 	    		</div>
-	    		<div class ="row center divBorder"> <!-- TABLE -->
+	    		<div class ="row center"> <!-- TABLE -->
 	    			<img src="assets/img/table.gif" class="img-responsive center" alt="map">
 	    		</div>
 	    	</div> <!-- GRAPH AND TABLE -->
