@@ -10,19 +10,12 @@
 	<div id="table_div"></div>
 	<p id="result"></p>
 	<script>
-        $('#loader').hide();
-        $('#pagecontent').show();
-        var dataArray;
+		function getData(dataurl){return $.getJSON(dataurl).then(function(data){return data;});}
 
-       $.getJSON('data/data.json', function(json) {
-		    dataArray = json; })
-       //document.getElementById("result").innerHTML = JSON.stringify(dataArray);
+		getData("data/data.json").then(function(returndata){ 
+			//När datan har lästs in från filen hamnar man här!! Datan ligger i returndata.
+			document.getElementById("result").innerHTML = JSON.stringify(returndata); });
 
-		setTimeout(
-		  function()
-		  {
-		  	document.getElementById("result").innerHTML = JSON.stringify(dataArray);
-		  }, 10);
 	</script>
 </body>
 </html>
