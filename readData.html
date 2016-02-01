@@ -4,22 +4,24 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="js/tabell.js"></script>
 <body>
-
+	<div id="table_div"></div>
 	<p id="result"></p>
 	<script>
         $('#loader').hide();
         $('#pagecontent').show();
         var dataArray;
         var data;
-       	
+
        $.getJSON("data.json", function(json) {
 		    data = json; // this will show the info it in firebug console
 		});
 
 
 		setTimeout(
-		  function() 
+		  function()
 		  {
 		    console.log(data);
 		  }, 5000);
