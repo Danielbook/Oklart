@@ -8,36 +8,48 @@
 <body>
 	<p id="result"></p>
 	<script>
-        $('#loader').hide();
-        $('#pagecontent').show();
+	//OBS
+	//OBS
+	//OBS
+	//OBS
+	//OBS
+	//OBS
+	//OBS
+	//OBS
+	//KÖR INTE DEN HÄR FILEN FÖR MYCKET, SMHI BLIR LEDSNA :'( !!!!!!!!!!!!!!
 
-       	//Longitud - horisontellt - x - ALATS, ALATN
-		//Latutud - vertikalt - y - ALONW, ALONE
-		//Modifierade hörnpunkterna något efter jag fick ERROR på vissa koordinater
-		var ALATS=54, ALATN=70.75, ALONW=2.25, ALONE=27.00;
-		var sampleLenght = 2.0;
-		var dataArray = { data: [] };
-		var datastring = "";
-		var howMany = 0;
 
-		for(var lon = ALONW; lon < ALONE; lon = lon + sampleLenght){
-			for(var lat = ALATS; lat < ALATN; lat = lat + sampleLenght){
-				var smhiAPI = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
-				$.getJSON(smhiAPI, function(data){
-					dataArray.data.push(data);
-				});
-				howMany++;
-			}
-		}
+  //       $('#loader').hide();
+  //       $('#pagecontent').show();
 
-		console.log(howMany);
+  //      	//Longitud - horisontellt - x - ALATS, ALATN
+		// //Latutud - vertikalt - y - ALONW, ALONE
+		// //Modifierade hörnpunkterna något efter jag fick ERROR på vissa koordinater
+		// var ALATS=54, ALATN=70.75, ALONW=2.25, ALONE=27.00;
+		// var sampleLenght = 2.0;
+		// var dataArray = { data: [] };
+		// var datastring = "";
+		// var howMany = 0;
 
-		setTimeout(
-		  function()
-		  {
-		  	document.write(JSON.stringify(dataArray));
-		    console.log(dataArray);
-		  }, 10000);
+		// for(var lon = ALONW; lon < ALONE; lon = lon + sampleLenght){
+		// 	for(var lat = ALATS; lat < ALATN; lat = lat + sampleLenght){
+		// 		var smhiAPI = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
+		// 		$.getJSON(smhiAPI, function(data){
+		// 			dataArray.data.push(data);
+		// 		});
+		// 		howMany++;
+		// 	}
+		// }
+
+		// console.log(howMany);
+
+		// setTimeout(
+		//   function()
+		//   {
+		//   	document.write(JSON.stringify(dataArray));
+		//     console.log(dataArray);
+		//   }, 10000);
+
 	</script>
 </body>
 </html>
