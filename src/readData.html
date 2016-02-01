@@ -5,7 +5,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript" src="js/tabell.js"></script>
+<script type="text/javascript" src="../js/tabell.js"></script>
 <body>
 	<div id="table_div"></div>
 	<p id="result"></p>
@@ -13,16 +13,16 @@
         $('#loader').hide();
         $('#pagecontent').show();
         var dataArray;
-       	
-       $.getJSON('data/data.json', function(json) {
-		    dataArray = json; // this will show the info it in firebug console
 
+       $.getJSON('data/data.json', function(json) {
+		    dataArray = json; })
+       //document.getElementById("result").innerHTML = JSON.stringify(dataArray);
 
 		setTimeout(
 		  function()
 		  {
-       		document.write(JSON.stringify(dataArray));
-		  }, 2000);
+		  	document.getElementById("result").innerHTML = JSON.stringify(dataArray);
+		  }, 10);
 	</script>
 </body>
 </html>
