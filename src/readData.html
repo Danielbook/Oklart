@@ -11,18 +11,17 @@
         $('#loader').hide();
         $('#pagecontent').show();
         var dataArray;
-        var data;
        	
-       $.getJSON("data/data177.json", function(json) {
-		    data = json; // this will show the info it in firebug console
+       $.getJSON('data/data.json', function(json) {
+		    dataArray = json; // this will show the info it in firebug console
 		});
 
 
 		setTimeout(
 		  function() 
 		  {
-       		console.log(data);
-		  }, 1000);
+       		document.write(JSON.stringify(dataArray));
+		  }, 2000);
 	</script>
 </body>
 </html>
