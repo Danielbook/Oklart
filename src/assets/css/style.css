@@ -1,0 +1,12 @@
+body{
+	position: relative;
+	padding-top: 20px;
+}
+
+.center{
+	margin:auto;
+}
+
+.searchBar{
+	padding: 10px;
+}
