@@ -14,7 +14,12 @@
 
 		getData("data/data.json").then(function(returndata){ 
 			//När datan har lästs in från filen hamnar man här!! Datan ligger i returndata.
-			document.getElementById("result").innerHTML = JSON.stringify(returndata); });
+			//Exempel på att skriva ut temperaturen för data med index 2, 3 tidpunkter in:
+			//document.getElementById("result").innerHTML = returndata.data[2].timeseries[3].t ;
+
+			console.log(returndata);
+			//document.getElementById("result").innerHTML = returndata.data[2].timeseries[3].t ;
+		});
 
 	</script>
 </body>
