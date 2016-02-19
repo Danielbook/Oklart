@@ -69,18 +69,6 @@
 
 	<p id="result"></p>
 	<script>
-	      var map = new ol.Map({
-	        target: 'map',
-	        layers: [
-	          new ol.layer.Tile({
-	            source: new ol.source.MapQuest({layer: 'sat'})
-	          })
-	        ],
-	        view: new ol.View({	
-	          center: ol.proj.fromLonLat([16, 58.82]),
-	          zoom: 4
-	        })
-	      });
 		function getData(dataurl){return $.getJSON(dataurl).then(function(data){return data;});}
 
 		getData("data/data.json").then(function(returndata){ 
