@@ -14,10 +14,11 @@ var Stamen = new ol.layer.Tile({
             })
           });
 
+
 //http://wiki.openstreetmap.org/wiki/Tile_servers
 var openTransportMapLayer = new ol.layer.Tile({
   source: new ol.source.OSM({
-    url: 'http://{a-b}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png'
+    url: 'http://{a-b}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png' //Tile server
   })
 });
 
@@ -32,6 +33,9 @@ var map = new ol.Map({
           center: ol.proj.fromLonLat([16.192420999999968, 58.587745]),
           zoom: 4,
           maxZoom: 6,
-          minZoom: 4
+          minZoom: 4,
+          //ol.proj.transform([23.4, 42.5], 'EPSG:4326','EPSG:3857');
+          //extent:[minx, miny, maxx, maxy]
       })
 });
+
