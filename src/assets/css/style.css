@@ -7,18 +7,14 @@ body{
 	margin:auto;
 }
 
-.searchBar{
-	padding: 10px;
-}
-
 .navbar-default{
 	padding-left: 40px;
 	padding-right: 40px;
 }
 
-.divBorder{
-	border-style: double;
-	padding:5px;
+#graph_div{
+    margin:auto; 
+    height: auto;
 }
 
 .map {
