@@ -1,3 +1,4 @@
+function createMap(){
 var osmLayer = new ol.layer.Tile({
   source: new ol.source.OSM()
 });
@@ -7,10 +8,10 @@ var osmLayer2 = new ol.layer.Tile({
 });
 
 var Stamen = new ol.layer.Tile({
-            source: new ol.source.Stamen({
-              layer: 'watercolor'
-            })
-          });
+  source: new ol.source.Stamen({
+    layer: 'watercolor'
+  })
+});
 
 
 //http://wiki.openstreetmap.org/wiki/Tile_servers
@@ -22,9 +23,9 @@ var openTransportMapLayer = new ol.layer.Tile({
 
 var map = new ol.Map({
         target: 'map', //Attach map to 'map' div
-       
+
         layers: [
-          openTransportMapLayer
+        openTransportMapLayer
         ],
 
         view: new ol.View({
@@ -34,6 +35,7 @@ var map = new ol.Map({
           minZoom: 4,
           //ol.proj.transform([23.4, 42.5], 'EPSG:4326','EPSG:3857');
           //extent:[minx, miny, maxx, maxy]
-      })
-});
+        })
+      });
+}
 
