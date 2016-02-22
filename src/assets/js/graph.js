@@ -1,39 +1,36 @@
-
-google.charts.setOnLoadCallback(drawGraph);
-
 function drawGraph() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'Time');
-      data.addColumn('number', 'Max');
-      data.addColumn('number', 'Temp');
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'Time');
+  data.addColumn('number', 'Max');
+  data.addColumn('number', 'Temp');
 
-      data.addRows([
-        [0, 2, 10],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
-        [6, 11, 3],   [7, 27, 19],  [8, 33, 25],  [9, 40, 32],  [10, 32, 24], [11, 35, 27],
-        [12, 30, 22], [13, 40, 32], [14, 42, 34], [15, 47, 39], [16, 44, 36], [17, 48, 40],
-        [18, 52, 44], [19, 54, 46], [20, 42, 34], [21, 55, 47], [22, 56, 48], [23, 57, 49],
-        [24, 60, 52]
-      ]);
+  data.addRows([
+    [0, 2, 10],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
+    [6, 11, 3],   [7, 27, 19],  [8, 33, 25],  [9, 40, 32],  [10, 32, 24], [11, 35, 27],
+    [12, 30, 22], [13, 40, 32], [14, 42, 34], [15, 47, 39], [16, 44, 36], [17, 48, 40],
+    [18, 52, 44], [19, 54, 46], [20, 42, 34], [21, 55, 47], [22, 56, 48], [23, 57, 49],
+    [24, 60, 52]
+    ]);
 
-      var options = {
-        hAxis: {
-          title: 'Time'
-        },
-        vAxis: {
-          title: 'Temperature'
-        },
-        colors: ['#a52714', '#097138'],
-        curveType: 'function',
-        crosshair: {
-          color: '#000',
-          trigger: 'hover',
-          orientation: 'vertical'
-        }
-      };
+  var options = {
+    hAxis: {
+      title: 'Time'
+    },
+    vAxis: {
+      title: 'Temperature'
+    },
+    colors: ['#a52714', '#097138'],
+    curveType: 'function',
+    crosshair: {
+      color: '#000',
+      trigger: 'hover',
+      orientation: 'vertical'
+    }
+  };
 
-      var lineChart = new google.visualization.LineChart(document.getElementById('graph_div'));
+  var lineChart = new google.visualization.LineChart(document.getElementById('graph_div'));
 
-      lineChart.draw(data, options);
+  lineChart.draw(data, options);
 
       // Every time the table fires the "select" event, it should call your
       // selectHandler() function.

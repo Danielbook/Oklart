@@ -10,22 +10,24 @@ requirejs.config({
 });
 
 require([
-  'tabell',
+  'table',
   'graph',
-  'karta',
-], function (
-  Tabell,
-  Graph,
-  Karta
-) {
+  'map',
+  ], function (
+    Table,
+    Graph,
+    Map
+    ) {
   /**
    * 
    */
 	google.charts.load('current', {'packages':['table','corechart', 'line']}); // INIT GOOGLE
-	function getData(dataurl){return $.getJSON(dataurl).then(function(data){return data;});}
-
-	getData("data/data.json").then(function(returndata){ 
-	console.log(returndata);
-	});
-  	
+	
+  function getData(dataurl){return $.getJSON(dataurl).then(function(data){return data;});}
+	getData("./assets/data/data.json").then(function(returndata){ 
+    google.charts.setOnLoadCallback(drawTable);
+    google.charts.setOnLoadCallback(drawGraph);
+    createMap();
   });
+
+});
