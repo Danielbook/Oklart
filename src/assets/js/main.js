@@ -10,13 +10,13 @@ requirejs.config({
 });
 
 require([
-  'tabell',
+  'table',
   'graph',
-  'karta',
+  'map',
   ], function (
-    Tabell,
+    Table,
     Graph,
-    Karta
+    Map
     ) {
   /**
    * 
@@ -27,7 +27,7 @@ require([
 	getData("./assets/data/data.json").then(function(returndata){ 
     google.charts.setOnLoadCallback(drawTable);
     google.charts.setOnLoadCallback(drawGraph);
-    createMap;
+    createMap();
   });
 
 });
