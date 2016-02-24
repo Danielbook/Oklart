@@ -13,21 +13,35 @@ require([
   'table',
   'graph',
   'map',
+  'testModule'
   ], function (
     Table,
     Graph,
-    Map
+    Map,
+    testModule
     ) {
   /**
    * 
    */
-	google.charts.load('current', {'packages':['table','corechart', 'line']}); // INIT GOOGLE
+   
+   //console.log(Table.drawTable());
 	
-  function getData(dataurl){return $.getJSON(dataurl).then(function(data){return data;});}
-	getData("./assets/data/data.json").then(function(returndata){ 
-    google.charts.setOnLoadCallback(drawTable);
-    google.charts.setOnLoadCallback(drawGraph);
-    createMap();
-  });
+	
+  function getData(dataurl){
+    return $.getJSON(dataurl).then(function(data){
+        return data;
+      })
+    ;}
 
+
+	getData("./assets/data/data.json").then(function(returndata){ 
+    console.log(returndata);
+    Table.initTable(returndata);
+
+    //console.log(returndata);
+    //Table.sayHelloJens;
+    // google.chars.setOnLoadCallback(Table.drawTable());
+    // google.charts.setOnLoadCallback(drawGraph);
+    // createMap();
+  });
 });
