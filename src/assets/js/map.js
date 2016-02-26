@@ -59,7 +59,7 @@ function createMap(){
 
   if(geolocation){
     console.log("Succes!");
-  }
+  
   //create a vector source to add the icon(s) to.
 
   geolocation.once('change', function(evt) {
@@ -67,7 +67,7 @@ function createMap(){
     pos = geolocation.getPosition();
     map.getView().setCenter(ol.proj.fromLonLat(pos));
 
-
+  
    //create icon at new map center
    var iconFeature = new ol.Feature({
      geometry: new ol.geom.Point(ol.proj.fromLonLat(pos)), 
@@ -78,12 +78,26 @@ function createMap(){
    //currPosVectorSource.addFeature(iconFeature);    
       
  });
+
+  }
+  else {
+    alert("Couldn't find location");
+  }
   /*---------------------------------------------------*/
-}
+
 
  document.getElementById("SearchBtn").onclick = function searchFun()
     {
-     console.log("hello");
-     //validation code to see State field is mandatory.  
+
+     var AdresFalt = $("#CitySearch") ;
+       $.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+            var FoundExtent = data[0].boundingbox;
+            var placemark_lat = data[0].lat;
+            var placemark_lon = data[0].lon;
+                       
+           map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+        
+       }); 
     }   
 
+}
