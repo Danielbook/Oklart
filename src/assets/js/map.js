@@ -89,13 +89,19 @@ function createMap(){
  document.getElementById("SearchBtn").onclick = function searchFun()
     {
 
+    var pan = ol.animation.pan({
+      duration: 1000,
+      source: view.getCenter()
+    });
+
      var AdresFalt = $("#CitySearch") ;
        $.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
             var FoundExtent = data[0].boundingbox;
             var placemark_lat = data[0].lat;
             var placemark_lon = data[0].lon;
-                       
-           map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+          
+          map.beforeRender(pan);        
+          map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
         
        }); 
     }   
