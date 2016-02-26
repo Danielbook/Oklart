@@ -1,11 +1,75 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Väderapp</title>
+    
+
+    <!-- Load javascripts from web -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="http://openlayers.org/en/v3.13.1/build/ol.js" type="text/javascript"></script>
+
+    <!-- Load javascripts from folder-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script src="javascripts/requireLib.js"></script>
+    <script> google.charts.load('current', {packages: ['corechart', 'table', 'line']}); </script>
+    <script src="javascripts/main.js"></script>
+
+    <!-- Load stylesheets from web-->
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.13.1/css/ol.css" type="text/css">
+    
+    <!-- Load stylesheets from folder-->
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+
+
+
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand"><img src="images/logoWhite.png" class="brand-img" alt="Brand"></a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <form class="navbar-form navbar-right" role="search">
+	        <div class="form-group">
+	          <input type="text" class="form-control" placeholder="Stad">
+	        </div>
+	        <button type="submit" class="btn btn-default">Sök</button>
+	      </form>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div class="container-fluid pageBody">
+		<div class="row"> <!-- OUTER DIVS -->
+	    	<div class="col-md-6"> 
+	    		<div id="map" class="map pageElement"></div> <!-- MAP -->   
+	    	</div> <!-- MAP -->
+	    	<div class="col-md-6"> <!-- GRAPH AND TABLE -->
+	    		<div class ="row"> <!-- GRAPH -->
+	    			<div id="graph_div" class="pageElement"></div>
+	    		</div>
+	    		<div class ="row center"> <!-- TABLE -->
+	    			<div id="table_div" class="table pageElement"></div>
+	    		</div>
+	    	</div> <!-- GRAPH AND TABLE -->
+	  	</div>
+	</div>
+</body>
 </html>
