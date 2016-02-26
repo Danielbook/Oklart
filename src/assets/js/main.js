@@ -12,13 +12,11 @@ requirejs.config({
 require([
   'table',
   'graph',
-  'map',
-  'testModule'
+  'map'
   ], function (
     Table,
     Graph,
-    Map,
-    testModule
+    Map
     ) {
   /**
    * 
