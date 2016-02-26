@@ -21,6 +21,8 @@ function createMap(){
     })
   });
 
+  var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+
   var map = new ol.Map({
     target: 'map', //Attach map to 'map' div
 
@@ -33,8 +35,7 @@ function createMap(){
       zoom: 4,
       maxZoom: 6,
       minZoom: 4,
-      //ol.proj.transform([23.4, 42.5], 'EPSG:4326','EPSG:3857');
-      //extent:[minx, miny, maxx, maxy]
+      extent: extent
     })
   });
 }

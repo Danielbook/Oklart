@@ -1,29 +1,24 @@
 /**
 * ------------------------------------------
 * main.js
-* Initialize loading file
+* Initialize application
 * ------------------------------------------ 
 */
-
 requirejs.config({
   baseUrl: './assets/js/',
 });
-
 require([
   'table',
   'graph',
-  'map',
-  'testModule'
+  'map'
   ], function (
     Table,
     Graph,
-    Map,
-    testModule
+    Map
     ) {
   /**
    * 
    */
-   
    //console.log(Table.drawTable());
 	
 	
@@ -33,13 +28,13 @@ require([
       })
     ;}
 
-
+  google.charts.load('current', {packages: ['corechart', 'table', 'line']});
 	getData("./assets/data/data.json").then(function(returndata){ 
     console.log(returndata);
     Table.initTable(returndata);
-
+    google.charts.setOnLoadCallback(drawGraph);
+    createMap();
     //console.log(returndata);
-    //Table.sayHelloJens;
     // google.chars.setOnLoadCallback(Table.drawTable());
     // google.charts.setOnLoadCallback(drawGraph);
     // createMap();

@@ -1,9 +1,6 @@
 define({
-  sayHelloJens: function(){
-    console.log("Hello Jens");
-  },
   initTable: function(arg){
-    google.charts.load('current', {packages: ['corechart', 'table', 'line']});
+    
     google.charts.setOnLoadCallback(this.drawTable(arg));
   },
   drawTable: function (smhidata){
