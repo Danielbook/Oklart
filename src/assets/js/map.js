@@ -10,7 +10,7 @@ function createMap(){
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
   var view = new ol.View({
-    center: ol.proj.fromLonLat([62.160372, 15.380859]), //Mitt i sverige
+    center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
     zoom: 4,
       //maxZoom: 6,
       //minZoom: 4,
