@@ -1,7 +1,10 @@
+//GEOSEARCH FIDDLE
+//http://jsfiddle.net/TimLucas/vbaupe30/5/
+
+
 function createMap(){
 
   //http://wiki.openstreetmap.org/wiki/Tile_servers
-
   var cartoDBLight = new ol.layer.Tile({
     source: new ol.source.OSM({
       url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
@@ -11,10 +14,10 @@ function createMap(){
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
   var view = new ol.View({
-    center: ol.proj.fromLonLat([62.160372, 15.380859]), //Mitt i sverige
+    center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
     zoom: 4,
-      //maxZoom: 6,
-      //minZoom: 4,
+      maxZoom: 7,
+      minZoom: 4,
       //extent: extent
     })
 
@@ -32,8 +35,8 @@ function createMap(){
       opacity: 0.75,
       scale: 0.5,
       src: './assets/img/icon.png'
-   }))
-});
+    }))
+  });
   /*--------------------------------*/
 
   var map = new ol.Map({
@@ -49,35 +52,38 @@ function createMap(){
 
   /* -------------- Gelocation ------------------- */
   //create a vector source to add the icon(s) to.
+
   var geolocation = new ol.Geolocation({
     tracking: true
   });
 
+  if(geolocation){
+    console.log("Succes!");
+  }
   //create a vector source to add the icon(s) to.
 
-geolocation.once('change', function(evt) {
+  geolocation.once('change', function(evt) {
    //save position and set map center
-   pos = geolocation.getPosition();
-   map.getView().setCenter(ol.proj.fromLonLat(pos));
+    pos = geolocation.getPosition();
+    map.getView().setCenter(ol.proj.fromLonLat(pos));
+
 
    //create icon at new map center
    var iconFeature = new ol.Feature({
-         geometry: new ol.geom.Point(ol.proj.fromLonLat(pos)), 
-         style: markerIconStyle
+     geometry: new ol.geom.Point(ol.proj.fromLonLat(pos)), 
+     style: markerIconStyle
    });
 
-    iconFeature.setStyle(markerIconStyle);
-
-   //add icon to vector source
-   currPosVectorSource.addFeature(iconFeature);       
-});
+   //iconFeature.setStyle(markerIconStyle);
+   //currPosVectorSource.addFeature(iconFeature);    
+      
+ });
   /*---------------------------------------------------*/
-
 }
-
 
  document.getElementById("SearchBtn").onclick = function searchFun()
     {
      console.log("hello");
      //validation code to see State field is mandatory.  
     }   
+
