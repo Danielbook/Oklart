@@ -1,9 +1,10 @@
 function createMap(){
 
   //http://wiki.openstreetmap.org/wiki/Tile_servers
-  var openTransportMapLayer = new ol.layer.Tile({
+
+  var cartoDBLight = new ol.layer.Tile({
     source: new ol.source.OSM({
-      url: 'http://{a-b}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png' //Tile server
+      url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
     })
   });
 
@@ -39,7 +40,7 @@ function createMap(){
     target: 'map', //Attach map to 'map' div
 
     layers: [
-    openTransportMapLayer,
+    cartoDBLight,
     currPosVectorLayer
     ],
     view: view
@@ -75,3 +76,8 @@ geolocation.once('change', function(evt) {
 }
 
 
+ document.getElementById("SearchBtn").onclick = function searchFun()
+    {
+     console.log("hello");
+     //validation code to see State field is mandatory.  
+    }   
