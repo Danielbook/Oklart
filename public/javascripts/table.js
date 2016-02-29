@@ -21,7 +21,7 @@ define(['table'], function (table) {
       data.addColumn('number', 'Temperatur');
       data.addColumn('number', 'Gust');
 
-      for(var i = 0; i < 10; i++){
+      for(var i = 0; i < 30; i++){
         data.addRows([ [smhidata.data[0].timeseries[i].validTime,  {v: smhidata.data[0].timeseries[i].t, f: smhidata.data[0].timeseries[i].t.toString()}, {v: smhidata.data[0].timeseries[i].gust, f: smhidata.data[0].timeseries[i].gust.toString()}] ]);
       }
       

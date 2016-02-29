@@ -7,8 +7,7 @@ define(['graph'], function (graph) {
     // console.log(this._data);
   };
 
-  Graph.prototype.initGraph = function(smhidata) {
-    var arg;
+  Graph.prototype.initGraph = function(arg) {
     this._data = google.charts.setOnLoadCallback(this.drawGraph(arg));
   }
 
@@ -16,36 +15,11 @@ define(['graph'], function (graph) {
     var fun = function() {
       var data = new google.visualization.DataTable();
       data.addColumn('number', 'Time');
-      data.addColumn('number', 'Max');
       data.addColumn('number', 'Temp');
 
-      data.addRows([
-        [0, 11, 10],    
-        [1, 10, 5],   
-        [2, 23, 15],  
-        [3, 17, 9],   
-        [4, 18, 10],  
-        [5, 9, 5],
-        [6, 11, 3],   
-        [7, 27, 19],  
-        [8, 33, 25],  
-        [9, 40, 32],  
-        [10, 32, 24], 
-        [11, 35, 27],
-        [12, 30, 22], 
-        [13, 40, 32], 
-        [14, 42, 34], 
-        [15, 47, 39], 
-        [16, 44, 36], 
-        [17, 48, 40],
-        [18, 52, 44], 
-        [19, 54, 46], 
-        [20, 42, 34], 
-        [21, 55, 47], 
-        [22, 56, 48], 
-        [23, 57, 49],
-        [24, 60, 52] 
-        ]);
+      for(var i = 0 ; i < 30 ; i++){
+        data.addRows([[i, smhidata.data[0].timeseries[i].t]]);
+      }
 
       var options = {
         hAxis: {
