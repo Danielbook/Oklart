@@ -8,12 +8,12 @@ define(['table'], function (table) {
     // console.log(this._data);
   };
 
-  Table.prototype.initTable = function() {
-    var arg;
+  Table.prototype.initTable = function(arg) {
     this._data = google.charts.setOnLoadCallback(this.drawTable(arg));
   }
 
   Table.prototype.drawTable = function(smhidata) {
+    console.log(smhidata);
     var fun = function(){
       var data = new google.visualization.DataTable();
 
@@ -22,7 +22,7 @@ define(['table'], function (table) {
       data.addColumn('number', 'Gust');
 
       for(var i = 0; i < 10; i++){
-        data.addRows([ ['Morgan',  {v: i, f: 'i'}, {v: i*2, f: 'i*2'}] ]);
+        data.addRows([ [smhidata.data[0].timeseries[i].validTime,  {v: smhidata.data[0].timeseries[i].t, f: smhidata.data[0].timeseries[i].t.toString()}, {v: smhidata.data[0].timeseries[i].gust, f: smhidata.data[0].timeseries[i].gust.toString()}] ]);
       }
       
       var table = new google.visualization.Table(document.getElementById('table_div'));
