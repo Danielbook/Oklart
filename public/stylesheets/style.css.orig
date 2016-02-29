@@ -8,6 +8,8 @@ body{
 	margin:auto;
 }
 
+<<<<<<< HEAD:public/stylesheets/style.css
+=======
 .pac-container{
   background-color: #FFF;
   z-index: 1050; 
@@ -19,6 +21,7 @@ body{
     height: 0px;
 }
 
+>>>>>>> master:src/assets/css/style.css
 .pageBody{
   background-color: #FFFFFF;
   margin: 20px;
@@ -38,6 +41,7 @@ body{
 
 .pageElement{
   width:100%;
+<<<<<<< HEAD:public/stylesheets/style.css
 }
 
 .brand-img{
@@ -49,6 +53,19 @@ body{
   transition: opacity ease 0.25s;
 }
 
+=======
+}
+
+.brand-img{
+  height:30px;
+  opacity:0.6;
+  -webkit-transition: opacity ease 0.25s;
+  -moz-transition: opacity ease 0.25s;
+  -o-transition: opacity ease 0.25s;
+  transition: opacity ease 0.25s;
+}
+
+>>>>>>> master:src/assets/css/style.css
 .brand-img:hover {
   opacity:1;
 }
