@@ -14,9 +14,22 @@ body{
   position:relative;
 
 }
-.pac-container:after {
-    background-image: none !important;
-    height: 0px;
+
+.rotate-north {
+  top: 10%;
+  left: 10%;
+  width: 10%;
+
+
+}
+
+#map-icon{
+  max-width: 10%;
+  max-height: 10%
+}
+
+.ol-touch .rotate-north {
+  top: 80px;
 }
 
 .pageBody{

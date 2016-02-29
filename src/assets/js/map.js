@@ -4,6 +4,62 @@
 
 function createMap(){
 
+
+window.app = {};
+var app = window.app;
+
+
+//
+// Define rotate to north control.
+//
+
+
+
+/**
+ * @constructor
+ * @extends {ol.control.Control}
+ * @param {Object=} opt_options Control options.
+ */
+app.RotateNorthControl = function(opt_options) {
+
+  var options = opt_options || {};
+
+  var button = document.createElement('input');
+  button.src = 'http://simpleicon.com/wp-content/uploads/cloud-10.png';
+  button.type ="image";
+  button.style.height="10%";
+  button.style.width="10%";
+
+
+
+
+ 
+
+  var this_ = this;
+  var handleRotateNorth = function(e) {
+    this_.getMap().getView().setCenter([0,0]);
+  };
+
+  button.addEventListener('click', handleRotateNorth, false);
+  button.addEventListener('touchstart', handleRotateNorth, false);
+
+  var element = document.createElement('div');
+  element.className = 'rotate-north ol-unselectable ol-control';
+  element.appendChild(button);
+
+  ol.control.Control.call(this, {
+    element: element,
+    target: options.target
+  });
+
+};
+ol.inherits(app.RotateNorthControl, ol.control.Control);
+
+
+
+
+
+
   //http://wiki.openstreetmap.org/wiki/Tile_servers
   var cartoDBLight = new ol.layer.Tile({
     source: new ol.source.OSM({
@@ -41,6 +97,13 @@ function createMap(){
 
   var map = new ol.Map({
     target: 'map', //Attach map to 'map' div
+    controls: ol.control.defaults({
+      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        collapsible: false
+      })
+    }).extend([
+      new app.RotateNorthControl()
+    ]),
 
     layers: [
     cartoDBLight,
@@ -49,6 +112,15 @@ function createMap(){
     view: view
     
   });
+
+
+
+
+
+
+
+
+
 
   /* -------------- Gelocation ------------------- */
   //create a vector source to add the icon(s) to.
@@ -126,9 +198,13 @@ $("#CitySearch").keypress(function(e){
     }
   });
 
+/* ------ Autocomplete ------ */
 var input = document.getElementById('CitySearch');
 var options = {};
     
 new google.maps.places.Autocomplete(input, options);
+
+/* ---------------------------*/
+
 
 }
