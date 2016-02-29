@@ -19,7 +19,7 @@ require([
   /**
    * 
    */
-    var returndata = {};
+    returndata = {};
     Table.initTable(returndata);
     Graph.initGraph(returndata);
     Map.createMap(returndata);
