@@ -8,6 +8,17 @@ body{
 	margin:auto;
 }
 
+.pac-container{
+  background-color: #FFF;
+  z-index: 1050; 
+  position:relative;
+
+}
+.pac-container:after {
+    background-image: none !important;
+    height: 0px;
+}
+
 .pageBody{
   background-color: #FFFFFF;
   margin: 20px;

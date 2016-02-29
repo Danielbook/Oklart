@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="http://openlayers.org/en/v3.13.1/css/ol.css" type="text/css">
     <script src="http://openlayers.org/en/v3.13.1/build/ol.js" type="text/javascript"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwe8U2FdeCFvdvPsWrnH0l4wc6nd6Cbls&libraries=places"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <!-- Bootstrap -->
@@ -41,13 +42,10 @@
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      <form class="navbar-form navbar-right" role="search">
-	        <div class="form-group">
-	          <input type="text" class="form-control" placeholder="Stad" id="CitySearch">
+	    	<div class="navbar-form navbar-right">
+	          	<input type="text" class="form-control" placeholder="Stad" id="CitySearch">
+	          	<button type="button" class="btn btn-default" id="SearchBtn">Sök</button>
 	        </div>
-	        <button type="button" class="btn btn-default" id="SearchBtn" onclick="searchFun()">Sök</button>
-
-	      </form>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>

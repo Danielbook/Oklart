@@ -16,7 +16,7 @@ function createMap(){
   var view = new ol.View({
     center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
     zoom: 4,
-      maxZoom: 7,
+      maxZoom: 10,
       minZoom: 4,
       //extent: extent
     })
@@ -86,8 +86,7 @@ function createMap(){
   /*---------------------------------------------------*/
 
 
- document.getElementById("SearchBtn").onclick = function searchFun()
-    {
+ document.getElementById("SearchBtn").onclick = function(){
 
     var pan = ol.animation.pan({
       duration: 1000,
@@ -105,5 +104,31 @@ function createMap(){
         
        }); 
     }   
+
+
+$("#CitySearch").keypress(function(e){
+    if(e.which == 13){
+    var pan = ol.animation.pan({
+      duration: 1000,
+      source: view.getCenter()
+    });
+
+     var AdresFalt = $("#CitySearch") ;
+       $.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+            var FoundExtent = data[0].boundingbox;
+            var placemark_lat = data[0].lat;
+            var placemark_lon = data[0].lon;
+          
+          map.beforeRender(pan);        
+          map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+        
+       }); 
+    }
+  });
+
+var input = document.getElementById('CitySearch');
+var options = {};
+    
+new google.maps.places.Autocomplete(input, options);
 
 }
