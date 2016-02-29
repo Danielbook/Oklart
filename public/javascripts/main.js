@@ -4,36 +4,18 @@
 * Initialize application
 * ------------------------------------------ 
 */
-requirejs.config({
-  baseUrl: './javascripts/',
+requirejs.config({ baseUrl: './javascripts/' });
+requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
+  var _table = new Table();
+  var _graph = new Graph();
+  var _map = new Map();
+
+  returnData = {};
+  _table.initTable(returnData);
+  _graph.initGraph(returnData);
+  _map.initMap(returnData);
+
 });
-require([
-  'table',
-  'graph',
-  'map'
-  ], function (
-    Table,
-    Graph,
-    Map
-    ) {
-  /**
-   * 
-   */
-    returndata = {};
-    Table.initTable(returndata);
-    Graph.initGraph(returndata);
-    Map.createMap(returndata);
 
 
-    /*
-    function getData(dataurl){
-      return $.getJSON(dataurl).then(function(data){
-        return data;
-      })
-    ;}
-	  getData("./assets/data/data.json").then(function(returndata){ 
-      //When data has been loaded this runs
-      console.log(returndata);
-    });
-    */    
-});
+
