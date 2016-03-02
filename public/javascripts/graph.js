@@ -68,9 +68,7 @@ define(['graph'], function (graph) {
       dashboard.bind(rangeSlider, lineChart);
 
       var dataViewNew = new google.visualization.DataView(data);
-      dataViewNew.setColumns([{calc: function(data, row) {
-          return data.getFormattedValue(row, 0); }, type:'string'}, 0,1]);
-
+      dataViewNew.setColumns([0,1]);
       dashboard.draw(dataViewNew);
 
         // Every time the table fires the "select" event, it should call your
