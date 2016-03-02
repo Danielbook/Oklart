@@ -15,6 +15,11 @@ body{
 
 }
 
+.pac-container:after {
+  background-image: none !important;
+  height: 0px;
+}
+
 .rotate-north {
   top: 10%;
   left: 10%;
