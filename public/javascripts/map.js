@@ -26,7 +26,7 @@ define(['map'], function (map) {
       //extent: extent
     })
 
-
+ //Testar lite
   /* -------- Marker layer -------- */
   var currPosVectorSource = new ol.source.Vector({});
   var currPosVectorLayer = new ol.layer.Vector({
@@ -73,7 +73,7 @@ define(['map'], function (map) {
 
   if(geolocation){
     console.log("Succes!");
-    
+
   //create a vector source to add the icon(s) to.
 
   geolocation.once('change', function(evt) {
@@ -81,7 +81,7 @@ define(['map'], function (map) {
    pos = geolocation.getPosition();
    map.getView().setCenter(ol.proj.fromLonLat(pos));
 
-   
+
    //create icon at new map center
    var iconFeature = new ol.Feature({
      geometry: new ol.geom.Point(ol.proj.fromLonLat(pos)), 
@@ -90,7 +90,7 @@ define(['map'], function (map) {
 
    //iconFeature.setStyle(markerIconStyle);
    //currPosVectorSource.addFeature(iconFeature);    
-   
+
  });
 
 }
@@ -112,10 +112,10 @@ document.getElementById("SearchBtn").onclick = function(){
     var FoundExtent = data[0].boundingbox;
     var placemark_lat = data[0].lat;
     var placemark_lon = data[0].lon;
-    
+
     map.beforeRender(pan);        
     map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
-    
+
   }); 
 }   
 
@@ -132,10 +132,10 @@ $("#CitySearch").keypress(function(e){
       var FoundExtent = data[0].boundingbox;
       var placemark_lat = data[0].lat;
       var placemark_lon = data[0].lon;
-      
+
       map.beforeRender(pan);        
       map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
-      
+
     }); 
   }
 });
