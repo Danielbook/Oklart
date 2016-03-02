@@ -2,9 +2,6 @@
 <html>
 <% include templates/header.ejs %>
 <body>
-	<h1><%=location%></h1>
-	<h2><%=time%></h2>
-
 	<script>
 		var data = <%-JSON.stringify(dataobject)%>;
 		//console.log(data);
@@ -33,20 +30,20 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-
 	      <a class="navbar-brand"><img src="images/logoWhite.png" class="brand-img" alt="Brand"></a>
+	     	<p class="navbar-text"><%=location%> | <%=time%></p>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      <form class="navbar-form navbar-right" role="search">
-	        <div class="form-group">
-	          <input type="text" class="form-control" placeholder="Stad">
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> 
+	        <div class="form-group navbar-form navbar-right">
+	          <input type="text" class="form-control" placeholder="Stad" id="CitySearch" >
+	          <button type="button" class="btn btn-default" id ="SearchBtn">Sök</button>
 	        </div>
-	        <button type="submit" class="btn btn-default">Sök</button>
-	      </form>
 	    </div>
 	  </div>
+
+
 	</nav>
 
 	<div class="container-fluid pageBody">
