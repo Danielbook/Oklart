@@ -3,6 +3,9 @@ define(['map'], function (map) {
   /**
   * CONSTRUCTOR 
   */
+  var map;
+  var view;
+
   var Map = function() {
     // this._data = data;
     // console.log(this._data);
@@ -18,7 +21,7 @@ define(['map'], function (map) {
 
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
-  var view = new ol.View({
+  view = new ol.View({
     center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
     zoom: 4,
     maxZoom: 10,
@@ -27,25 +30,25 @@ define(['map'], function (map) {
     })
 
  //Testar lite
-  /* -------- Marker layer -------- */
-  var currPosVectorSource = new ol.source.Vector({});
-  var currPosVectorLayer = new ol.layer.Vector({
-    source: currPosVectorSource
-  });
+ /* -------- Marker layer -------- */
+ var currPosVectorSource = new ol.source.Vector({});
+ var currPosVectorLayer = new ol.layer.Vector({
+  source: currPosVectorSource
+});
 
-  var markerIconStyle = new ol.style.Style({
-    image: new ol.style.Icon(({
-      anchor: [0.5, 1],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'fraction',
-      opacity: 0.75,
-      scale: 0.5,
-      src: './assets/img/icon.png'
-    }))
-  });
-  /*--------------------------------*/
+ var markerIconStyle = new ol.style.Style({
+  image: new ol.style.Icon(({
+    anchor: [0.5, 1],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    opacity: 0.75,
+    scale: 0.5,
+    src: './assets/img/icon.png'
+  }))
+});
+ /*--------------------------------*/
 
-  var map = new ol.Map({
+ map = new ol.Map({
     target: 'map', //Attach map to 'map' div
     controls: ol.control.defaults({
       attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
@@ -64,7 +67,7 @@ define(['map'], function (map) {
   });
 
 
-  /* -------------- Gelocation ------------------- */
+ /* -------------- Gelocation ------------------- */
   //create a vector source to add the icon(s) to.
 
   var geolocation = new ol.Geolocation({
@@ -97,59 +100,22 @@ define(['map'], function (map) {
 else {
   alert("Couldn't find location");
 }
-/*---------------------------------------------------*/
+}
 
-
-document.getElementById("SearchBtn").onclick = function(){
+Map.prototype.updateMap = function(data) {
 
   var pan = ol.animation.pan({
     duration: 1000,
     source: view.getCenter()
   });
 
-  var AdresFalt = $("#CitySearch") ;
-  $.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-    var FoundExtent = data[0].boundingbox;
-    var placemark_lat = data[0].lat;
-    var placemark_lon = data[0].lon;
+  var FoundExtent = data[0].boundingbox;
+  var placemark_lat = data[0].lat;
+  var placemark_lon = data[0].lon;
 
-    map.beforeRender(pan);        
-    map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
-
-  }); 
-}   
-
-
-$("#CitySearch").keypress(function(e){
-  if(e.which == 13){
-    var pan = ol.animation.pan({
-      duration: 1000,
-      source: view.getCenter()
-    });
-
-    var AdresFalt = $("#CitySearch") ;
-    $.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-      var FoundExtent = data[0].boundingbox;
-      var placemark_lat = data[0].lat;
-      var placemark_lon = data[0].lon;
-
-      map.beforeRender(pan);        
-      map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
-
-    }); 
-  }
-});
-
-/* ------ Autocomplete ------ */
-var input = document.getElementById('CitySearch');
-var options = {};
-
-new google.maps.places.Autocomplete(input, options);
-
-/* ---------------------------*/
-
+  map.beforeRender(pan);        
+  map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
 }
-
 
 return Map;
 });

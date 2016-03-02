@@ -7,17 +7,37 @@
 		//console.log(data);
 
 		requirejs.config({ baseUrl: './javascripts/' });
-		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
-		  var _table = new Table();
-		  var _graph = new Graph();
-		  var _map = new Map();
+		requirejs(['table', 'graph', 'map'], 
+		function (Table, Graph, Map) {
+			var _table = new Table();
+			var _graph = new Graph();
+			var _map = new Map();
 
-		  returnData = data;
-		  _table.initTable(returnData);
-		  _graph.initGraph(returnData);
-		  _map.initMap(returnData);
+			returnData = data;
+			_table.initTable(returnData);
+			_graph.initGraph(returnData);
+			_map.initMap(returnData);
+
+			var input = document.getElementById('CitySearch');
+			var options = {};
+			new google.maps.places.Autocomplete(input, options);
+
+			document.getElementById("SearchBtn").onclick = function(){
+				var AdresFalt = $("#CitySearch") ;
+  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+  					_map.updateMap(data);
+  				})
+			};
+
+			$("#CitySearch").keypress(function(e){
+				if(e.which == 13){
+					var AdresFalt = $("#CitySearch") ;
+	  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+	  					_map.updateMap(data);
+					})
+  				}
+			});
 		});
-
 	</script>
 
 	<nav class="navbar navbar-default navbar-fixed-top">
