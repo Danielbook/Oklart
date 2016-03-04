@@ -21,14 +21,13 @@ define(['graph'], function (graph) {
         var currHour = smhidata.data[0].timeseries[i].validTime;
         currHour = currHour.substring(11,16);
         currHour = currHour.toString();
-        console.log(currHour);
         data.addRows([[i, smhidata.data[0].timeseries[i].t]]);
       }
 
       var options = {
         hAxis: {
           format:'',
-          gridlines: { count: data.Lf.length} //Draw gridlines for each row in data
+          gridlines: { count: 30} //Draw gridlines for each row in data
         },
         animation: {
           startup: true,

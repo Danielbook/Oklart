@@ -75,7 +75,6 @@ define(['map'], function (map) {
   });
 
   if(geolocation){
-    console.log("Succes!");
 
   //create a vector source to add the icon(s) to.
 
