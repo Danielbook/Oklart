@@ -5,7 +5,7 @@ var async = require('async');
 
 var localSmhidata = require('../data.json');
 var urls = getUrls();
-console.log(urls);
+//console.log(urls);
 //var apiSmhidata = getSmhiData(urls);
 //console.log(apiSmhidata);
 

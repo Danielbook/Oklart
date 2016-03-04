@@ -9,7 +9,6 @@ var index = require('./routes/index');
 var app = express();
 
 app.locals.title = "SMHI väderdata";
-app.locals.smhidata = require('./data.json');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

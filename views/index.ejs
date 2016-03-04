@@ -2,26 +2,35 @@
 <html>
 <% include templates/header.ejs %>
 <body>
-	<script>
-		var data = <%-JSON.stringify(dataobject)%>;
-		//console.log(data);
+	<script> 
+		//Load the google charts packages that is used
+		//google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
+		google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
 
+		//Requirejs is setup
 		requirejs.config({ baseUrl: './javascripts/' });
-		requirejs(['table', 'graph', 'map'], 
-		function (Table, Graph, Map) {
+
+		//In this function our javascripts are accesable and instanses of the included objects can be created
+		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
+			//Stores data sent from Node.js into smhidata 
+			var smhidata = <%-JSON.stringify(dataobject)%>;
+
+			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph();
 			var _map = new Map();
 
-			returnData = data;
-			_table.initTable(returnData);
-			_graph.initGraph(returnData);
-			_map.initMap(returnData);
+			//Inits the objects to create the components
+			_table.initTable(smhidata);
+			//_graph.initGraph(smhidata);
+			_map.initMap(smhidata);
 
+			//This code implements livesearch for the Stad textfield
 			var input = document.getElementById('CitySearch');
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
 
+			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
   				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
@@ -29,7 +38,9 @@
   				})
 			};
 
+			//This function runs when the Stad textfield is highlighted and a key is pressed
 			$("#CitySearch").keypress(function(e){
+				//If the pressed button is enter
 				if(e.which == 13){
 					var AdresFalt = $("#CitySearch") ;
 	  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
@@ -37,7 +48,7 @@
 					})
   				}
 			});
-		});
+		})
 	</script>
 
 	<nav class="navbar navbar-default navbar-fixed-top">
@@ -73,7 +84,10 @@
 			</div>
 	    	<div class="col-md-6"> <!-- GRAPH AND TABLE -->
 	    		<div class ="row"> <!-- GRAPH -->
-	    			<div id="graph_div" class="pageElement"></div>
+						<div id="dashboard_div" class="pageElement">
+							<div id="chart_div" class="center-block"></div>
+							<div id="rangeSlider_div" class="slider"></div>
+						</div>
 	    		</div>
 	    		<div class ="row"> <!-- TABLE -->
 	    			<div id="table_div" class="table pageElement"></div>

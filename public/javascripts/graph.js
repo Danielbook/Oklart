@@ -13,46 +13,64 @@ define(['graph'], function (graph) {
 
   Graph.prototype.drawGraph = function(smhidata) {
     var fun = function() {
+      var dashboard = new google.visualization.Dashboard( document.getElementById('dashboard_div'));
+
       var data = new google.visualization.DataTable();
       data.addColumn('number', 'Time');
       data.addColumn('number', 'Temp');
 
-      for(var i = 0 ; i < 30 ; i++){
-        var currHour = smhidata.data[0].timeseries[i].validTime;
-        currHour = currHour.substring(11,16);
-        currHour = currHour.toString();
-        console.log(currHour);
+      for(var i = 1 ; i < 25 ; i++){
         data.addRows([[i, smhidata.data[0].timeseries[i].t]]);
       }
 
-      var options = {
-        hAxis: {
-          format:'',
-          gridlines: { count: data.Jf.length} //Draw gridlines for each row in data
-        },
-        animation: {
-          startup: true,
-          duration: 1000,
-          easing: 'out',
-        },
-        vAxis: {
-          viewWindowMode: 'maximized'
-        },
-        legend: { 
-          position: 'top',
-          alignment: 'center'
-        },
-        colors: ['#a52714', '#097138'],
-        curveType: 'none',
-        focusTarget: 'category',
-        crosshair: {
-          color: '#000',
-          trigger: 'hover',
-        },
-        height:400
-      };
-      var lineChart = new google.visualization.LineChart(document.getElementById('graph_div'));
-      lineChart.draw(data, options);
+      var rangeSlider = new google.visualization.ControlWrapper({
+            'controlType': 'NumberRangeFilter',
+            'containerId': 'rangeSlider_div',
+            'options': {
+            'filterColumnLabel': 'Time',
+            'width': '100%',
+            'ui': { 'labelStacking': 'horizontal', 'format': { 'pattern':'####','fractionDigits':'0','groupingSymbol':'','showRangeValues':true }}
+        }
+      });
+
+      var lineChart = new google.visualization.ChartWrapper({
+          'chartType': 'LineChart',
+          'containerId': 'chart_div',
+          'options': {
+              'height': 400,
+              'fontSize':11,
+              'hAxis': {
+                  format: '',
+                  gridlines: { count: data.lenght}
+              },
+              animation: {
+                  startup: true,
+                  duration: 1000,
+                  easing: 'out',
+              },
+              vAxis: {
+                  viewWindowMode: 'maximized'
+              },
+              legend: {
+                  position: 'top',
+                  alignment: 'center'
+              },
+              colors: ['#a52714', '#097138'],
+              curveType: 'none',
+              focusTarget: 'category',
+              crosshair: {
+                  color: '#000',
+                  trigger: 'hover',
+              },
+          }
+      });
+
+      dashboard.bind(rangeSlider, lineChart);
+
+      var dataViewNew = new google.visualization.DataView(data);
+      dataViewNew.setColumns([0,1]);
+      dashboard.draw(dataViewNew);
+
         // Every time the table fires the "select" event, it should call your
         // selectHandler() function.
         google.visualization.events.addListener(lineChart, 'select', selectHandler);
