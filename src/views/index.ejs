@@ -33,9 +33,9 @@
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
-  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-  					_map.updateMap(data);
-  				})
+				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+					_map.updateMap(data);
+				})
 			};
 
 			//This function runs when the Stad textfield is highlighted and a key is pressed
@@ -43,85 +43,107 @@
 				//If the pressed button is enter
 				if(e.which == 13){
 					var AdresFalt = $("#CitySearch") ;
-	  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-	  					_map.updateMap(data);
+					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+						_map.updateMap(data);
 					})
-  				}
+				}
 			});
 		})
 
+	$( document ).ready(function() {
+		// TIME SLIDER
+		$( "#timeSlider" ).slider({
+			min:0,
+			max:10,
+			value:0,
+		});
 
+		$('#playButton').on('click touchstart', function () {
+			console.log( $('#timeSlider').slider("value") );
+		});
+
+		$( "#timeSlider" ).on('slide swipe', function() {
+			$('#time').text( 
+				$('#timeSlider').slider("value")
+			);
+		});
+		if( $( window ).height() < 568){
+			$(".navbar-custom").removeClass("large").addClass("small");
+			$("body").css({"padding-top":"40px"});
+		}
+	});
+
+	$(document).on("scroll",function(){
+		if( $( window ).height() >= 568){
+			if($(document).scrollTop()>50){ 
+				$(".navbar-custom").removeClass("large").addClass("small");
+			}
+			else{
+				$(".navbar-custom").removeClass("small").addClass("large");
+			}
+		}
+	});
 	</script>
 
-	<nav class="navbar navbar-default navbar-fixed-top">
-	  <div class="container-fluid">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	      <a class="navbar-brand"><img src="images/logoWhite.png" class="brand-img" alt="Brand"></a>
-	     	<p class="navbar-text"><%=location%> | <%=time%></p>
-	    </div>
+	<nav class="navbar navbar-custom navbar-fixed-top large">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand"><img src="images/logoWhite.png" class="brand-img" alt="Brand"></a>
+				<p class="navbar-text"><%=location%> | <%=time%></p>
+			</div>
 
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> 
-	        <div class="form-group navbar-form navbar-right">
-	          <input type="text" class="form-control" placeholder="Stad" id="CitySearch" >
-	          <button type="button" class="btn btn-default" id ="SearchBtn">Sök</button>
-	        </div>
-	    </div>
-	  </div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> 
+				<div class="form-group navbar-form navbar-right">
+					<input type="text" class="form-control" placeholder="Stad" id="CitySearch" >
+					<button id="SearchBtn" type="button" class="btn btn-success">Sök</button>
+				</div>
+			</div>
+		</div>
 	</nav>
 	
 	<div class="container-fluid pageBody">
-		<div class="row gutter-20"> <!-- OUTER DIVS -->
-			<div class="col-md-6">
+		<div class="row"> <!-- OUTER DIVS -->
+			<div class="col-md-6 card">
 				<div class="pageElement">
 					<div id="map" class="map"></div>
 					<div class="sliderAndButton">
-						<button id="playButton" type="button" class="btn btn-info"><span class="glyphicon glyphicon-play
-" aria-hidden="true"></span></button>
-						<div id="timeSlider" class="slider slider-horizontal"></div>
+						<button id="playButton" type="button" class="btn btn-info btn-md">
+							<span class="glyphicon glyphicon-play
+							" aria-hidden="true"></span>
+						</button>
+						<div id="timeSlider" class="slider"></div>
 					</div>
 				</div>
 			</div>
-	    	<div class="col-md-6"> <!-- GRAPH AND TABLE -->
-	    		<div class ="row"> <!-- GRAPH -->
-	    			<div id="graph_div" class="graph pageElement"></div>
-	    		</div>
-	    		<div class ="row"> <!-- TABLE -->
-	    			<div id="table_div" class="table pageElement"></div>
-	    		</div>
-	    	</div> <!-- GRAPH AND TABLE -->
-	  	</div>
+			<div class="col-md-6"> <!-- GRAPH AND TABLE -->
+				<div class ="row"> <!-- GRAPH -->
+					<div id="graph_div" class="graph pageElement"></div>
+				</div>
+				<div class ="row"> <!-- TABLE -->
+					<div id="table_div" class="table pageElement"></div>
+				</div>
+			</div> <!-- GRAPH AND TABLE -->
+		</div>
 	</div>
-
-	<!-- Init slider -->
 	<script>
-		var options = {
-			min: 0,
-			max: 30,
-			tooltip: "show",
-			value: 0
-		}
 
-		$('#timeSlider').slider(options);
 
-		$('#timeSlider').slider().on('slide', function(ev){ 
-			var currentTime = $('#timeSlider').slider().on('slide').data('slider').getValue();
-    	console.log( currentTime );
-  	});
+	// $('#timeSlider').on('slide' , );
 
-  	$('#playButton').click(function(){
-  		$('#timeSlider').slider().data('slider').setValue(0);
-  	});
-
+	// var updateTime = function (){
+	// 	$('#time').text( 
+	// 		$('#timeSlider').slider("value")
+	// 	);
+	// };
 	</script>
+	</body>
 
-</body>
-
-</html>
+	</html>
