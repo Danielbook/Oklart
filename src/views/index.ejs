@@ -2,7 +2,7 @@
 <html>
 <% include templates/header.ejs %>
 <body>
-	<script> 
+	<script>
 		//Load the google charts packages that is used
 		//google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
 		google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
@@ -12,13 +12,14 @@
 
 		//In this function our javascripts are accesable and instanses of the included objects can be created
 		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
-			//Stores data sent from Node.js into smhidata 
+			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph();
 			var _map = new Map();
+			var slider = new Slider('#bootslide', {});
 
 			//Inits the objects to create the components
 			_table.initTable(smhidata);
@@ -37,6 +38,8 @@
   					_map.updateMap(data);
   				})
 			};
+
+
 
 			//This function runs when the Stad textfield is highlighted and a key is pressed
 			$("#CitySearch").keypress(function(e){
@@ -66,7 +69,7 @@
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> 
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	        <div class="form-group navbar-form navbar-right">
 	          <input type="text" class="form-control" placeholder="Stad" id="CitySearch" >
 	          <button type="button" class="btn btn-default" id ="SearchBtn">Sök</button>
@@ -74,11 +77,13 @@
 	    </div>
 	  </div>
 	</nav>
-	
+
 	<div class="container-fluid pageBody">
 		<div class="row"> <!-- OUTER DIVS -->
 			<div class="col-md-6">
 				<div id="map" class="map pageElement"></div>
+				 <b>01:00</b> <input id="bootslide" type="text" class="span2" value=""
+									 data-slider-min="1" data-slider-max="24" data-slider-step="1" data-slider-value="[4,6]"/> <b>24:00</b>
 			</div>
 	    	<div class="col-md-6"> <!-- GRAPH AND TABLE -->
 	    		<div class ="row"> <!-- GRAPH -->
