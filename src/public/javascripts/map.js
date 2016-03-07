@@ -26,7 +26,6 @@ define(['map'], function (map) {
         var pointFeature = new ol.Feature(point);
         vectorSource.addFeatures([pointFeature]);
       }
-
     // Vector layer
     var vectorLayer = new ol.layer.Vector({
       source: vectorSource
@@ -84,10 +83,15 @@ define(['map'], function (map) {
 
         var handleCloudBtn = function() {
           this_.getMap().addLayer(vectorLayer);
+          cloudBtn.style.backgroundColor = 'gray';
+          rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
         var handleRainBtn = function() {
           this_.getMap().removeLayer(vectorLayer);
+          rainBtn.style.backgroundColor = 'gray';
+          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+
 
         };
 
