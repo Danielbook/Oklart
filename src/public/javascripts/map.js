@@ -13,9 +13,10 @@ define(['map'], function (map) {
 
   Map.prototype.initMap = function(smhidata) {
 
-      /*----------------------------------------*/
-      // Source
-      var vectorSource = new ol.source.Vector({
+    /*----------------------------------------*/
+
+      // Source for the vector layer
+      var temperatureSource = new ol.source.Vector({
         projection: 'EPSG:4326'
       });
 
@@ -24,16 +25,30 @@ define(['map'], function (map) {
           ol.proj.transform([smhidata.data[i].lon, smhidata.data[i].lat], 'EPSG:4326', 'EPSG:3857')
           );
         var pointFeature = new ol.Feature(point);
-        vectorSource.addFeatures([pointFeature]);
+
+        // Style for each point
+        pointFeature.setStyle(new ol.style.Style({
+        text: new ol.style.Text({
+          text: String(smhidata.data[i].timeseries[0].t), // .t = temperature
+          scale: 1.3,
+          fill: new ol.style.Fill({
+            color: '#000'
+          })
+        })
+        }));
+
+
+        temperatureSource.addFeatures([pointFeature]); //Fill the temperatureSource with point features
       }
     // Vector layer
-    var vectorLayer = new ol.layer.Vector({
-      source: vectorSource
+    var temperatureVecLayer = new ol.layer.Vector({
+      source: temperatureSource
     });
 
 
 
-      /* ------------------------------------- */
+
+    /* ------------------------------------- */
 
     /* Layers */
     var cartoDBLight = new ol.layer.Tile({
@@ -71,32 +86,32 @@ define(['map'], function (map) {
         var options = opt_options || {};
 
         /* Buttons */
-        var cloudBtn = document.createElement('button');
+        var temperatureButton = document.createElement('button');
         var rainBtn = document.createElement('button');
 
-        cloudBtn.innerHTML = 'C';
+        temperatureButton.innerHTML = 'T';
         rainBtn.innerHTML = 'R';
 
 
         /* Event listeners */
         var this_ = this;
 
-        var handleCloudBtn = function() {
-          this_.getMap().addLayer(vectorLayer);
-          cloudBtn.style.backgroundColor = 'gray';
+        var handleTemperatureButton = function() {
+          this_.getMap().addLayer(temperatureVecLayer);
+          temperatureButton.style.backgroundColor = 'gray';
           rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
         var handleRainBtn = function() {
-          this_.getMap().removeLayer(vectorLayer);
+          this_.getMap().removeLayer(temperatureVecLayer);
           rainBtn.style.backgroundColor = 'gray';
-          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
 
 
         };
 
-        cloudBtn.addEventListener('click', handleCloudBtn, false);
-        cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
+        temperatureButton.addEventListener('click', handleTemperatureButton, false);
+        temperatureButton.addEventListener('touchstart', handleTemperatureButton, false);
         rainBtn.addEventListener('click', handleRainBtn, false);
         rainBtn.addEventListener('touchstart', handleRainBtn, false);
 
@@ -104,7 +119,7 @@ define(['map'], function (map) {
         /* Button div */
         var element = document.createElement('div');
         element.className = 'map-controls ol-unselectable ol-control';
-        element.appendChild(cloudBtn);
+        element.appendChild(temperatureButton);
         element.appendChild(rainBtn);
 
 
