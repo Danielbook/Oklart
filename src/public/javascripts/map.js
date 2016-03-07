@@ -13,11 +13,19 @@ define(['map'], function (map) {
 
   Map.prototype.initMap = function(smhidata) {
 
+    /* Layers */
     var cartoDBLight = new ol.layer.Tile({
       source: new ol.source.OSM({
       url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
     })
     });
+
+    var cartoDBdark = new ol.layer.Tile({
+      source: new ol.source.OSM({
+      url: 'http://{a-b}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png' //Tile server
+    })
+    });
+
 
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -27,7 +35,7 @@ define(['map'], function (map) {
     //maxZoom: 10,
     //minZoom: 4,
     //extent: extent
-    })
+  })
 
   /* -------- Controls -------- */
 
@@ -56,12 +64,22 @@ define(['map'], function (map) {
 
         /* Event listeners */
         var this_ = this;
-        var handleRotateNorth = function() {
-          this_.getMap().getView().setCenter([0,0]);
+
+        var handleCloudBtn = function() {
+          this_.getMap().addLayer(cartoDBLight);
+          this_.getMap().removeLayer(cartoDBdark);
         };
 
-        cloudBtn.addEventListener('click', handleRotateNorth, false);
-        cloudBtn.addEventListener('touchstart', handleRotateNorth, false);
+        var handleRainBtn = function() {
+          this_.getMap().addLayer(cartoDBdark);
+          this_.getMap().removeLayer(cartoDBLight);
+        };
+
+        cloudBtn.addEventListener('click', handleCloudBtn, false);
+        cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
+        rainBtn.addEventListener('click', handleRainBtn, false);
+        rainBtn.addEventListener('touchstart', handleRainBtn, false);
+
 
         /* Button div */
         var element = document.createElement('div');
@@ -78,29 +96,28 @@ define(['map'], function (map) {
       };
       ol.inherits(app.LayerControl, ol.control.Control);
 
-
       /*--------------------------------*/
+
 
       map = new ol.Map({
     target: 'map', //Attach map to 'map' div
     controls: ol.control.defaults({
-      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-        collapsible: false
-      })
-    }).extend([
-      new app.LayerControl()
+     attributionOptions: /** @type {olx.control.AttributionOptions} */  ({
+       collapsible: false
+     })
+   }).extend([
+   new app.LayerControl()
    ]),
 
-    layers: [
-    cartoDBLight,
-    ],
-    view: view
-    
-  });
+   layers: [
+   cartoDBLight,
+   ],
+   view: view
+
+ });
 
 
       /* -------------- Gelocation ------------------- */
-  //create a vector source to add the icon(s) to.
 
   var geolocation = new ol.Geolocation({
     tracking: true
@@ -108,22 +125,11 @@ define(['map'], function (map) {
 
   if(geolocation){
 
-  //create a vector source to add the icon(s) to.
 
   geolocation.once('change', function(evt) {
    //save position and set map center
    pos = geolocation.getPosition();
    map.getView().setCenter(ol.proj.fromLonLat(pos));
-
-
-   //create icon at new map center
-   var iconFeature = new ol.Feature({
-     geometry: new ol.geom.Point(ol.proj.fromLonLat(pos)), 
-     style: markerIconStyle
-   });
-
-   //iconFeature.setStyle(markerIconStyle);
-   //currPosVectorSource.addFeature(iconFeature);    
 
  });
 
