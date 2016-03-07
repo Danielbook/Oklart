@@ -55,8 +55,7 @@ define(['map'], function (map) {
         }));
 
         RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
-      
-      //  temperatureSource.addFeatures([pointFeature]); //Fill the temperatureSource with point features
+ 
       }
     // Vector layer
     var temperatureVecLayer = new ol.layer.Vector({
@@ -68,11 +67,6 @@ define(['map'], function (map) {
     var RainVecLayer = new ol.layer.Vector({
       source: RainSource
     });
-
-
-   // smhidata.data[0].timeseries[i].gust, f: smhidata.data[0].timeseries[i].gust.toString()
-
-
 
 
 
@@ -120,7 +114,6 @@ var cartoDBLight = new ol.layer.Tile({
     })
 });
 
-
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
   view = new ol.View({
@@ -164,6 +157,8 @@ var cartoDBLight = new ol.layer.Tile({
           this_.getMap().removeLayer(RainVecLayer);
           this_.getMap().addLayer(heatMapLayer);
 
+          temperatureButton.disabled = true;
+          rainBtn.disabled = false;
           temperatureButton.style.backgroundColor = 'gray';
           rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
@@ -173,7 +168,8 @@ var cartoDBLight = new ol.layer.Tile({
           this_.getMap().removeLayer(temperatureVecLayer);
           this_.getMap().removeLayer(heatMapLayer);
 
-
+          temperatureButton.disabled = false;
+          rainBtn.disabled = true;
           rainBtn.style.backgroundColor = 'gray';
           temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
