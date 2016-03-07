@@ -13,7 +13,7 @@ define(['map'], function (map) {
 
   Map.prototype.initMap = function(smhidata) {
 
-    /*----------------------------------------*/
+    /* ----------- Temperature layer -------------- */
 
       // Source for the vector layer
       var temperatureSource = new ol.source.Vector({
@@ -33,7 +33,7 @@ define(['map'], function (map) {
 
         // Style for each point
         pointFeatureTemp.setStyle(new ol.style.Style({
-        text: new ol.style.Text({
+          text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].t), // .t = temperature
           scale: 1.3,
           fill: new ol.style.Fill({
@@ -56,6 +56,7 @@ define(['map'], function (map) {
 
         RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
       
+      //  temperatureSource.addFeatures([pointFeature]); //Fill the temperatureSource with point features
       }
     // Vector layer
     var temperatureVecLayer = new ol.layer.Vector({
@@ -74,14 +75,50 @@ define(['map'], function (map) {
 
 
 
-    /* ------------------------------------- */
 
-    /* Layers */
-    var cartoDBLight = new ol.layer.Tile({
-      source: new ol.source.OSM({
+  /* -------- Temperature heatmap -------------- */
+  //http://jsfiddle.net/GFarkas/61dafv93/
+
+    HMtempData = new ol.source.Vector();
+    //Max- and min-temp for the heatmap to scale correctly
+    var minScale = 0.1;
+    var maxScale = 1.0;
+    var minTemp = -10; 
+    var maxTemp = 15;
+
+
+    for(i=0; i<smhidata.data.length; i++){
+      var coord = ol.proj.transform([smhidata.data[i].lon, smhidata.data[i].lat], 'EPSG:4326', 'EPSG:3857');
+      var temper = smhidata.data[i].timeseries[0].t;
+      var lonLat = new ol.geom.Point(coord);
+      //scale [minTemp, maxTemp] to range [minScale, maxScale]
+      var weight = (maxScale-minScale)*(temper - minTemp)/(maxTemp - minTemp) + minScale; // http://goo.gl/vGO5rr
+      var pointFeature = new ol.Feature({
+        geometry: lonLat,
+        weight: weight,
+      });
+
+      HMtempData.addFeature(pointFeature);
+    }
+
+
+    // create the layer
+    heatMapLayer = new ol.layer.Heatmap({
+      source: HMtempData,
+      gradient: ['#00AAE5', '#397BA0', '#724D5B', '#982E2D', '#BF1000'],
+      radius: 20,
+      blur: 80,
+      opacity: .8
+    });
+  
+/* --------------------------------------------- */
+
+/* Layers */
+var cartoDBLight = new ol.layer.Tile({
+  source: new ol.source.OSM({
       url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
     })
-    });
+});
 
 
   //Bounding box
@@ -125,6 +162,8 @@ define(['map'], function (map) {
         var handleTemperatureButton = function() {
           this_.getMap().addLayer(temperatureVecLayer);
           this_.getMap().removeLayer(RainVecLayer);
+          this_.getMap().addLayer(heatMapLayer);
+
           temperatureButton.style.backgroundColor = 'gray';
           rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
@@ -132,10 +171,11 @@ define(['map'], function (map) {
         var handleRainBtn = function() {
           this_.getMap().addLayer(RainVecLayer);
           this_.getMap().removeLayer(temperatureVecLayer);
+          this_.getMap().removeLayer(heatMapLayer);
+
+
           rainBtn.style.backgroundColor = 'gray';
           temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
-
-
         };
 
         temperatureButton.addEventListener('click', handleTemperatureButton, false);
