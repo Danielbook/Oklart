@@ -13,16 +13,33 @@ define(['map'], function (map) {
 
   Map.prototype.initMap = function(smhidata) {
 
+      /*----------------------------------------*/
+      // Source
+      var vectorSource = new ol.source.Vector({
+        projection: 'EPSG:4326'
+      });
+
+      for(i=0; i<smhidata.data.length; i++){
+        var point = new ol.geom.Point(
+          ol.proj.transform([smhidata.data[i].lon, smhidata.data[i].lat], 'EPSG:4326', 'EPSG:3857')
+          );
+        var pointFeature = new ol.Feature(point);
+        vectorSource.addFeatures([pointFeature]);
+      }
+
+    // Vector layer
+    var vectorLayer = new ol.layer.Vector({
+      source: vectorSource
+    });
+
+
+
+      /* ------------------------------------- */
+
     /* Layers */
     var cartoDBLight = new ol.layer.Tile({
       source: new ol.source.OSM({
       url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
-    })
-    });
-
-    var cartoDBdark = new ol.layer.Tile({
-      source: new ol.source.OSM({
-      url: 'http://{a-b}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png' //Tile server
     })
     });
 
@@ -66,13 +83,12 @@ define(['map'], function (map) {
         var this_ = this;
 
         var handleCloudBtn = function() {
-          this_.getMap().addLayer(cartoDBLight);
-          this_.getMap().removeLayer(cartoDBdark);
+          this_.getMap().addLayer(vectorLayer);
         };
 
         var handleRainBtn = function() {
-          this_.getMap().addLayer(cartoDBdark);
-          this_.getMap().removeLayer(cartoDBLight);
+          this_.getMap().removeLayer(vectorLayer);
+
         };
 
         cloudBtn.addEventListener('click', handleCloudBtn, false);
@@ -119,40 +135,40 @@ define(['map'], function (map) {
 
       /* -------------- Gelocation ------------------- */
 
-  var geolocation = new ol.Geolocation({
-    tracking: true
-  });
+      var geolocation = new ol.Geolocation({
+        tracking: true
+      });
 
-  if(geolocation){
+      if(geolocation){
 
 
-  geolocation.once('change', function(evt) {
+        geolocation.once('change', function(evt) {
    //save position and set map center
    pos = geolocation.getPosition();
    map.getView().setCenter(ol.proj.fromLonLat(pos));
 
  });
 
-}
-else {
-  alert("Couldn't find location");
-}
-}
+      }
+      else {
+        alert("Couldn't find location");
+      }
+    }
 
-Map.prototype.updateMap = function(data) {
+    Map.prototype.updateMap = function(data) {
 
-  var pan = ol.animation.pan({
-    duration: 1000,
-    source: view.getCenter()
+      var pan = ol.animation.pan({
+        duration: 1000,
+        source: view.getCenter()
+      });
+
+      var FoundExtent = data[0].boundingbox;
+      var placemark_lat = data[0].lat;
+      var placemark_lon = data[0].lon;
+
+      map.beforeRender(pan);        
+      map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+    }
+
+    return Map;
   });
-
-  var FoundExtent = data[0].boundingbox;
-  var placemark_lat = data[0].lat;
-  var placemark_lon = data[0].lon;
-
-  map.beforeRender(pan);        
-  map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
-}
-
-return Map;
-});
