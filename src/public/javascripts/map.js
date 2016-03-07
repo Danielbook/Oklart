@@ -20,14 +20,19 @@ define(['map'], function (map) {
         projection: 'EPSG:4326'
       });
 
+      var RainSource = new ol.source.Vector({
+        projection: 'EPSG:4326'
+    });
+
       for(i=0; i<smhidata.data.length; i++){
         var point = new ol.geom.Point(
           ol.proj.transform([smhidata.data[i].lon, smhidata.data[i].lat], 'EPSG:4326', 'EPSG:3857')
           );
-        var pointFeature = new ol.Feature(point);
+        var pointFeatureTemp = new ol.Feature(point);
+        var pointFeatureRain = new ol.Feature(point);
 
         // Style for each point
-        pointFeature.setStyle(new ol.style.Style({
+        pointFeatureTemp.setStyle(new ol.style.Style({
         text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].t), // .t = temperature
           scale: 1.3,
@@ -37,13 +42,34 @@ define(['map'], function (map) {
         })
         }));
 
+        temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
 
-        temperatureSource.addFeatures([pointFeature]); //Fill the temperatureSource with point features
+        pointFeatureRain.setStyle(new ol.style.Style({
+        text: new ol.style.Text({
+          text: String(smhidata.data[i].timeseries[0].pit), // .t = temperature
+          scale: 1.3,
+          fill: new ol.style.Fill({
+            color: '#000'
+          })
+        })
+        }));
+
+        RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
+      
       }
     // Vector layer
     var temperatureVecLayer = new ol.layer.Vector({
       source: temperatureSource
     });
+
+  
+    // Vector layer
+    var RainVecLayer = new ol.layer.Vector({
+      source: RainSource
+    });
+
+
+   // smhidata.data[0].timeseries[i].gust, f: smhidata.data[0].timeseries[i].gust.toString()
 
 
 
@@ -98,11 +124,13 @@ define(['map'], function (map) {
 
         var handleTemperatureButton = function() {
           this_.getMap().addLayer(temperatureVecLayer);
+          this_.getMap().removeLayer(RainVecLayer);
           temperatureButton.style.backgroundColor = 'gray';
           rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
         var handleRainBtn = function() {
+          this_.getMap().addLayer(RainVecLayer);
           this_.getMap().removeLayer(temperatureVecLayer);
           rainBtn.style.backgroundColor = 'gray';
           temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
