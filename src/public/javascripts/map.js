@@ -24,50 +24,82 @@ define(['map'], function (map) {
   view = new ol.View({
     center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
     zoom: 4,
-    maxZoom: 10,
-    minZoom: 4,
-      //extent: extent
+    //maxZoom: 10,
+    //minZoom: 4,
+    //extent: extent
     })
 
- //Testar lite
- /* -------- Marker layer -------- */
- var currPosVectorSource = new ol.source.Vector({});
- var currPosVectorLayer = new ol.layer.Vector({
-  source: currPosVectorSource
-});
+  /* -------- Controls -------- */
 
- var markerIconStyle = new ol.style.Style({
-  image: new ol.style.Icon(({
-    anchor: [0.5, 1],
-    anchorXUnits: 'fraction',
-    anchorYUnits: 'fraction',
-    opacity: 0.75,
-    scale: 0.5,
-    src: './assets/img/icon.png'
-  }))
-});
- /*--------------------------------*/
+     /**
+       * Define a namespace for the application.
+       */
+       window.app = {};
+       var app = window.app;
 
- map = new ol.Map({
+      /**
+       * @constructor
+       * @extends {ol.control.Control}
+       * @param {Object=} opt_options Control options.
+       */
+       app.LayerControl = function(opt_options) {
+
+        var options = opt_options || {};
+
+        /* Buttons */
+        var cloudBtn = document.createElement('button');
+        var rainBtn = document.createElement('button');
+
+        cloudBtn.innerHTML = 'C';
+        rainBtn.innerHTML = 'R';
+
+
+        /* Event listeners */
+        var this_ = this;
+        var handleRotateNorth = function() {
+          this_.getMap().getView().setCenter([0,0]);
+        };
+
+        cloudBtn.addEventListener('click', handleRotateNorth, false);
+        cloudBtn.addEventListener('touchstart', handleRotateNorth, false);
+
+        /* Button div */
+        var element = document.createElement('div');
+        element.className = 'map-controls ol-unselectable ol-control';
+        element.appendChild(cloudBtn);
+        element.appendChild(rainBtn);
+
+
+        ol.control.Control.call(this, {
+          element: element,
+          target: options.target
+        });
+
+      };
+      ol.inherits(app.LayerControl, ol.control.Control);
+
+
+      /*--------------------------------*/
+
+      map = new ol.Map({
     target: 'map', //Attach map to 'map' div
     controls: ol.control.defaults({
       attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
         collapsible: false
       })
     }).extend([
-   //   new app.RotateNorthControl()
+      new app.LayerControl()
    ]),
 
     layers: [
     cartoDBLight,
-    currPosVectorLayer
     ],
     view: view
     
   });
 
 
- /* -------------- Gelocation ------------------- */
+      /* -------------- Gelocation ------------------- */
   //create a vector source to add the icon(s) to.
 
   var geolocation = new ol.Geolocation({
