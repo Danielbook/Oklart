@@ -18,10 +18,10 @@ define(['graph'], function (graph) {
       data.addColumn('number', 'Temp');
 
       for(var i = 0 ; i < 30 ; i++){
-        var currHour = smhidata.data[0].timeseries[i].validTime;
+        var currHour = smhidata[0].timeseries[i].validTime;
         currHour = currHour.substring(11,16);
         currHour = currHour.toString();
-        data.addRows([[i, smhidata.data[0].timeseries[i].t]]);
+        data.addRows([[i, smhidata[0].timeseries[i].t]]);
       }
 
       var options = {
