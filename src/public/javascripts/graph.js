@@ -1,16 +1,14 @@
 define(['graph'], function (graph) { 
-  /**
-  * CONSTRUCTOR 
-  */
+  
   var Graph = function() {
     // this._data = data;
     // console.log(this._data);
   };
-
+  
   Graph.prototype.initGraph = function(arg) {
     this._data = google.charts.setOnLoadCallback(this.drawGraph(arg));
   }
-
+  
   Graph.prototype.drawGraph = function(smhidata) {
     var fun = function() {
       var data = new google.visualization.DataTable();
@@ -23,7 +21,7 @@ define(['graph'], function (graph) {
         currHour = currHour.toString();
         data.addRows([[i, smhidata.data[0].timeseries[i].t]]);
       }
-
+      
       var options = {
         hAxis: {
           format:'',
@@ -38,8 +36,7 @@ define(['graph'], function (graph) {
           viewWindowMode: 'maximized'
         },
         legend: { 
-          position: 'top',
-          alignment: 'center'
+          position: 'in',
         },
         colors: ['#a52714', '#097138'],
         curveType: 'none',
@@ -48,7 +45,7 @@ define(['graph'], function (graph) {
           color: '#000',
           trigger: 'hover',
         },
-        height:400
+        chartArea:{width:"80%",height:"80%"}
       };
       var lineChart = new google.visualization.LineChart(document.getElementById('graph_div'));
       lineChart.draw(data, options);
