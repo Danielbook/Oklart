@@ -205,7 +205,8 @@ body{
 .navbar-custom .navbar-toggle,
 .navbar-custom img, 
 .navbar-custom p, 
-.navbar-custom span{
+.navbar-custom span,
+.navbar-custom.small .navbar-form{
   transition: all 1s;
   -moz-transition: all 1s; /* Firefox 4 */
   -webkit-transition: all 1s; /* Safari and Chrome */
@@ -236,6 +237,10 @@ body{
 }
 .navbar-custom.small span{
   height: 1px;
+}
+
+.navbar-custom.small .navbar-form{
+  padding: 0px 0px;
 }
 
 .gutter-20.row {

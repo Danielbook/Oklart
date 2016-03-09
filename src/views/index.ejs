@@ -51,22 +51,6 @@
 		})
 
 	$( document ).ready(function() {
-		// TIME SLIDER
-		$( "#timeSlider" ).slider({
-			min:0,
-			max:10,
-			value:0,
-		});
-
-		$('#playButton').on('click touchstart', function () {
-			console.log( $('#timeSlider').slider("value") );
-		});
-
-		$( "#timeSlider" ).on('slide swipe', function() {
-			$('#time').text( 
-				$('#timeSlider').slider("value")
-			);
-		});
 		if( $( window ).height() < 568){
 			$(".navbar-custom").removeClass("large").addClass("small");
 			$("body").css({"padding-top":"40px"});
@@ -75,7 +59,7 @@
 
 	$(document).on("scroll",function(){
 		if( $( window ).height() >= 568){
-			if($(document).scrollTop()>50){ 
+			if($(document).scrollTop()>30){ 
 				$(".navbar-custom").removeClass("large").addClass("small");
 			}
 			else{
@@ -114,13 +98,6 @@
 			<div class="col-md-6 card">
 				<div class="pageElement">
 					<div id="map" class="map"></div>
-					<div class="sliderAndButton">
-						<button id="playButton" type="button" class="btn btn-info btn-md">
-							<span class="glyphicon glyphicon-play
-							" aria-hidden="true"></span>
-						</button>
-						<div id="timeSlider" class="slider"></div>
-					</div>
 				</div>
 			</div>
 			<div class="col-md-6"> <!-- GRAPH AND TABLE -->
@@ -131,19 +108,9 @@
 					<div id="table_div" class="table pageElement"></div>
 				</div>
 			</div> <!-- GRAPH AND TABLE -->
-		</div>
+		</div>	
 	</div>
-	<script>
-
-
-	// $('#timeSlider').on('slide' , );
-
-	// var updateTime = function (){
-	// 	$('#time').text( 
-	// 		$('#timeSlider').slider("value")
-	// 	);
-	// };
-	</script>
+	</div>
 	</body>
 
 	</html>
