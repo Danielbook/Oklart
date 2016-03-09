@@ -22,7 +22,7 @@ define(['map'], function (map) {
 
       var RainSource = new ol.source.Vector({
         projection: 'EPSG:4326'
-    });
+      });
 
       for(i=0; i<smhidata.data.length; i++){
         var point = new ol.geom.Point(
@@ -45,7 +45,7 @@ define(['map'], function (map) {
         temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
 
         pointFeatureRain.setStyle(new ol.style.Style({
-        text: new ol.style.Text({
+          text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].pit), // .t = temperature
           scale: 1.3,
           fill: new ol.style.Fill({
@@ -55,25 +55,15 @@ define(['map'], function (map) {
         }));
 
         RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
- 
+
       }
-    // Vector layer
-    var temperatureVecLayer = new ol.layer.Vector({
-      source: temperatureSource
-    });
-
-  
-    // Vector layer
-    var RainVecLayer = new ol.layer.Vector({
-      source: RainSource
-    });
 
 
 
-  /* -------- Temperature heatmap -------------- */
+      /* -------- Temperature heatmap -------------- */
   //http://jsfiddle.net/GFarkas/61dafv93/
 
-    HMtempData = new ol.source.Vector();
+  HMtempData = new ol.source.Vector();
     //Max- and min-temp for the heatmap to scale correctly
     var minScale = 0.1;
     var maxScale = 1.0;
@@ -104,15 +94,34 @@ define(['map'], function (map) {
       blur: 80,
       opacity: .8
     });
-  
-/* --------------------------------------------- */
 
-/* Layers */
-var cartoDBLight = new ol.layer.Tile({
-  source: new ol.source.OSM({
+    /* --------------------------------------------- */
+
+    /* Layers */
+
+    //Base map layer
+    var cartoDBLight = new ol.layer.Tile({
+      source: new ol.source.OSM({
       url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
     })
-});
+    });
+
+    var cloudLayer = new ol.layer.Tile({
+      source: new ol.source.OSM({
+      url: 'http://{a-b}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png' //Tile server
+    })
+    });
+
+    // Temperature layer
+    var temperatureVecLayer = new ol.layer.Vector({
+      source: temperatureSource
+    });
+
+
+    // Rain layer
+    var RainVecLayer = new ol.layer.Vector({
+      source: RainSource
+    });
 
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -144,9 +153,14 @@ var cartoDBLight = new ol.layer.Tile({
         /* Buttons */
         var temperatureButton = document.createElement('button');
         var rainBtn = document.createElement('button');
+        var cloudBtn = document.createElement('button');
+        var snowBtn = document.createElement('button');
+
 
         temperatureButton.innerHTML = 'T';
         rainBtn.innerHTML = 'R';
+        cloudBtn.innerHTML = 'C';
+        snowBtn.innerHTML = 'S';
 
 
         /* Event listeners */
@@ -154,13 +168,17 @@ var cartoDBLight = new ol.layer.Tile({
 
         var handleTemperatureButton = function() {
           this_.getMap().addLayer(temperatureVecLayer);
-          this_.getMap().removeLayer(RainVecLayer);
           this_.getMap().addLayer(heatMapLayer);
+          this_.getMap().removeLayer(RainVecLayer);
 
           temperatureButton.disabled = true;
-          rainBtn.disabled = false;
           temperatureButton.style.backgroundColor = 'gray';
+          rainBtn.disabled = false;
           rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          cloudBtn.disabled = false;
+          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          snowBtn.disabled = false;
+          snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
         var handleRainBtn = function() {
@@ -168,16 +186,57 @@ var cartoDBLight = new ol.layer.Tile({
           this_.getMap().removeLayer(temperatureVecLayer);
           this_.getMap().removeLayer(heatMapLayer);
 
-          temperatureButton.disabled = false;
           rainBtn.disabled = true;
           rainBtn.style.backgroundColor = 'gray';
           temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+          temperatureButton.disabled = false;
+          cloudBtn.disabled = false;
+          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          snowBtn.disabled = false;
+          snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        };
+
+        var handleCloudBtn = function() {
+          this_.getMap().removeLayer(temperatureVecLayer);
+          this_.getMap().removeLayer(heatMapLayer);
+          this_.getMap().removeLayer(RainVecLayer);
+
+          cloudBtn.disabled = true;
+          cloudBtn.style.backgroundColor = 'gray';
+          rainBtn.disabled = false;
+          rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          temperatureButton.disabled = false;
+          temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+          snowBtn.disabled = false;
+          snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+
+        };
+
+        var handleSnowBtn = function() {
+          this_.getMap().removeLayer(temperatureVecLayer);
+          this_.getMap().removeLayer(heatMapLayer);
+          this_.getMap().removeLayer(RainVecLayer);
+         
+          snowBtn.disabled = true;
+          snowBtn.style.backgroundColor = 'gray';
+          cloudBtn.disabled = false;
+          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          rainBtn.disabled = false;
+          rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+          temperatureButton.disabled = false;
+          temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+
         };
 
         temperatureButton.addEventListener('click', handleTemperatureButton, false);
         temperatureButton.addEventListener('touchstart', handleTemperatureButton, false);
         rainBtn.addEventListener('click', handleRainBtn, false);
         rainBtn.addEventListener('touchstart', handleRainBtn, false);
+        cloudBtn.addEventListener('click', handleCloudBtn, false);
+        cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
+        snowBtn.addEventListener('click', handleSnowBtn, false);
+        snowBtn.addEventListener('touchstart', handleSnowBtn, false);
+
 
 
         /* Button div */
@@ -185,6 +244,8 @@ var cartoDBLight = new ol.layer.Tile({
         element.className = 'map-controls ol-unselectable ol-control';
         element.appendChild(temperatureButton);
         element.appendChild(rainBtn);
+        element.appendChild(cloudBtn);
+        element.appendChild(snowBtn);
 
 
         ol.control.Control.call(this, {
