@@ -2,79 +2,65 @@ var express = require('express');
 var router = express.Router();
 var http = require('http');
 var request = require('request');
-var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
-
-var localSmhidata = require('../data.json');
-
-
-//clearDB();
-
 var locations = require('../locations.json');
 
-for(var i = 0; i < locations.length; i++){
-	if(i == locations.length - 1)
-		writeDB(locations[i], true);
-	else
-		writeDB(locations[i], false);
+//If data in DB is old, refresh the data
+if(true){
+	refreshDB(locations);
+}else {
+	readDB();
 }
 
 
-function clearDB(){
-var db = MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+
+function refreshDB(locations){
+
+	var db = MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
 		if(err)
-		    throw err;
-		myCollection = db.collection('data');
-		myCollection.remove({});
-	});
+	        throw err;
+	    myCollection = db.collection('data');
+	    myCollection.remove({});
+	    var counter = 0;
+
+		for(var i = 0; i < locations.length; i++){
+
+			console.log("Har skickat förfrågan om data");
+			url = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + locations[i].lat + "/lon/" + locations[i].lon + "/data.json";
+			addDataPoint(url);
+			counter++;
+		}
+	})
 };
-//Get data from api at location l and store in database
-function writeDB(l, isLast){
 
-	//Create url that fetches data for location l
-	url = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + l.lat + "/lon/" + l.lon + "/data.json";
-
+function addDataPoint(url){
 	//Get data from smhi-api
 	http.get(url, function(res){
     var body = '';
 
-    	//Add chunk of data to body
 	    res.on('data', function(chunk){
 	        body += chunk;
 	    });
 
-	    //When data has been read from smhi-api this runs
+	    var counter = 0;
 	    res.on('end', function(){
-	        var smhiResponse = JSON.parse(body);
+	    	var smhiResponse = JSON.parse(body);
 
-			var myCollection;
-			//Connect to db
-			var db = MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
-			    if(err)
-			        throw err;
-			    myCollection = db.collection('data');
+	    	//Add datapoint to db
+		    myCollection.insert(smhiResponse, function(err, result) {
+			    if(err)
+			        throw err;
+			})
 
-			    //Add datapoint to db
-			    myCollection.insert(smhiResponse, function(err, result) {
-				    if(err)
-				        throw err;
+			console.log("Har hämtat data");
 
-				//If this is the last insert we render the page
-				if(isLast)
-					render();
+		    readDB();
+		})
+	})
 
-				});
-			});
-		});
-
-
-	//Handle error if data couldn't be read from smhi-api	
-	}).on('error', function(e){
-	      console.log("Got an error when reading from SMHI ", e);
-	});
 };
 
-function render(){
+function readDB(){
 var db = MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
 		    if(err)
 		        throw err;
