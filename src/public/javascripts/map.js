@@ -31,7 +31,7 @@ define(['map'], function (map) {
         var pointFeatureTemp = new ol.Feature(point);
         var pointFeatureRain = new ol.Feature(point);
 
-        // Style for each point
+        // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
           text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].t), // .t = temperature
@@ -44,6 +44,7 @@ define(['map'], function (map) {
 
         temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
 
+        //Style for each rain point
         pointFeatureRain.setStyle(new ol.style.Style({
           text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].pit), // .t = temperature
@@ -123,6 +124,19 @@ define(['map'], function (map) {
       source: RainSource
     });
 
+  }); 
+ 
+ /* EJ FÅTT DETTA ATT FUNGERA ÄN
+ +var layer_cloud = new ol.layer.Tile({
+ +  source: new ol.source.OSM({
+ +     // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
+ +     url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
+ +    
+ +  })
+  });
+ +*/
+ 
+
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
   view = new ol.View({
@@ -165,6 +179,7 @@ define(['map'], function (map) {
         /* Event listeners */
         var this_ = this;
 
+        //Function to handle temperature button
         var handleTemperatureButton = function() {
           this_.getMap().addLayer(temperatureVecLayer);
           this_.getMap().addLayer(heatMapLayer);
@@ -180,6 +195,7 @@ define(['map'], function (map) {
           snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
+        //Function to handle rain button
         var handleRainBtn = function() {
           this_.getMap().addLayer(RainVecLayer);
           this_.getMap().removeLayer(temperatureVecLayer);
@@ -274,6 +290,7 @@ define(['map'], function (map) {
 
    layers: [
    cartoDBLight,
+   //cloudLayer
    ],
    view: view
 
