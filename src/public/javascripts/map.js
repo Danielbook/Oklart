@@ -274,7 +274,6 @@ define(['map'], function (map) {
 
    layers: [
    cartoDBLight,
-   cloudLayer,
    ],
    view: view
 
