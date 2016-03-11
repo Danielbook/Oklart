@@ -7,14 +7,14 @@ var locations = require('../locations.json');
 var async = require("async");
 
 //If data in DB is old, refresh the data
-if(true){
-	asyncTest(locations);
+if(false){
+	refreshDB(locations);
 }else {
 	readDB();
 }
 
 
-
+//Takes a list of locations and reads from SMHI for each loaction. The data for each point is inserted into mongodb.
 function refreshDB(locations){
 	var urls = [];
 
