@@ -1,54 +1,56 @@
 define(['graph'], function (graph) { 
+
+  var _data, _options;
   
-  var Graph = function() {
-    // this._data = data;
+  var Graph = function(smhidata) {
     // console.log(this._data);
+    _data = smhidata;
+    _options = {
+      hAxis: {
+        minValue: 4,
+        maxValue: 10
+      },
+      animation: {
+        startup: true,
+        duration: 1000,
+        easing: 'out',
+      },
+      vAxis: {
+        viewWindowMode: 'maximized'
+      },
+      legend: { 
+        position: 'in',
+      },
+      colors: ['#a52714'],
+      curveType: 'none',
+      focusTarget: 'category',
+      crosshair: {
+        color: '#000',
+        trigger: 'hover',
+      },
+      chartArea:{width:"80%",height:"80%"}
+    };
   };
   
-  Graph.prototype.initGraph = function(arg) {
-    this._data = google.charts.setOnLoadCallback(this.drawGraph(arg));
+  Graph.prototype.initGraph = function(data) {
+    this._graph = google.charts.setOnLoadCallback(this.drawGraph());
   }
   
-  Graph.prototype.drawGraph = function(smhidata) {
+  Graph.prototype.drawGraph = function() {
     var fun = function() {
       var data = new google.visualization.DataTable();
       data.addColumn('number', 'Time');
       data.addColumn('number', 'Temp');
 
       for(var i = 0 ; i < 30 ; i++){
-        var currHour = smhidata.data[0].timeseries[i].validTime;
+        var currHour = _data.data[0].timeseries[i].validTime;
         currHour = currHour.substring(11,16);
         currHour = currHour.toString();
-        data.addRows([[i, smhidata.data[0].timeseries[i].t]]);
+        data.addRows([[i, _data.data[0].timeseries[i].t]]);
       }
-      
-      var options = {
-        hAxis: {
-          format:'',
-          gridlines: { count: 30} //Draw gridlines for each row in data
-        },
-        animation: {
-          startup: true,
-          duration: 1000,
-          easing: 'out',
-        },
-        vAxis: {
-          viewWindowMode: 'maximized'
-        },
-        legend: { 
-          position: 'in',
-        },
-        colors: ['#a52714', '#097138'],
-        curveType: 'none',
-        focusTarget: 'category',
-        crosshair: {
-          color: '#000',
-          trigger: 'hover',
-        },
-        chartArea:{width:"80%",height:"80%"}
-      };
+
       var lineChart = new google.visualization.LineChart(document.getElementById('graph_div'));
-      lineChart.draw(data, options);
+      lineChart.draw(data, _options);
         // Every time the table fires the "select" event, it should call your
         // selectHandler() function.
         google.visualization.events.addListener(lineChart, 'select', selectHandler);
@@ -78,6 +80,12 @@ define(['graph'], function (graph) {
       };
     return fun; 
     }
+
+  Graph.prototype.updateTime = function(timeIndex) {
+    _options.hAxis.minValue = timeIndex[0];
+    _options.hAxis.maxValue = timeIndex[1];
+    console.log(_options.hAxis.minValue , ", ",_options.hAxis.maxValue );
+  }
 
   return Graph;
 });

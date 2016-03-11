@@ -17,7 +17,7 @@
 
 			//Creates objects for the components
 			var _table = new Table();
-			var _graph = new Graph();
+			var _graph = new Graph(smhidata);
 			var _map = new Map();
 			var slider = new Slider('#bootslide', {});
 
@@ -30,6 +30,14 @@
 			var input = document.getElementById('CitySearch');
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
+
+			slider.on("slide", function(slideEvt) {
+				var sliderValues = slider.getValue();
+
+				_graph.updateTime(sliderValues);
+
+				console.log(sliderValues);
+			});
 
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
@@ -50,6 +58,7 @@
 				}
 			});
 		})
+
 
 	$( document ).ready(function() {
 		if( $( window ).height() < 568){
@@ -101,7 +110,11 @@
 					<div id="map" class="map"></div>
 					 <b>01:00</b> 
 					 <input id="bootslide" type="text" class="span2" value=""
-										 data-slider-min="1" data-slider-max="24" data-slider-step="1" data-slider-value="[4,6]"/> 
+										 data-slider-min="1" 
+										 data-slider-max="24" 
+										 data-slider-step="1"
+										 data-slider-tooltip_split="true" 
+										 data-slider-value="[4,6]"/> 
 					 <b>24:00</b>
 				</div>
 			</div>
