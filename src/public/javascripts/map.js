@@ -31,7 +31,7 @@ define(['map'], function (map) {
         var pointFeatureTemp = new ol.Feature(point);
         var pointFeatureRain = new ol.Feature(point);
 
-        // Style for each point
+        // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
           text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].t), // .t = temperature
@@ -44,6 +44,7 @@ define(['map'], function (map) {
 
         temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
 
+        //Style for each rain point
         pointFeatureRain.setStyle(new ol.style.Style({
         text: new ol.style.Text({
           text: String(smhidata.data[i].timeseries[0].pit), // .t = temperature
@@ -57,13 +58,13 @@ define(['map'], function (map) {
         RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
  
       }
-    // Vector layer
+    // Vector layer for temperature
     var temperatureVecLayer = new ol.layer.Vector({
       source: temperatureSource
     });
 
   
-    // Vector layer
+    // Vector layer for rain
     var RainVecLayer = new ol.layer.Vector({
       source: RainSource
     });
@@ -112,7 +113,18 @@ var cartoDBLight = new ol.layer.Tile({
   source: new ol.source.OSM({
       url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
     })
+}); 
+
+/* EJ FÅTT DETTA ATT FUNGERA ÄN
+var layer_cloud = new ol.layer.Tile({
+  source: new ol.source.OSM({
+     // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
+     url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
+    
+  })
 });
+*/
+
 
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -152,6 +164,7 @@ var cartoDBLight = new ol.layer.Tile({
         /* Event listeners */
         var this_ = this;
 
+        /* Event listener for temperature-button */
         var handleTemperatureButton = function() {
           this_.getMap().addLayer(temperatureVecLayer);
           this_.getMap().removeLayer(RainVecLayer);
@@ -163,6 +176,7 @@ var cartoDBLight = new ol.layer.Tile({
           rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
+        /* Event listener for rain-button */
         var handleRainBtn = function() {
           this_.getMap().addLayer(RainVecLayer);
           this_.getMap().removeLayer(temperatureVecLayer);
@@ -198,7 +212,7 @@ var cartoDBLight = new ol.layer.Tile({
       /*--------------------------------*/
 
 
-      map = new ol.Map({
+    map = new ol.Map({
     target: 'map', //Attach map to 'map' div
     controls: ol.control.defaults({
      attributionOptions: /** @type {olx.control.AttributionOptions} */  ({
@@ -210,6 +224,7 @@ var cartoDBLight = new ol.layer.Tile({
 
    layers: [
    cartoDBLight,
+  // layer_cloud,
    ],
    view: view
 
