@@ -124,7 +124,6 @@ define(['map'], function (map) {
       source: RainSource
     });
 
-  }); 
  
  /* EJ FÅTT DETTA ATT FUNGERA ÄN
  +var layer_cloud = new ol.layer.Tile({
