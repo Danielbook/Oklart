@@ -20,14 +20,48 @@ body{
   height: 0px;
 }
 
+.map-buttonDiv{
+  height:100%;
+  position: absolute;
+  width:10%;
+  top: 0em;
+  right: 0em;
+  background-color: rgba(0, 0, 0, .7);;
+
+}
+
 .map-controls {
-  top: .5em;
-  right: .5em;
+    width: 2.0em;
+    margin: auto; 
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    padding: 2px;
+
+}
+
+.map-controls button{
+    display: block;
+    margin: 1px;
+    padding: 0;
+    color: #fff;
+    font-size: 1.14em;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
+    width: 1.375em;
+    line-height: .4em;
+    background-color: rgba(0,60,136,.5);
+    border: none;
+    border-radius: 2px;
 }
 
 .ol-touch .map-controls {
-  top: .5em;
-  right: .5em;
+    width: 50%;
+    margin: auto; 
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    padding: 2px;
 }
 
 .pageBody{

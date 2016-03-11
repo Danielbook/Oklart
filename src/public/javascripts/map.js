@@ -156,7 +156,6 @@ define(['map'], function (map) {
         var cloudBtn = document.createElement('button');
         var snowBtn = document.createElement('button');
 
-
         temperatureButton.innerHTML = 'T';
         rainBtn.innerHTML = 'R';
         cloudBtn.innerHTML = 'C';
@@ -240,16 +239,20 @@ define(['map'], function (map) {
 
 
         /* Button div */
-        var element = document.createElement('div');
-        element.className = 'map-controls ol-unselectable ol-control';
-        element.appendChild(temperatureButton);
-        element.appendChild(rainBtn);
-        element.appendChild(cloudBtn);
-        element.appendChild(snowBtn);
+        var buttonDiv = document.createElement('div'); //Background div
+        buttonDiv.className = 'map-buttonDiv';
+
+        var buttonContainer = document.createElement('div'); //div containing buttons
+        buttonDiv.appendChild(buttonContainer);
+        buttonContainer.className = 'map-controls';
+        buttonContainer.appendChild(temperatureButton);
+        buttonContainer.appendChild(rainBtn);
+        buttonContainer.appendChild(cloudBtn);
+        buttonContainer.appendChild(snowBtn);
 
 
         ol.control.Control.call(this, {
-          element: element,
+          element: buttonDiv,
           target: options.target
         });
 
@@ -271,6 +274,7 @@ define(['map'], function (map) {
 
    layers: [
    cartoDBLight,
+   cloudLayer,
    ],
    view: view
 
