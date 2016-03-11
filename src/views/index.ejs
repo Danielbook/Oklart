@@ -24,11 +24,7 @@
 			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
 			_map.initMap(smhidata);
-
-			//This code implements livesearch for the Stad textfield
-			var input = document.getElementById('CitySearch');
-			var options = {};
-			new google.maps.places.Autocomplete(input, options);
+			
 
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
@@ -120,6 +116,10 @@
   		$('#timeSlider').slider().data('slider').setValue(0);
   	});
 
+		//This code implements livesearch for the Stad textfield
+			var input = document.getElementById('CitySearch');
+			var options = {};
+			new google.maps.places.Autocomplete(input, options);
 	</script>
 
 </body>

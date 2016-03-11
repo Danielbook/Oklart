@@ -1,51 +1,85 @@
 var express = require('express');
 var router = express.Router();
+var http = require('http');
 var request = require('request');
-var async = require('async');
+var MongoClient = require('mongodb').MongoClient;
+var locations = require('../locations.json');
+var async = require("async");
 
-var localSmhidata = require('../data.json');
-var urls = getUrls();
-//console.log(urls);
-//var apiSmhidata = getSmhiData(urls);
-//console.log(apiSmhidata);
+//If data in DB is old, refresh the data
+if(true){
+	asyncTest(locations);
+}else {
+	readDB();
+}
 
-router.get('/', function(req, res, next) {
-  res.render('index',{location: "Norrköping",time:"28/2 - 2016",dataobject:localSmhidata});
-});
 
-function getUrls(){
-	var ALATS=54, ALATN=70.75, ALONW=2.25, ALONE=27.00;
-	var sampleLenght = 4.0;
-	var urls = {};
-	var index = 0;
-	for(var lon = ALONW; lon < ALONE; lon = lon + sampleLenght){
-		for(var lat = ALATS; lat < ALATN; lat = lat + sampleLenght){
-			urls[index] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
-			index++;
-		}
+
+function refreshDB(locations){
+	var urls = [];
+
+	for(var i = 0; i < locations.length; i++){
+		urls[i] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + locations[i].lat + "/lon/" + locations[i].lon + "/data.json";
 	}
-	return urls;
-};
 
-function getSmhiData(urls){
-	var dataArray = { data: [] };
-	var index = 0; 
-	async.forEachSeries(urls, function(url, callback) {
-	  request(url, function (error, response, body) {
+	var db = MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+		if(err)
+	        throw err;
+	    myCollection = db.collection('data');
+	    myCollection.remove({});
 
-	    async.forEachSeries(body.docs, function(doc, callback) {
-	      console.log(doc);
-	      index++;
-	      callback();
-	    }, function(err) {
-	      console.log("ERROR 100");
+		// 1st para in async.each() is the array of urls
+		async.each(urls,
+	  	  // 2nd param is the function that each item is passed to
+		  function(url, callback){
+	      // Call the http get async function and call callback when one datapoint has been inserted in db
+		    http.get(url, function(res){
+		    var body = '';
 
-	      callback();
-	    });
-	  })
-	}, function(err) {
-	  console.log("ERROR 200");
-	});
+			    res.on('data', function(chunk){
+			        body += chunk;
+			    });
+
+			    res.on('end', function(){
+			    	var smhiResponse = JSON.parse(body);
+			    	//Add datapoint to db
+				    myCollection.insert(smhiResponse, function(err, result) {
+					    if(err)
+					        throw err;
+
+						callback();
+					})
+				})
+			})
+		  },
+		  // 3rd param is the function to call when everything's done
+		  function(err){
+		  	console.log("All data har hämtats");
+		    readDB();
+		  }
+		);
+	})
+}
+
+//Read DB and render index.ejs with data from collection data
+function readDB(){
+var db = MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+		    if(err)
+		        throw err;
+		    myCollection = db.collection('data');
+
+		    //Read collection to array result
+		    myCollection.find().toArray(function(err, result) {
+			    if (err) {
+			      throw err;
+			    }
+
+			    //Render index.ejs and send data from database as variable
+			    router.get('/', function(req, res, next) {
+				  res.render('index',{location: "Norrköping",time:"28/2 - 2016",dataobject:result});
+				});
+			});
+		});
 };
 
 module.exports = router;
