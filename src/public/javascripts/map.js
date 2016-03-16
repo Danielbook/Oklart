@@ -169,11 +169,13 @@ define(['map'], function (map) {
         var cloudBtn = document.createElement('button');
         var snowBtn = document.createElement('button');
 
-        temperatureButton.innerHTML = 'T';
-        rainBtn.innerHTML = 'R';
-        cloudBtn.innerHTML = 'C';
-        snowBtn.innerHTML = 'S';
+        temperatureButton.className = 'btn btn-info glyphicon glyphicon-temperature';
 
+
+        // temperatureButton.innerHTML = 'T';
+        // rainBtn.innerHTML = 'R';
+        // cloudBtn.innerHTML = 'C';
+        // snowBtn.innerHTML = 'S';
 
         /* Event listeners */
         var this_ = this;
