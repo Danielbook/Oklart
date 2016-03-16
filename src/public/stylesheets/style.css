@@ -23,10 +23,9 @@ body{
 .map-buttonDiv{
   height:97.4%;
   position: absolute;
-  width:10%;
   top: 0em;
   right: 0em;
-  background-color: rgba(0, 0, 0, .7);;
+  background-color: rgba(0, 0, 0, .5);;
 
 }
 

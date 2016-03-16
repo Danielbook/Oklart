@@ -286,8 +286,9 @@ define(['map'], function (map) {
 
       map = new ol.Map({
     target: 'map', //Attach map to 'map' div
-    controls: ol.control.defaults({
-     attributionOptions: /** @type {olx.control.AttributionOptions} */  ({
+    controls: 
+    ol.control.defaults({
+     attributionOptions:({
        collapsible: false
      })
    }).extend([
