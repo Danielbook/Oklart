@@ -169,10 +169,11 @@ define(['map'], function (map) {
         var cloudBtn = document.createElement('button');
         var snowBtn = document.createElement('button');
 
-        temperatureButton.className = 'btn btn-info glyphicon glyphicon-glass';
-        rainBtn.className = 'btn btn-info glyphicon glyphicon-tint';
-        cloudBtn.className = 'btn btn-info glyphicon glyphicon-glass';
-        snowBtn.className = 'btn btn-info glyphicon glyphicon-glass';
+        // http://ionicons.com/
+        temperatureButton.className = 'icon ion-thermometer';
+        rainBtn.className = 'icon ion-umbrella';
+        cloudBtn.className = 'icon ion-cloud';
+        snowBtn.className = 'icon ion-ios-snowy';
 
 
 

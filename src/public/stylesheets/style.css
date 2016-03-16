@@ -21,7 +21,7 @@ body{
 }
 
 .map-buttonDiv{
-  height:100%;
+  height:97.4%;
   position: absolute;
   width:10%;
   top: 0em;
@@ -31,8 +31,7 @@ body{
 }
 
 .map-controls {
-    width: 2.0em;
-    margin: auto; 
+    margin-top: 3.5em;
     background-color: rgba(255,255,255,.4);
     border-radius: 4px;
     padding: 2px;
@@ -41,10 +40,11 @@ body{
 
 .map-controls button{
     display: block;
-    margin: 1px;
+    margin: 5px;
+    margin-left: .1em;
     padding: 0;
     color: #fff;
-    font-size: 1.14em;
+    font-size: 2.5em;
     font-weight: 700;
     text-decoration: none;
     text-align: center;
