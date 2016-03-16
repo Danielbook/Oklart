@@ -28,7 +28,6 @@ function refreshDB(locations){
 	    myCollection = db.collection('data');
 	    myCollection.remove({});
 
-	    var idx = 0; 
 		// 1st para in async.each() is the array of urls
 		async.each(urls,
 	  	  // 2nd param is the function that each item is passed to
@@ -36,8 +35,7 @@ function refreshDB(locations){
 	      // Call the http get async function and call callback when one datapoint has been inserted in db
 		    http.get(url, function(res){
 		    var body = '';
-		    var location = locations[idx].name;
-		    idx++;
+		    var location = locations[urls.indexOf(url)].name;
 
 			    res.on('data', function(chunk){
 			        body += chunk;
