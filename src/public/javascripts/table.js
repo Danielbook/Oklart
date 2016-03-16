@@ -3,7 +3,7 @@ define(['table'], function (table) {
   /**
   * CONSTRUCTOR 
   */
-  var Table = function() {
+  var Table = function(smhidata) {
     // this._data = data;
     // console.log(this._data);
   };

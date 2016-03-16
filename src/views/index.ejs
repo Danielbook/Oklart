@@ -2,7 +2,7 @@
 <html>
 <% include templates/header.ejs %>
 <body>
-	<script> 
+	<script>
 		//Load the google charts packages that is used
 		//google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
 		google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
@@ -12,26 +12,41 @@
 
 		//In this function our javascripts are accesable and instanses of the included objects can be created
 		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
-			//Stores data sent from Node.js into smhidata 
+			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
 			//Creates objects for the components
 			var _table = new Table();
-			var _graph = new Graph();
+			var _graph = new Graph(smhidata);
 			var _map = new Map();
+			var slider = new Slider('#bootslide', {});
 
 			//Inits the objects to create the components
 			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
+			_graph.drawGraph();
 			_map.initMap(smhidata);
 			
+
+			//This code implements livesearch for the Stad textfield
+			var input = document.getElementById('CitySearch');
+			var options = {};
+			new google.maps.places.Autocomplete(input, options);
+
+			slider.on("slideStop", function(slideEvt) {
+				var sliderValues = slider.getValue();
+
+				_graph.updateTime(sliderValues);
+
+				console.log(sliderValues);
+			});
 
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
-  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-  					_map.updateMap(data);
-  				})
+				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+					_map.updateMap(data);
+				})
 			};
 
 			//This function runs when the Stad textfield is highlighted and a key is pressed
@@ -39,89 +54,75 @@
 				//If the pressed button is enter
 				if(e.which == 13){
 					var AdresFalt = $("#CitySearch") ;
-	  				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-	  					_map.updateMap(data);
+					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
+						_map.updateMap(data);
 					})
-  				}
+				}
 			});
 		})
 
+        $( document ).ready(function() {
+            /**
+             * For toggling the sidebar
+             */
+            $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+        });
 
 	</script>
-
-	<nav class="navbar navbar-default navbar-fixed-top">
-	  <div class="container-fluid">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	      <a class="navbar-brand"><img src="images/logoWhite.png" class="brand-img" alt="Brand"></a>
-	     	<p class="navbar-text"><%=location%> | <%=time%></p>
-	    </div>
-
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> 
-	        <div class="form-group navbar-form navbar-right">
-	          <input type="text" class="form-control" placeholder="Stad" id="CitySearch" >
-	          <button type="button" class="btn btn-default" id ="SearchBtn">Sök</button>
-	        </div>
-	    </div>
-	  </div>
-	</nav>
-	
-	<div class="container-fluid pageBody">
-		<div class="row gutter-20"> <!-- OUTER DIVS -->
-			<div class="col-md-6">
-				<div class="pageElement">
-					<div id="map" class="map"></div>
-					<div class="sliderAndButton">
-						<button id="playButton" type="button" class="btn btn-info"><span class="glyphicon glyphicon-play
-" aria-hidden="true"></span></button>
-						<div id="timeSlider" class="slider slider-horizontal"></div>
-					</div>
-				</div>
-			</div>
-	    	<div class="col-md-6"> <!-- GRAPH AND TABLE -->
-	    		<div class ="row"> <!-- GRAPH -->
-	    			<div id="graph_div" class="graph pageElement"></div>
-	    		</div>
-	    		<div class ="row"> <!-- TABLE -->
-	    			<div id="table_div" class="table pageElement"></div>
-	    		</div>
-	    	</div> <!-- GRAPH AND TABLE -->
-	  	</div>
-	</div>
-
-	<!-- Init slider -->
-	<script>
-		var options = {
-			min: 0,
-			max: 30,
-			tooltip: "show",
-			value: 0
-		}
-
-		$('#timeSlider').slider(options);
-
-		$('#timeSlider').slider().on('slide', function(ev){ 
-			var currentTime = $('#timeSlider').slider().on('slide').data('slider').getValue();
-    	console.log( currentTime );
-  	});
-
-  	$('#playButton').click(function(){
-  		$('#timeSlider').slider().data('slider').setValue(0);
-  	});
-
-		//This code implements livesearch for the Stad textfield
-			var input = document.getElementById('CitySearch');
-			var options = {};
-			new google.maps.places.Autocomplete(input, options);
-	</script>
-
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <h3><%= location %> | <%= time %></h3>
+                </li>
+                <li>
+                    <form class="navbar-form" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Stad" id="CitySearch">
+                        <button id="SearchBtn" type="button" class="btn btn-success">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid pageBody">
+                <button type="button" class="btn btn-primary" href="#menu-toggle" id="menu-toggle">
+                    <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+                </button>
+                <!-- /#sidebar-wrapper -->
+                <div class="row"> <!-- OUTER DIVS -->
+                    <div class="col-md-6">
+                        <div class="pageElement">
+                            <div id="map" class="map"></div>
+                             <b>1</b>
+                             <input id="bootslide" type="text" class="span2" value=""
+                                                 data-slider-min="1"
+                                                 data-slider-max="29"
+                                                 data-slider-step="1"
+                                                 data-slider-tooltip_split="true"
+                                                 data-slider-value="[0,29]"/>
+                             <b>30</b>
+                        </div>
+                    </div>
+                    <div class="col-md-6"> <!-- GRAPH AND TABLE -->
+                        <div class ="row"> <!-- GRAPH -->
+                            <div id="graph_div" class="graph pageElement"></div>
+                        </div>
+                        <div class ="row"> <!-- TABLE -->
+                            <div id="table_div" class="table pageElement"></div>
+                        </div>
+                    </div> <!-- GRAPH AND TABLE -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#wrapper -->
 </body>
-
 </html>
