@@ -7,7 +7,7 @@ var locations = require('../locations.json');
 var async = require("async");
 
 //If data in DB is old, refresh the data
-if(false){
+if(true){
 	refreshDB(locations);
 }else {
 	readDB();
