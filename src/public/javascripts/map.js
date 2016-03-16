@@ -31,10 +31,11 @@ define(['map'], function (map) {
         var pointFeatureTemp = new ol.Feature(point);
         var pointFeatureRain = new ol.Feature(point);
 
-        // Style for each point
+        // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
           text: new ol.style.Text({
-          text: String(smhidata[i].name), // .t = temperature
+          text: String(smhidata[i].timeseries[0].t), // .t = temperature
+
           scale: 1.3,
           fill: new ol.style.Fill({
             color: '#000'
@@ -44,6 +45,7 @@ define(['map'], function (map) {
 
         temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
 
+        //Style for each rain point
         pointFeatureRain.setStyle(new ol.style.Style({
           text: new ol.style.Text({
           text: String(smhidata[i].timeseries[0].pit), // .t = temperature
@@ -123,6 +125,18 @@ define(['map'], function (map) {
       source: RainSource
     });
 
+
+    /* EJ FÅTT DETTA ATT FUNGERA ÄN
+    var layer_cloud = new ol.layer.Tile({
+      source: new ol.source.OSM({
+         // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
+         url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
+        
+      })
+    });
+    +*/
+
+
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
   view = new ol.View({
@@ -156,16 +170,23 @@ define(['map'], function (map) {
         var cloudBtn = document.createElement('button');
         var snowBtn = document.createElement('button');
 
+        // http://ionicons.com/
+        temperatureButton.className = 'icon ion-thermometer';
+        rainBtn.className = 'icon ion-umbrella';
+        cloudBtn.className = 'icon ion-cloud';
+        snowBtn.className = 'icon ion-ios-snowy';
 
-        temperatureButton.innerHTML = 'T';
-        rainBtn.innerHTML = 'R';
-        cloudBtn.innerHTML = 'C';
-        snowBtn.innerHTML = 'S';
 
+
+        // temperatureButton.innerHTML = 'T';
+        // rainBtn.innerHTML = 'R';
+        // cloudBtn.innerHTML = 'C';
+        // snowBtn.innerHTML = 'S';
 
         /* Event listeners */
         var this_ = this;
 
+        //Function to handle temperature button
         var handleTemperatureButton = function() {
           this_.getMap().addLayer(temperatureVecLayer);
           this_.getMap().addLayer(heatMapLayer);
@@ -181,6 +202,7 @@ define(['map'], function (map) {
           snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         };
 
+        //Function to handle rain button
         var handleRainBtn = function() {
           this_.getMap().addLayer(RainVecLayer);
           this_.getMap().removeLayer(temperatureVecLayer);
@@ -216,7 +238,7 @@ define(['map'], function (map) {
           this_.getMap().removeLayer(temperatureVecLayer);
           this_.getMap().removeLayer(heatMapLayer);
           this_.getMap().removeLayer(RainVecLayer);
-         
+
           snowBtn.disabled = true;
           snowBtn.style.backgroundColor = 'gray';
           cloudBtn.disabled = false;
@@ -240,16 +262,20 @@ define(['map'], function (map) {
 
 
         /* Button div */
-        var element = document.createElement('div');
-        element.className = 'map-controls ol-unselectable ol-control';
-        element.appendChild(temperatureButton);
-        element.appendChild(rainBtn);
-        element.appendChild(cloudBtn);
-        element.appendChild(snowBtn);
+        var buttonDiv = document.createElement('div'); //Background div
+        buttonDiv.className = 'map-buttonDiv';
+
+        var buttonContainer = document.createElement('div'); //div containing buttons
+        buttonDiv.appendChild(buttonContainer);
+        buttonContainer.className = 'map-controls';
+        buttonContainer.appendChild(temperatureButton);
+        buttonContainer.appendChild(rainBtn);
+        buttonContainer.appendChild(cloudBtn);
+        buttonContainer.appendChild(snowBtn);
 
 
         ol.control.Control.call(this, {
-          element: element,
+          element: buttonDiv,
           target: options.target
         });
 
@@ -261,8 +287,9 @@ define(['map'], function (map) {
 
       map = new ol.Map({
     target: 'map', //Attach map to 'map' div
-    controls: ol.control.defaults({
-     attributionOptions: /** @type {olx.control.AttributionOptions} */  ({
+    controls: 
+    ol.control.defaults({
+     attributionOptions:({
        collapsible: false
      })
    }).extend([
@@ -271,6 +298,7 @@ define(['map'], function (map) {
 
    layers: [
    cartoDBLight,
+   //cloudLayer
    ],
    view: view
 

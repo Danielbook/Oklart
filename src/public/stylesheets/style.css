@@ -1,6 +1,5 @@
 body{
-  position: relative;
-  padding-top: 60px;
+  padding-top:50px;
   background-color: #F5F5F5;
 }
 
@@ -20,66 +19,94 @@ body{
   height: 0px;
 }
 
+.map-buttonDiv{
+  height:97.4%;
+  position: absolute;
+  top: 0em;
+  right: 0em;
+  background-color: rgba(0, 0, 0, .5);;
+
+}
+
 .map-controls {
-  top: .5em;
-  right: .5em;
+    margin-top: 3.5em;
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    padding: 2px;
+
+}
+
+.card{
+  padding:0;
+}
+
+
+#playButton{
+  margin-bottom:-20px;
+}
+
+.map-controls button{
+    display: block;
+    margin: 5px;
+    margin-left: .1em;
+    padding: 0;
+    color: #fff;
+    font-size: 2.5em;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
+    width: 1.375em;
+    line-height: .4em;
+    background-color: rgba(0,60,136,.5);
+    border: none;
+    border-radius: 2px;
 }
 
 .ol-touch .map-controls {
-  top: .5em;
-  right: .5em;
-}
-
-.pageBody{
-  margin: 20px;
+    width: 50%;
+    margin: auto; 
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    padding: 2px;
 }
 
 .pageElement{
   width:100%;
-  padding:20px;
-  margin:; auto;
+  padding:2%;
+  margin:auto;
   background-color: #FFF;
-  border-width: 1px;
-  border-color: #DFDFDF;
+  border-width: 5px;
+  border-color: #F5f5f5;
   border-style: solid;
 }
 
-.brand-img{
-  height:30px;
-  opacity:0.6;
-  -webkit-transition: opacity ease 0.25s;
-  -moz-transition: opacity ease 0.25s;
-  -o-transition: opacity ease 0.25s;
-  transition: opacity ease 0.25s;
-}
 
-.brand-img:hover {
-  opacity:1;
-}
 .map {
   height:80vh;
-  width: 100%;
+  margin-bottom:2vh; 
+  width:100%;
 }
 
 .table {
-  width: 100%;
-  height: 44vh;
-  margin: auto;
+  width:100%;
+  height:45vh;
+  margin:auto;
 }
 
 .graph{
-  margin: auto; 
-  height: 44vh;
+  width:100%;
+  margin:auto; 
+  height:45vh;
 }
 
 .slider{
-  width: 500px;
+  width:40vw;
+  margin:auto;
 }
 
 .sliderAndButton{
-  padding-top:20px;
   margin:auto;
-  height: 5vh;
 }
 
 #playButton{
@@ -87,86 +114,110 @@ body{
 }
 
 /* navbar */
-.navbar-default {
-  height:60px;
-  background-color: #537FA3;
-  border-color: #888888;
-  border-bottom-width: 2px;
-  padding-left: 40px;
-  padding-right: 40px;
+.navbar-custom {
+  background-color: rgba(83,127,163,1);
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.navbar-brand{
-  padding: 15px 15px;
+.navbar-toggle {
+  position: relative;
+  float: right;
+  padding: 9px 10px;
+  margin-top: 15px;
+  margin-right: 15px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
+
+
 /* title */
-.navbar-default .navbar-brand {
+.navbar-custom .navbar-brand {
   color: #ffffff;
 }
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-  color: #5E5E5E;
+
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-brand:focus {
+  opacity:0.5;
 }
 /* link */
-.navbar-default .navbar-nav > li > a {
+.navbar-custom .navbar-nav > li > a {
   color: #777;
 }
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
+.navbar-custom .navbar-nav > li > a:hover,
+.navbar-custom .navbar-nav > li > a:focus {
   color: #333;
 }
-.navbar-default .navbar-nav > .active > a, 
-.navbar-default .navbar-nav > .active > a:hover, 
-.navbar-default .navbar-nav > .active > a:focus {
+.navbar-custom .navbar-nav > .active > a,
+.navbar-custom .navbar-nav > .active > a:hover,
+.navbar-custom .navbar-nav > .active > a:focus {
   color: #555;
   background-color: #E7E7E7;
 }
-.navbar-default .navbar-nav > .open > a, 
-.navbar-default .navbar-nav > .open > a:hover, 
-.navbar-default .navbar-nav > .open > a:focus {
+.navbar-custom .navbar-nav > .open > a,
+.navbar-custom .navbar-nav > .open > a:hover,
+.navbar-custom .navbar-nav > .open > a:focus {
   color: #555;
   background-color: #D5D5D5;
 }
 /* caret */
-.navbar-default .navbar-nav > .dropdown > a .caret {
+.navbar-custom .navbar-nav > .dropdown > a .caret {
   border-top-color: #777;
   border-bottom-color: #777;
 }
-.navbar-default .navbar-nav > .dropdown > a:hover .caret,
-.navbar-default .navbar-nav > .dropdown > a:focus .caret {
+.navbar-custom .navbar-nav > .dropdown > a:hover .caret,
+.navbar-custom .navbar-nav > .dropdown > a:focus .caret {
   border-top-color: #333;
   border-bottom-color: #333;
 }
-.navbar-default .navbar-nav > .open > a .caret, 
-.navbar-default .navbar-nav > .open > a:hover .caret, 
-.navbar-default .navbar-nav > .open > a:focus .caret {
+.navbar-custom .navbar-nav > .open > a .caret,
+.navbar-custom .navbar-nav > .open > a:hover .caret,
+.navbar-custom .navbar-nav > .open > a:focus .caret {
   border-top-color: #555;
   border-bottom-color: #555;
 }
 /* mobile version */
-.navbar-default .navbar-toggle {
+.navbar-custom .navbar-toggle {
   border-color: #DDD;
 }
-.navbar-default .navbar-text {
+.navbar-custom .navbar-text {
   color: #f5f5f5;
-  font-size: 18pt;
+  font-size: 14pt;
   font-family: 'Dosis', sans-serif;
 }
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
+.navbar-custom .navbar-toggle:hover,
+.navbar-custom .navbar-toggle:focus {
   background-color: #DDD;
 }
-.navbar-default .navbar-toggle .icon-bar {
+.navbar-custom .navbar-toggle .icon-bar {
   background-color: #ffffff;
 }
 @media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
     color: #777;
   }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
     color: #333;
   }
+}
+
+.navbar-form {
+  padding: 0px;
+}
+
+.navbar-custom .navbar-brand{
+  -webkit-transition: opacity 250ms;
+  -moz-transition: opacity 250ms;
+  -ms-transition: opacity 250ms;
+  -o-transition: opacity 250ms;
+  transition: opacity 250ms;
+}
+/* Sizes for the bigger menu */
+.navbar-custom{
+  height: 50px;
 }
 
 .gutter-20.row {
