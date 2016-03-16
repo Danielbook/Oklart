@@ -2,6 +2,11 @@ define(['graph'], function (graph) {
 
   var _data, _options, _lineChart, _tableData;
   
+  /**
+   *
+   * @param smhidata  data from SMHI
+   * @constructor
+   */
   var Graph = function(smhidata) {
     // console.log(this._data);
     _data = smhidata;
@@ -32,7 +37,10 @@ define(['graph'], function (graph) {
       chartArea:{width:"80%",height:"80%"}
     };
   };
-  
+
+  /**
+   * Initialize a graph and create the DataTable
+   */
   Graph.prototype.initGraph = function() {
     google.charts.setOnLoadCallback( function(){
       _tableData = new google.visualization.DataTable();
@@ -50,13 +58,19 @@ define(['graph'], function (graph) {
     });
   };
 
+  /**
+   * Draws graph
+   */
   Graph.prototype.drawGraph = function() {
     google.charts.setOnLoadCallback( function() {
       _lineChart.draw(_tableData, _options);
     });
   };
 
-
+  /**
+   * Updates the hAxis in graph
+   * @param timeIndex - Time from slider
+   */
   Graph.prototype.updateTime = function(timeIndex) {
     _options.hAxis.viewWindow.min = timeIndex[0];
     _options.hAxis.viewWindow.max = timeIndex[1];
