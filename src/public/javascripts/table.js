@@ -13,7 +13,6 @@ define(['table'], function (table) {
   }
 
   Table.prototype.drawTable = function(smhidata) {
-    console.log(smhidata);
     var fun = function(){
       var data = new google.visualization.DataTable();
 
