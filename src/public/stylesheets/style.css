@@ -19,27 +19,64 @@ body{
   height: 0px;
 }
 
-.rotate-north {
-  top: 10%;
-  left: 10%;
-  width: 10%;
+.map-buttonDiv{
+  height:97.4%;
+  position: absolute;
+  top: 0em;
+  right: 0em;
+  background-color: rgba(0, 0, 0, .5);;
+
+}
+
+.map-controls {
+    margin-top: 3.5em;
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    padding: 2px;
+
 }
 
 .card{
   padding:0;
 }
 
-#map-icon{
-  max-width: 10%;
-  max-height: 10%
-}
 
 #playButton{
   margin-bottom:-20px;
 }
 
-.ol-touch .rotate-north {
-  top: 80px;
+.map-controls button{
+    display: block;
+    margin: 5px;
+    margin-left: .1em;
+    padding: 0;
+    color: #fff;
+    font-size: 2.5em;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    height: 1.375em;
+    width: 1.375em;
+    line-height: .4em;
+    background-color: rgba(0,60,136,.5);
+    border: none;
+    border-radius: 2px;
+}
+
+.ol-touch .map-controls {
+    width: 50%;
+    margin: auto; 
+    background-color: rgba(255,255,255,.4);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+
+.pageBody{
+  background-color: #FFFFFF;
+  margin: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .pageElement{
