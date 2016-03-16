@@ -22,7 +22,7 @@ define(['table'], function (table) {
       data.addColumn('number', 'Gust');
 
       for(var i = 0; i < 30; i++){
-        data.addRows([ [smhidata.data[0].timeseries[i].validTime,  {v: smhidata.data[0].timeseries[i].t, f: smhidata.data[0].timeseries[i].t.toString()}, {v: smhidata.data[0].timeseries[i].gust, f: smhidata.data[0].timeseries[i].gust.toString()}] ]);
+        data.addRows([ [smhidata[0].timeseries[i].validTime,  {v: smhidata[0].timeseries[i].t, f: smhidata[0].timeseries[i].t.toString()}, {v: smhidata[0].timeseries[i].gust, f: smhidata[0].timeseries[i].gust.toString()}] ]);
       }
       
       var table = new google.visualization.Table(document.getElementById('table_div'));
