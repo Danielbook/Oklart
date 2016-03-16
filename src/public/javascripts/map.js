@@ -169,7 +169,11 @@ define(['map'], function (map) {
         var cloudBtn = document.createElement('button');
         var snowBtn = document.createElement('button');
 
-        temperatureButton.className = 'btn btn-info glyphicon glyphicon-temperature';
+        temperatureButton.className = 'btn btn-info glyphicon glyphicon-glass';
+        rainBtn.className = 'btn btn-info glyphicon glyphicon-glass';
+        cloudBtn.className = 'btn btn-info glyphicon glyphicon-glass';
+        snowBtn.className = 'btn btn-info glyphicon glyphicon-glass';
+
 
 
         // temperatureButton.innerHTML = 'T';
