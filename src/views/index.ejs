@@ -24,6 +24,7 @@
 			//Inits the objects to create the components
 			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
+			_graph.drawGraph();
 			_map.initMap(smhidata);
 
 			//This code implements livesearch for the Stad textfield
@@ -31,7 +32,7 @@
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
 
-			slider.on("slide", function(slideEvt) {
+			slider.on("slideStop", function(slideEvt) {
 				var sliderValues = slider.getValue();
 
 				_graph.updateTime(sliderValues);
@@ -108,14 +109,14 @@
 			<div class="col-md-6">
 				<div class="pageElement">
 					<div id="map" class="map"></div>
-					 <b>01:00</b> 
+					 <b>1</b>
 					 <input id="bootslide" type="text" class="span2" value=""
-										 data-slider-min="1" 
-										 data-slider-max="24" 
+										 data-slider-min="1"
+										 data-slider-max="29"
 										 data-slider-step="1"
 										 data-slider-tooltip_split="true" 
-										 data-slider-value="[4,6]"/> 
-					 <b>24:00</b>
+										 data-slider-value="[0,29]"/>
+					 <b>30</b>
 				</div>
 			</div>
 			<div class="col-md-6"> <!-- GRAPH AND TABLE -->
