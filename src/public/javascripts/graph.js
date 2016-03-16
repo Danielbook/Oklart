@@ -48,10 +48,10 @@ define(['graph'], function (graph) {
       _tableData.addColumn('number', 'Temp');
 
       for(var i = 0 ; i < 30 ; i++){
-        var currHour = _data.data[0].timeseries[i].validTime;
+        var currHour = _data[0].timeseries[i].validTime;
         currHour = currHour.substring(11,16);
         currHour = currHour.toString();
-        _tableData.addRows([[i, _data.data[0].timeseries[i].t]]);
+        _tableData.addRows([[i, _data[0].timeseries[i].t]]);
       }
 
       _lineChart = new google.visualization.LineChart(document.getElementById('graph_div'));
