@@ -124,17 +124,17 @@ define(['map'], function (map) {
       source: RainSource
     });
 
- 
- /* EJ FÅTT DETTA ATT FUNGERA ÄN
- +var layer_cloud = new ol.layer.Tile({
- +  source: new ol.source.OSM({
- +     // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
- +     url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
- +    
- +  })
-  });
- +*/
- 
+
+    /* EJ FÅTT DETTA ATT FUNGERA ÄN
+    var layer_cloud = new ol.layer.Tile({
+      source: new ol.source.OSM({
+         // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
+         url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
+        
+      })
+    });
+    +*/
+
 
   //Bounding box
   var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -230,7 +230,7 @@ define(['map'], function (map) {
           this_.getMap().removeLayer(temperatureVecLayer);
           this_.getMap().removeLayer(heatMapLayer);
           this_.getMap().removeLayer(RainVecLayer);
-         
+
           snowBtn.disabled = true;
           snowBtn.style.backgroundColor = 'gray';
           cloudBtn.disabled = false;
