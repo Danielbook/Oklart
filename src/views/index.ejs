@@ -59,31 +59,19 @@
 				}
 			});
 		})
+
+        $( document ).ready(function() {
+            /**
+             * For toggling the sidebar
+             */
+            $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+        });
+
 	</script>
     <div id="wrapper">
-        <!--<nav class="navbar navbar-custom navbar-fixed-top large">
-            <div class="container-fluid">
-                &lt;!&ndash; Brand and toggle get grouped for better mobile display &ndash;&gt;
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand"><img src="images/logoWhite.png" class="brand-img" alt="Brand"></a>
-                    <p class="navbar-text"><%=location%> | <%=time%></p>
-                </div>
-
-                &lt;!&ndash; Collect the nav links, forms, and other content for toggling &ndash;&gt;
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <div class="form-group navbar-form navbar-right">
-                        <input type="text" class="form-control" placeholder="Stad" id="CitySearch" >
-                        <button id="SearchBtn" type="button" class="btn btn-success">Sök</button>
-                    </div>
-                </div>
-            </div>
-        </nav> -->
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
@@ -135,13 +123,5 @@
         </div>
     </div>
     <!-- /#wrapper -->
-
-    <!-- Menu Toggle Script -->
-    <script>
-        $("#menu-toggle").click(function(e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("toggled");
-        });
-    </script>
 </body>
 </html>
