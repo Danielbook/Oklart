@@ -10,7 +10,7 @@ var urls = getUrls();
 //console.log(apiSmhidata);
 
 router.get('/', function(req, res, next) {
-  res.render('index',{location: "Norrköping",time:"28/2 - 2016",dataobject:localSmhidata});
+  res.render('index',{location: "Norrköping",time:"15 Mars",dataobject:localSmhidata});
 });
 
 function getUrls(){

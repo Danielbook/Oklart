@@ -1,7 +1,7 @@
 define(['graph'], function (graph) { 
 
   var _data, _options, _lineChart, _tableData;
-  
+
   /**
    *
    * @param smhidata  data from SMHI
