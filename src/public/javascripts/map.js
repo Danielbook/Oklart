@@ -100,6 +100,8 @@ define(['map'], function (map) {
     /* --------------------------------------------- */
 
     /* Layers */
+    var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+
 
     //Base map layer
     var cartoDBLight = new ol.layer.Tile({
@@ -108,13 +110,50 @@ define(['map'], function (map) {
     })
     });
 
-    var cloudLayer = new ol.layer.Tile({
+    /* OpenWeathermap tile layers */
+    var OWMtempLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
-      url: 'http://{a-b}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png' //Tile server
-    })
+      url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png', 
+      crossOrigin: null
+      }), 
+      sphericalMercator: true,
+      opacity: 0.5,
+      //extent: extent,
     });
 
-    // Temperature layer
+    var OWMrainLayer = new ol.layer.Tile({
+      source: new ol.source.OSM({
+      url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png', 
+      crossOrigin: null
+      }), 
+      sphericalMercator: true,
+      opacity: 0.5,
+      //extent: extent,
+    });
+
+    var OWMcloudLayer = new ol.layer.Tile({
+      source: new ol.source.OSM({
+      url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png', 
+      crossOrigin: null
+      }), 
+      sphericalMercator: true,
+      opacity: 0.5,
+      //extent: extent,
+    });
+
+    var OWMsnowLayer = new ol.layer.Tile({
+      source: new ol.source.OSM({
+      url: 'http://{s}.tile.openweathermap.org/map/snow/{z}/{x}/{y}.png', 
+      crossOrigin: null
+      }), 
+      sphericalMercator: true,
+      opacity: 0.5,
+      //extent: extent,
+    });
+
+
+
+    // Temperature layer 
     var temperatureVecLayer = new ol.layer.Vector({
       source: temperatureSource
     });
@@ -138,7 +177,6 @@ define(['map'], function (map) {
 
 
   //Bounding box
-  var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
   view = new ol.View({
     center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
     zoom: 4,
@@ -188,9 +226,11 @@ define(['map'], function (map) {
 
         //Function to handle temperature button
         var handleTemperatureButton = function() {
-          this_.getMap().addLayer(temperatureVecLayer);
-          this_.getMap().addLayer(heatMapLayer);
-          this_.getMap().removeLayer(RainVecLayer);
+          this_.getMap().addLayer(OWMtempLayer);
+          this_.getMap().removeLayer(OWMsnowLayer);
+          this_.getMap().removeLayer(OWMcloudLayer);
+          this_.getMap().removeLayer(OWMrainLayer);
+
 
           temperatureButton.disabled = true;
           temperatureButton.style.backgroundColor = 'gray';
@@ -204,9 +244,11 @@ define(['map'], function (map) {
 
         //Function to handle rain button
         var handleRainBtn = function() {
-          this_.getMap().addLayer(RainVecLayer);
-          this_.getMap().removeLayer(temperatureVecLayer);
-          this_.getMap().removeLayer(heatMapLayer);
+          this_.getMap().removeLayer(OWMtempLayer);
+          this_.getMap().removeLayer(OWMsnowLayer);
+          this_.getMap().removeLayer(OWMcloudLayer);
+          this_.getMap().addLayer(OWMrainLayer);
+
 
           rainBtn.disabled = true;
           rainBtn.style.backgroundColor = 'gray';
@@ -219,9 +261,10 @@ define(['map'], function (map) {
         };
 
         var handleCloudBtn = function() {
-          this_.getMap().removeLayer(temperatureVecLayer);
-          this_.getMap().removeLayer(heatMapLayer);
-          this_.getMap().removeLayer(RainVecLayer);
+          this_.getMap().removeLayer(OWMtempLayer);
+          this_.getMap().removeLayer(OWMsnowLayer);
+          this_.getMap().addLayer(OWMcloudLayer);
+          this_.getMap().removeLayer(OWMrainLayer);
 
           cloudBtn.disabled = true;
           cloudBtn.style.backgroundColor = 'gray';
@@ -235,9 +278,10 @@ define(['map'], function (map) {
         };
 
         var handleSnowBtn = function() {
-          this_.getMap().removeLayer(temperatureVecLayer);
-          this_.getMap().removeLayer(heatMapLayer);
-          this_.getMap().removeLayer(RainVecLayer);
+          this_.getMap().removeLayer(OWMtempLayer);
+          this_.getMap().addLayer(OWMsnowLayer);
+          this_.getMap().removeLayer(OWMcloudLayer);
+          this_.getMap().removeLayer(OWMrainLayer);
 
           snowBtn.disabled = true;
           snowBtn.style.backgroundColor = 'gray';
