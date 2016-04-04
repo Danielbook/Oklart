@@ -24,27 +24,35 @@ var insertData = function (locations){
 	    console.log("Writing data to DB...");
 	    myCollection = db.collection('data');
 	    myCollection.remove({});
-
-	    for(var i = 0; i < locations.length; i++){
+	    urls.forEach(function(url){
 	    	request({
-			    url: urls[i],
+			    url: url,
 			    json: true
 			}, function (error, response, body) {
-				var smhiResponse = body;
 			    if (!error && response.statusCode === 200) {
-			    	for(var i = 0; i < smhiResponse.timeseries.length ; i++){
-			    		smhiResponse.timeseries[i].ourSpat = 0.7;
-			    		smhiResponse.timeseries[i].ourTemp = 0.6;
+
+			    	var smhiResponse = {};
+					smhiResponse = body;
+					var index = urls.indexOf(url);
+					
+
+					//console.log(urls.indexOf(url));
+					smhiResponse.zoomlevel = locations[index].zoomlevel;
+					smhiResponse.name = locations[index].name;
+
+			    	smhiResponse.timeseries[0].temp_t = smhiResponse.timeseries[0].t - smhiResponse.timeseries[1].t
+			    	for(var j = 1; j < smhiResponse.timeseries.length - 1 ; j++){
+			    		smhiResponse.timeseries[j].temp_t = smhiResponse.timeseries[j].t - (smhiResponse.timeseries[j-1].t + smhiResponse.timeseries[j+1].t)/2 ;
 				    }
+				    smhiResponse.timeseries[smhiResponse.timeseries.length-1].temp_t = smhiResponse.timeseries[smhiResponse.timeseries.length-1].t - smhiResponse.timeseries[1].t
+
 				    myCollection.insert(smhiResponse, function(err, result) {
 					    if(err)
 					        throw err;	
 					})
-
-			        console.log(smhiResponse) // Print the json response
 			    }
 			})
-	    }
+	    })
 
 	});
 		// // 1st para in async.each() is the array of urls
