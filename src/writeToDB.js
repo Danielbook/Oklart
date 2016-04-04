@@ -4,6 +4,8 @@ var http = require('http');
 var request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
+var request = require("request")
+
 
 //Takes a list of locations and reads from SMHI for each loaction. The data for each point is inserted into mongodb.
 var insertData = function (locations){
@@ -17,43 +19,72 @@ var insertData = function (locations){
 		if(err){
 	        throw err;
 		}
+	
 
-	    console.log("hej");
+	    console.log("Writing data to DB...");
 	    myCollection = db.collection('data');
 	    myCollection.remove({});
 
-		// 1st para in async.each() is the array of urls
-		async.each(urls,
-	  	  // 2nd param is the function that each item is passed to
-		  function(url, callback){
-	      // Call the http get async function and call callback when one datapoint has been inserted in db
-		    http.get(url, function(res){
-		    var body = '';
-		    var location = locations[urls.indexOf(url)].name;
-
-			    res.on('data', function(chunk){
-			        body += chunk;
-			    });
-
-			    res.on('end', function(){
-			    	var smhiResponse = JSON.parse(body);
-			    	smhiResponse.name = location;
-			    	//Add datapoint to db
+	    for(var i = 0; i < locations.length; i++){
+	    	request({
+			    url: urls[i],
+			    json: true
+			}, function (error, response, body) {
+				var smhiResponse = body;
+			    if (!error && response.statusCode === 200) {
+			    	for(var i = 0; i < smhiResponse.timeseries.length ; i++){
+			    		smhiResponse.timeseries[i].ourSpat = 0.7;
+			    		smhiResponse.timeseries[i].ourTemp = 0.6;
+				    }
 				    myCollection.insert(smhiResponse, function(err, result) {
 					    if(err)
-					        throw err;
-
-						callback();
+					        throw err;	
 					})
-				})
+
+			        console.log(smhiResponse) // Print the json response
+			    }
 			})
-		  },
-		  // 3rd param is the function to call when everything's done
-		  function(err){
-		  	console.log("Data has been inserted in db");
-		  }
-		);
-	})
+	    }
+
+	});
+		// // 1st para in async.each() is the array of urls
+		// async.each(urls,
+	 //  	  // 2nd param is the function that each item is passed to
+		//   function(url, callback){
+	 //      // Call the http get async function and call callback when one datapoint has been inserted in db
+		//     http.get(url, function(res){
+		//     var body = '';
+		//     var location = locations[urls.indexOf(url)].name;
+
+		// 	    res.on('data', function(chunk){
+		// 	        body += chunk;
+		// 	    });
+
+		// 	    res.on('end', function(){
+		// 	    	var smhiResponse = JSON.parse(body);
+		// 	    	smhiResponse.name = location;
+			    	
+		// 	    	for(var i = 0; i < smhiResponse.timeseries.length ; i++){
+		// 	    		smhiResponse.timeseries[i].ourSpat = 0.7;
+		// 	    		smhiResponse.timeseries[i].ourTemp = 0.6;
+		// 	    	}
+			    	
+		// 	    	//Add datapoint to db
+		// 		    myCollection.insert(smhiResponse, function(err, result) {
+		// 			    if(err)
+		// 			        throw err;
+
+		// 				callback();
+		// 			})
+		// 		})
+		// 	})
+		//   },
+		//   // 3rd param is the function to call when everything's done
+		//   function(err){
+		//   	console.log("Data has been inserted in db");
+		//   }
+		// );
+	// })
 }
 
 module.exports = insertData;
