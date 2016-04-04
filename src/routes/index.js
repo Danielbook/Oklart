@@ -16,13 +16,21 @@ var db = MongoClient.connect('mongodb://adam:123@ds015919.mlab.com:15919/weather
 	    if (err) {
 	      throw err;
 	    }
+	    processData(result);
 	    
-	    //Render index.ejs and send data from database as variable
-	    router.get('/', function(req, res, next) {
-		  res.render('index',{location: "Norrköping",time:"28/2 - 2016",dataobject:result});
-		});
 	});
 });
 
+function processData(data){
+
+	renderData(data);
+};
+
+function renderData(data){
+	//Render index.ejs and send data from database as variable
+    router.get('/', function(req, res, next) {
+	  res.render('index',{location: "Norrköping",time:"28/2 - 2016",dataobject:data});
+	});
+};
 
 module.exports = router;
