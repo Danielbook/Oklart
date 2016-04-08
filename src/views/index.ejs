@@ -15,7 +15,7 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-//			console.log(smhidata);
+            //console.log(smhidata);
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
@@ -33,14 +33,17 @@
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
 
-			slider.on("slideStop", function(slideEvt) {
-				var sliderValues = slider.getValue();
+			//This function displays time chosen via the slider and updates graph range
+            slider.on("slideStop", function(slideEvt) {
+				var sliderValue = slider.getValue();
+                //console.log(sliderTime);
+				_graph.updateTime([sliderValue,29]);
 
-				_graph.updateTime(sliderValues);
+                var sliderTime = smhidata[1].timeseries[sliderValue].validTime.slice(12,16);
+                document.getElementById("tid").innerHTML = sliderTime;
 
-//				console.log(sliderValues);
+				//console.log(sliderValues);
 			});
-
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
@@ -135,13 +138,13 @@
                         <div class="pageElement">
                             <div id="map" class="map"></div>
                              <b>1</b>
-                             <input id="bootslide" type="text" class="span2" value=""
+                             <input id="bootslide" type="text"  value=""
                                                  data-slider-min="1"
-                                                 data-slider-max="29"
+                                                     data-slider-max="29"
                                                  data-slider-step="1"
-                                                 data-slider-tooltip_split="true"
-                                                 data-slider-value="[0,29]"/>
+                                                 data-slider-value="14"/>
                              <b>30</b>
+                             <b id="tid"></b>
                         </div>
                     </div>
                     <div class="col-md-6"> <!-- GRAPH AND TABLE -->
