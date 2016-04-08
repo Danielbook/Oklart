@@ -1,6 +1,9 @@
 define(['graph'], function (graph) { 
 
-  var _data, _options, _lineChart, _tableData;
+  var _data,
+      _options,
+      _lineChart,
+      _tableData;
 
   /**
    *

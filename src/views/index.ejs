@@ -15,7 +15,7 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-			console.log(smhidata);
+//			console.log(smhidata);
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
@@ -38,7 +38,7 @@
 
 				_graph.updateTime(sliderValues);
 
-				console.log(sliderValues);
+//				console.log(sliderValues);
 			});
 
 			//This function runs when the Sök button is clicked
