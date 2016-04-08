@@ -28,9 +28,6 @@
 			_graph.drawGraph();
 			_map.initMap(smhidata);
 
-
-			
-
 			//This code implements livesearch for the Stad textfield
 			var input = document.getElementById('CitySearch');
 			var options = {};
@@ -73,15 +70,40 @@
                 $("#wrapper").toggleClass("toggled");
             });
         });
+        $(window).resize(function() {
+            if( $(window).width() < 767 ) {
+                $("#searchForm").appendTo("#sideBar");
+            }
+            else {
+                $("#searchForm").appendTo("#topBar");
+                $("#wrapper").removeClass("toggled");
+            }
+        });
 
 	</script>
     <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand">
                     <span href="#menu-toggle" id="menu-toggle" class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                 </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <img src="images/logoWhite.png" class="navbar-left" style="height: 50px; z-index: -1">
+
+                <div class="navbar navbar-nav navbar-center">
+                    <h4><%= location %> | <%= time %></h4>
+                </div>
+
+                <form class="navbar-form navbar-right" id="topBar" role="search">
+                    <div class="form-group" id="searchForm">
+                        <input type="text" class="form-control" placeholder="Sök efter stad" id="CitySearch">
+                        <button id="SearchBtn" type="button" class="btn btn-success">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </nav>
@@ -93,13 +115,14 @@
                     <h3><%= location %> | <%= time %></h3>
                 </li>
                 <li>
-                    <form class="navbar-form" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Stad" id="CitySearch">
-                        <button id="SearchBtn" type="button" class="btn btn-success">
-                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        </button>
-                    </div>
+                    <form class="navbar-form navbar-side" id="sideBar" role="search">
+                        <!--<div class="form-group">-->
+                            <!--<input type="text" class="form-control" placeholder="Stad" id="CitySearch">-->
+                            <!--<button id="SearchBtn" type="button" class="btn btn-success">-->
+                                <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    </form>
                 </li>
             </ul>
         </div>
