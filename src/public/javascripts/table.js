@@ -1,45 +1,54 @@
-define(['table'], function (table) {
+define([
+  'table'
+], function (
+  table
+) {
 
   /**
   * CONSTRUCTOR 
   */
   var Table = function(smhidata) {
-  };
-  
-  Table.prototype.initTable = function(arg) {
-    this._data = google.charts.setOnLoadCallback(this.drawTable(arg));
+    this._data = smhidata;
   };
 
-  Table.prototype.drawTable = function(smhidata) {
-    var fun = function(){
-      var data = new google.visualization.DataTable();
-
-      data.addColumn('string', 'Tid');
-      data.addColumn('number', 'Väder');
-      data.addColumn('number', 'Vindstyrka');
-
-      for(var i = 0; i < 30; i++) {
-
-        data.addRows([
-          [
-            smhidata[0].timeseries[i].validTime.substring(0,10) + " " + smhidata[0].timeseries[i].validTime.substring(11,16),
-          {
-            v: smhidata[0].timeseries[i].t,
-            f: smhidata[0].timeseries[i].t.toString() + "°"
-          },
-          {
-            v: smhidata[0].timeseries[i].gust,
-            f: smhidata[0].timeseries[i].gust.toString() + "m/s"
-          }
-          ]
-        ]);
+  Table.prototype.precipitationType = function(type) {
+    switch (type){
+      case 0:{
+        return "Soligt";
       }
+      case 1:{
+        return "Snö";
+      }
+      case 2:{
+        return "Snö och regn";
+      }
+      case 3:{
+        return "Regn";
+      }
+      case 4:{
+        return "Duggregn";
+      }
+      case 5:{
+        return "Underkyltregn";
+      }
+      case 6:{
+        return "Underkyltduggregn";
+      }
+    }
+  };
 
-      var table = new google.visualization.Table(document.getElementById('table_div'));
-
-      table.draw(data, {width: '100%', height: '100%'});
-      };
-    return fun;
+  Table.prototype.drawTable = function() {
+    console.log(this._data);
+    var closestCities = 4;
+    for(var idx = 0; idx < closestCities; idx++) {
+      $('#tableBody').append("<tr>" +
+        "<td>"+this._data[idx].name + "</td>" +
+        "<td class ='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" +
+        "<td class ='toggleable'>"+this.precipitationType(this._data[idx].timeseries[0].pcat)+"</td>" +
+        "<td class ='toggleable'>"+this._data[idx].timeseries[0].tcc+"</td>" +
+        "<td class ='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s</td>" +
+        "</tr>");
+    }
   };
 
   return Table;

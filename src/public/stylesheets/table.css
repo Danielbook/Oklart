@@ -1,0 +1,20 @@
+.table {
+  margin:auto;
+}
+
+.activeCell{
+  background-color: #8F908F;
+}
+
+td.toggleable{
+  -webkit-transition: background-color 300ms;
+  -moz-transition: background-color 300ms;
+  -ms-transition: background-color 300ms;
+  -o-transition: background-color 300ms;
+  transition: background-color 300ms;
+}
+
+td.toggleable:hover {
+  background-color: #d3d3d2;
+  cursor: pointer;
+}
