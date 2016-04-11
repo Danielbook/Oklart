@@ -11,7 +11,11 @@ Andra potentiella källor för osäkerhet är ensemble-prognoser och att jämfö
 
 Versioner
 ---------
-### v1.0.0 (Mar 4, 2016)
+### v2.0 (Apr 8, 2016)
+* Uppdaterat utseende
+* La till slider för tid
+* Uppdaterad karta
+### v1.0 (Mar 4, 2016)
 * Första version
 * Användartestning
 
