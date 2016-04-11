@@ -56,6 +56,9 @@ define([
       if(wdp.tcc < 1) { // Sunny
         return "sun";
       }
+      else if(wdp.tcc > 1 && wdp.tcc < 4) { // Sunny with a chance of clouds
+        return "sun cloud";
+      }
       else if(wdp.tcc <= 6 && wdp.tcc > 4) { // Cloudy
         return "cloudy";
       }
