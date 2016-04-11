@@ -2,11 +2,15 @@
   margin:auto;
 }
 
+#currentLocation{
+  background-color: #3DDF9E;
+}
+
 .activeCell{
   background-color: #8F908F;
 }
 
-td{
+th, td{
   text-align: center;
 }
 
