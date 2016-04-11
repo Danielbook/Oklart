@@ -69,7 +69,7 @@ define([
       if(wdp.pit > 5) { // Heavy snow
         return "heavy snow";
       }
-      else if(wdp.pcat == 1 && wdp.pit > 0) { // Snow
+      else{ // Snow
         return "snow";
       }
     }
@@ -80,7 +80,7 @@ define([
       if(wdp.pit > 5) { // Heavy rain
         return "heavy rain";
       }
-      else if(wdp.pit > 0) { // Rain
+      else { // Rain
         return "rain";
       }
     }
