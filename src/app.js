@@ -10,9 +10,9 @@ var app = express();
 
 
 // ========== If this runs, data in cloud-db will be updated =========
-// var writeToDB = require('./writeToDB');
-// var locations = require('./locations.json');
-// writeToDB(locations);
+//var writeToDB = require('./writeToDB');
+//var locations = require('./locations.json');
+//writeToDB(locations);
 // ===================================================================
 
 
