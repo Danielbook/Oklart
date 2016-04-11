@@ -51,7 +51,6 @@ define([
    * @returns {string} what kind of weather on the specified place
    */
   Table.prototype.weatherType = function(wdp) { //Snow and rain
-    console.log(wdp);
     if(wdp.pcat == 0) { // No precipatopm
       if(wdp.tcc < 1) { // Sunny
         return "sun";
@@ -105,7 +104,6 @@ define([
    * Function to draw the table
    */
   Table.prototype.drawTable = function() {
-    console.log(this._data);
     var closestCities = 5;
     for(var idx = 0; idx < closestCities; idx++) {
       $('#tableBody').append("<tr>" +
