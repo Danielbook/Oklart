@@ -16,11 +16,16 @@
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
 //			console.log(smhidata);
+            idx = 0;
 			//Creates objects for the components
-			var _table = new Table(smhidata);
+			var _table = new Table(smhidata, idx);
 			var _graph = new Graph(smhidata);
 			var _map = new Map();
 			var slider = new Slider('#bootslide', {});
+
+
+            console.log(idx);
+
 
 			//Inits the objects to create the components
 			_graph.initGraph(smhidata);
@@ -164,8 +169,8 @@
                                         <tr>
                                             <th>Ort</th>
                                             <th>Väder</th>
+                                            <th>Temperatur</th>
                                             <th>Nederbörd</th>
-                                            <th>Molnighet</th>
                                             <th>Vindhastighet</th>
                                         </tr>
                                     </thead>

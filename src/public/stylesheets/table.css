@@ -6,6 +6,10 @@
   background-color: #8F908F;
 }
 
+td{
+  text-align: center;
+}
+
 td.toggleable{
   -webkit-transition: background-color 300ms;
   -moz-transition: background-color 300ms;
