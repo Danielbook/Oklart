@@ -15,6 +15,7 @@ Versioner
 * Uppdaterat utseende
 * La till slider för tid
 * Uppdaterad karta
+
 ### v1.0 (Mar 4, 2016)
 * Första version
 * Användartestning
