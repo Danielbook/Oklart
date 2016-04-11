@@ -36,10 +36,10 @@
 			//This function displays time chosen via the slider and updates graph range
             slider.on("slideStop", function(slideEvt) {
 				var sliderValue = slider.getValue();
-                //console.log(sliderTime);
-				_graph.updateTime([sliderValue,29]);
+				_graph.updateTime(sliderValue);
 
-                var sliderTime = smhidata[1].timeseries[sliderValue].validTime.slice(12,16);
+                var sliderTime = smhidata[1].timeseries[sliderValue].validTime.slice(11,16);
+                //console.log(sliderTime);
                 document.getElementById("tid").innerHTML = sliderTime;
 
 				//console.log(sliderValues);
@@ -83,7 +83,12 @@
             }
         });
 
+        function getDate() {
+
+        }
+
 	</script>
+
     <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -144,7 +149,12 @@
                                                  data-slider-step="1"
                                                  data-slider-value="14"/>
                              <b>30</b>
-                             <b id="tid"></b>
+                            <div>
+                                <output id="tid"></output>
+                            </div>
+                            <b id="idag"></b>
+                            <b id="imorgon"></b>
+                            <b id="iövermorgon"></b>
                         </div>
                     </div>
                     <div class="col-md-6"> <!-- GRAPH AND TABLE -->
