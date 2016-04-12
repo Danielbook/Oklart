@@ -1,81 +1,88 @@
-define(['map'], function (map) {
+define(['map']
+  , function (
+    map
+  ) {
 
   /**
-  * CONSTRUCTOR 
-  */
-  var map;
-  var view;
+   * CONSTRUCTOR
+   */
 
-  var Map = function() {
+  var Map = function(smhidata) {
     // this._data = data;
     // console.log(this._data);
+    this._data = smhidata;
+    this._map = "";
+    this._view = "";
+    this._myPosLatLon = "";
+    this._geolocation = "";
+    this._cartoDBLight = "";
+    this.getCurrentLocation();
   };
 
-  Map.prototype.initMap = function(smhidata) {
+  Map.prototype.temperatureLayer = function() {
 
+  };
+
+  Map.prototype.initMap = function() {
     /* ----------- Temperature layer -------------- */
+    // Source for the vector layer
+    var temperatureSource = new ol.source.Vector({
+      projection: 'EPSG:4326'
+    });
 
-      // Source for the vector layer
-      var temperatureSource = new ol.source.Vector({
-        projection: 'EPSG:4326'
-      });
+    var RainSource = new ol.source.Vector({
+      projection: 'EPSG:4326'
+    });
 
-      var RainSource = new ol.source.Vector({
-        projection: 'EPSG:4326'
-      });
+    for(i=0; i<this._data.length; i++){
+      var point = new ol.geom.Point(
+        ol.proj.transform([this._data[i].lon, this._data[i].lat], 'EPSG:4326', 'EPSG:3857')
+      );
+      var pointFeatureTemp = new ol.Feature(point);
+      var pointFeatureRain = new ol.Feature(point);
 
-      for(i=0; i<smhidata.length; i++){
-        var point = new ol.geom.Point(
-          ol.proj.transform([smhidata[i].lon, smhidata[i].lat], 'EPSG:4326', 'EPSG:3857')
-          );
-        var pointFeatureTemp = new ol.Feature(point);
-        var pointFeatureRain = new ol.Feature(point);
-
-        // Style for each temperature point
-        pointFeatureTemp.setStyle(new ol.style.Style({
-          text: new ol.style.Text({
-          text: String(smhidata[i].timeseries[0].t), // .t = temperature
+      // Style for each temperature point
+      pointFeatureTemp.setStyle(new ol.style.Style({
+        text: new ol.style.Text({
+          text: String(this._data[i].timeseries[0].t), // .t = temperature
 
           scale: 1.3,
           fill: new ol.style.Fill({
             color: '#000'
           })
         })
-        }));
+      }));
 
-        temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
+      temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
 
-        //Style for each rain point
-        pointFeatureRain.setStyle(new ol.style.Style({
-          text: new ol.style.Text({
-          text: String(smhidata[i].timeseries[0].pit), // .t = temperature
+      //Style for each rain point
+      pointFeatureRain.setStyle(new ol.style.Style({
+        text: new ol.style.Text({
+          text: String(this._data[i].timeseries[0].pit), // .t = temperature
           scale: 1.3,
           fill: new ol.style.Fill({
             color: '#000'
           })
         })
-        }));
+      }));
 
-        RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
+      RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
+    }
 
-      }
+    /* -------- Temperature heatmap -------------- */
+    //http://jsfiddle.net/GFarkas/61dafv93/
 
-
-
-      /* -------- Temperature heatmap -------------- */
-  //http://jsfiddle.net/GFarkas/61dafv93/
-
-  HMtempData = new ol.source.Vector();
+    HMtempData = new ol.source.Vector();
     //Max- and min-temp for the heatmap to scale correctly
     var minScale = 0.1;
     var maxScale = 1.0;
-    var minTemp = -10; 
+    var minTemp = -10;
     var maxTemp = 15;
 
 
-    for(i=0; i<smhidata.length; i++){
-      var coord = ol.proj.transform([smhidata[i].lon, smhidata[i].lat], 'EPSG:4326', 'EPSG:3857');
-      var temper = smhidata[i].timeseries[0].t;
+    for(i=0; i<this._data.length; i++){
+      var coord = ol.proj.transform([this._data[i].lon, this._data[i].lat], 'EPSG:4326', 'EPSG:3857');
+      var temper = this._data[i].timeseries[0].t;
       var lonLat = new ol.geom.Point(coord);
       //scale [minTemp, maxTemp] to range [minScale, maxScale]
       var weight = (maxScale-minScale)*(temper - minTemp)/(maxTemp - minTemp) + minScale; // http://goo.gl/vGO5rr
@@ -86,7 +93,6 @@ define(['map'], function (map) {
 
       HMtempData.addFeature(pointFeature);
     }
-
 
     // create the layer
     heatMapLayer = new ol.layer.Heatmap({
@@ -102,20 +108,19 @@ define(['map'], function (map) {
     /* Layers */
     var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
-
     //Base map layer
-    var cartoDBLight = new ol.layer.Tile({
+    this._cartoDBLight = new ol.layer.Tile({
       source: new ol.source.OSM({
-      url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
-    })
+        url: 'http://{a-b}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png' //Tile server
+      })
     });
 
     /* OpenWeathermap tile layers */
     var OWMtempLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
-      url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png', 
-      crossOrigin: null
-      }), 
+        url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png',
+        crossOrigin: null
+      }),
       sphericalMercator: true,
       opacity: 0.5,
       //extent: extent,
@@ -123,9 +128,9 @@ define(['map'], function (map) {
 
     var OWMrainLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
-      url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png', 
-      crossOrigin: null
-      }), 
+        url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png',
+        crossOrigin: null
+      }),
       sphericalMercator: true,
       opacity: 0.5,
       //extent: extent,
@@ -133,9 +138,9 @@ define(['map'], function (map) {
 
     var OWMcloudLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
-      url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png', 
-      crossOrigin: null
-      }), 
+        url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png',
+        crossOrigin: null
+      }),
       sphericalMercator: true,
       opacity: 0.5,
       //extent: extent,
@@ -143,248 +148,233 @@ define(['map'], function (map) {
 
     var OWMsnowLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
-      url: 'http://{s}.tile.openweathermap.org/map/snow/{z}/{x}/{y}.png', 
-      crossOrigin: null
-      }), 
+        url: 'http://{s}.tile.openweathermap.org/map/snow/{z}/{x}/{y}.png',
+        crossOrigin: null
+      }),
       sphericalMercator: true,
       opacity: 0.5,
       //extent: extent,
     });
 
-
-
-    // Temperature layer 
+    // Temperature layer
     var temperatureVecLayer = new ol.layer.Vector({
       source: temperatureSource
     });
-
-
     // Rain layer
     var RainVecLayer = new ol.layer.Vector({
       source: RainSource
     });
 
-
     /* EJ FÅTT DETTA ATT FUNGERA ÄN
-    var layer_cloud = new ol.layer.Tile({
-      source: new ol.source.OSM({
-         // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
-         url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
-        
-      })
+     var layer_cloud = new ol.layer.Tile({
+     source: new ol.source.OSM({
+     // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
+     url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
+
+     })
+     });
+     +*/
+
+    //Bounding box
+    this._view = new ol.View({
+      center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
+      zoom: 4,
+      //maxZoom: 10,
+      //minZoom: 4,
+      //extent: extent
     });
-    +*/
 
+    this.setupMapControls();
+    this.getCurrentLocation();
+  };
 
-  //Bounding box
-  view = new ol.View({
-    center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
-    zoom: 4,
-    //maxZoom: 10,
-    //minZoom: 4,
-    //extent: extent
-  })
+  /**
+   * Setup controls for map
+   */
+  Map.prototype.setupMapControls = function() {
+    /**
+     * Define a namespace for the application.
+     */
+    window.app = {};
+    var app = window.app;
 
-  /* -------- Controls -------- */
+    app.LayerControl = function(opt_options) {
+      var options = opt_options || {};
 
-     /**
-       * Define a namespace for the application.
-       */
-       window.app = {};
-       var app = window.app;
+      /* Buttons */
+      var temperatureButton = document.createElement('button');
+      var rainBtn = document.createElement('button');
+      var cloudBtn = document.createElement('button');
+      var snowBtn = document.createElement('button');
 
-      /**
-       * @constructor
-       * @extends {ol.control.Control}
-       * @param {Object=} opt_options Control options.
-       */
-       app.LayerControl = function(opt_options) {
-
-        var options = opt_options || {};
-
-        /* Buttons */
-        var temperatureButton = document.createElement('button');
-        var rainBtn = document.createElement('button');
-        var cloudBtn = document.createElement('button');
-        var snowBtn = document.createElement('button');
-
-        // http://ionicons.com/
-        temperatureButton.className = 'icon ion-thermometer';
-        rainBtn.className = 'icon ion-umbrella';
-        cloudBtn.className = 'icon ion-cloud';
-        snowBtn.className = 'icon ion-ios-snowy';
+      // http://ionicons.com/
+      temperatureButton.className = 'icon ion-thermometer';
+      rainBtn.className = 'icon ion-umbrella';
+      cloudBtn.className = 'icon ion-cloud';
+      snowBtn.className = 'icon ion-ios-snowy';
 
 
 
-        // temperatureButton.innerHTML = 'T';
-        // rainBtn.innerHTML = 'R';
-        // cloudBtn.innerHTML = 'C';
-        // snowBtn.innerHTML = 'S';
+      // temperatureButton.innerHTML = 'T';
+      // rainBtn.innerHTML = 'R';
+      // cloudBtn.innerHTML = 'C';
+      // snowBtn.innerHTML = 'S';
 
-        /* Event listeners */
-        var this_ = this;
+      /* Event listeners */
+      var this_ = this;
 
-        //Function to handle temperature button
-        var handleTemperatureButton = function() {
-          this_.getMap().addLayer(OWMtempLayer);
-          this_.getMap().removeLayer(OWMsnowLayer);
-          this_.getMap().removeLayer(OWMcloudLayer);
-          this_.getMap().removeLayer(OWMrainLayer);
-
-
-          temperatureButton.disabled = true;
-          temperatureButton.style.backgroundColor = 'gray';
-          rainBtn.disabled = false;
-          rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-          cloudBtn.disabled = false;
-          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-          snowBtn.disabled = false;
-          snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-        };
-
-        //Function to handle rain button
-        var handleRainBtn = function() {
-          this_.getMap().removeLayer(OWMtempLayer);
-          this_.getMap().removeLayer(OWMsnowLayer);
-          this_.getMap().removeLayer(OWMcloudLayer);
-          this_.getMap().addLayer(OWMrainLayer);
+      //Function to handle temperature button
+      var handleTemperatureButton = function() {
+        this_.getMap().addLayer(OWMtempLayer);
+        this_.getMap().removeLayer(OWMsnowLayer);
+        this_.getMap().removeLayer(OWMcloudLayer);
+        this_.getMap().removeLayer(OWMrainLayer);
 
 
-          rainBtn.disabled = true;
-          rainBtn.style.backgroundColor = 'gray';
-          temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
-          temperatureButton.disabled = false;
-          cloudBtn.disabled = false;
-          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-          snowBtn.disabled = false;
-          snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-        };
+        temperatureButton.disabled = true;
+        temperatureButton.style.backgroundColor = 'gray';
+        rainBtn.disabled = false;
+        rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        cloudBtn.disabled = false;
+        cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        snowBtn.disabled = false;
+        snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      };
 
-        var handleCloudBtn = function() {
-          this_.getMap().removeLayer(OWMtempLayer);
-          this_.getMap().removeLayer(OWMsnowLayer);
-          this_.getMap().addLayer(OWMcloudLayer);
-          this_.getMap().removeLayer(OWMrainLayer);
-
-          cloudBtn.disabled = true;
-          cloudBtn.style.backgroundColor = 'gray';
-          rainBtn.disabled = false;
-          rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-          temperatureButton.disabled = false;
-          temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
-          snowBtn.disabled = false;
-          snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-
-        };
-
-        var handleSnowBtn = function() {
-          this_.getMap().removeLayer(OWMtempLayer);
-          this_.getMap().addLayer(OWMsnowLayer);
-          this_.getMap().removeLayer(OWMcloudLayer);
-          this_.getMap().removeLayer(OWMrainLayer);
-
-          snowBtn.disabled = true;
-          snowBtn.style.backgroundColor = 'gray';
-          cloudBtn.disabled = false;
-          cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-          rainBtn.disabled = false;
-          rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-          temperatureButton.disabled = false;
-          temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
-
-        };
-
-        temperatureButton.addEventListener('click', handleTemperatureButton, false);
-        temperatureButton.addEventListener('touchstart', handleTemperatureButton, false);
-        rainBtn.addEventListener('click', handleRainBtn, false);
-        rainBtn.addEventListener('touchstart', handleRainBtn, false);
-        cloudBtn.addEventListener('click', handleCloudBtn, false);
-        cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
-        snowBtn.addEventListener('click', handleSnowBtn, false);
-        snowBtn.addEventListener('touchstart', handleSnowBtn, false);
+      //Function to handle rain button
+      var handleRainBtn = function() {
+        this_.getMap().removeLayer(OWMtempLayer);
+        this_.getMap().removeLayer(OWMsnowLayer);
+        this_.getMap().removeLayer(OWMcloudLayer);
+        this_.getMap().addLayer(OWMrainLayer);
 
 
+        rainBtn.disabled = true;
+        rainBtn.style.backgroundColor = 'gray';
+        temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+        temperatureButton.disabled = false;
+        cloudBtn.disabled = false;
+        cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        snowBtn.disabled = false;
+        snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      };
 
-        /* Button div */
-        var buttonDiv = document.createElement('div'); //Background div
-        buttonDiv.className = 'map-buttonDiv';
+      var handleCloudBtn = function() {
+        this_.getMap().removeLayer(OWMtempLayer);
+        this_.getMap().removeLayer(OWMsnowLayer);
+        this_.getMap().addLayer(OWMcloudLayer);
+        this_.getMap().removeLayer(OWMrainLayer);
 
-        var buttonContainer = document.createElement('div'); //div containing buttons
-        buttonDiv.appendChild(buttonContainer);
-        buttonContainer.className = 'map-controls';
-        buttonContainer.appendChild(temperatureButton);
-        buttonContainer.appendChild(rainBtn);
-        buttonContainer.appendChild(cloudBtn);
-        buttonContainer.appendChild(snowBtn);
-
-
-        ol.control.Control.call(this, {
-          element: buttonDiv,
-          target: options.target
-        });
+        cloudBtn.disabled = true;
+        cloudBtn.style.backgroundColor = 'gray';
+        rainBtn.disabled = false;
+        rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        temperatureButton.disabled = false;
+        temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+        snowBtn.disabled = false;
+        snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
 
       };
-      ol.inherits(app.LayerControl, ol.control.Control);
 
-      /*--------------------------------*/
+      var handleSnowBtn = function() {
+        this_.getMap().removeLayer(OWMtempLayer);
+        this_.getMap().addLayer(OWMsnowLayer);
+        this_.getMap().removeLayer(OWMcloudLayer);
+        this_.getMap().removeLayer(OWMrainLayer);
 
+        snowBtn.disabled = true;
+        snowBtn.style.backgroundColor = 'gray';
+        cloudBtn.disabled = false;
+        cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        rainBtn.disabled = false;
+        rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        temperatureButton.disabled = false;
+        temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
 
-      map = new ol.Map({
-    target: 'map', //Attach map to 'map' div
-    controls: 
-    ol.control.defaults({
-     attributionOptions:({
-       collapsible: false
-     })
-   }).extend([
-   new app.LayerControl()
-   ]),
+      };
 
-   layers: [
-   cartoDBLight,
-   //cloudLayer
-   ],
-   view: view
+      temperatureButton.addEventListener('click', handleTemperatureButton, false);
+      temperatureButton.addEventListener('touchstart', handleTemperatureButton, false);
+      rainBtn.addEventListener('click', handleRainBtn, false);
+      rainBtn.addEventListener('touchstart', handleRainBtn, false);
+      cloudBtn.addEventListener('click', handleCloudBtn, false);
+      cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
+      snowBtn.addEventListener('click', handleSnowBtn, false);
+      snowBtn.addEventListener('touchstart', handleSnowBtn, false);
 
- });
+      /* Button div */
+      var buttonDiv = document.createElement('div'); //Background div
+      buttonDiv.className = 'map-buttonDiv';
 
+      var buttonContainer = document.createElement('div'); //div containing buttons
+      buttonDiv.appendChild(buttonContainer);
+      buttonContainer.className = 'map-controls';
+      buttonContainer.appendChild(temperatureButton);
+      buttonContainer.appendChild(rainBtn);
+      buttonContainer.appendChild(cloudBtn);
+      buttonContainer.appendChild(snowBtn);
 
-      /* -------------- Gelocation ------------------- */
-
-      var geolocation = new ol.Geolocation({
-        tracking: true
+      ol.control.Control.call(this, {
+        element: buttonDiv,
+        target: options.target
       });
+    };
 
-      if(geolocation){
+    ol.inherits(app.LayerControl, ol.control.Control);
 
+    this._map = new ol.Map({
+      target: 'map', //Attach map to 'map' div
+      controls:
+              ol.control.defaults({
+                attributionOptions:({
+                  collapsible: false
+                })
+              }).extend([
+                new app.LayerControl()
+              ]),
 
-        geolocation.once('change', function(evt) {
-   //save position and set map center
-   pos = geolocation.getPosition();
-   map.getView().setCenter(ol.proj.fromLonLat(pos));
+      layers: [
+        this._cartoDBLight,
+        //cloudLayer
+      ],
+      view: this._view
+    });
+  };
 
- });
-
-      }
-      else {
-        alert("Couldn't find location");
-      }
-    }
-
-    Map.prototype.updateMap = function(data) {
-
-      var pan = ol.animation.pan({
-        duration: 1000,
-        source: view.getCenter()
+  /**
+   * Get current location for the map
+   */
+  Map.prototype.setToCurrentLocation = function() {
+    if(this._geolocation) {
+      this._geolocation.once('change', function(evt) {
+        // Save position and set map center
+        var pos = geolocation.getPosition();
+        this._map.getView().setCenter(ol.proj.fromLonLat(pos));
       });
-
-      var FoundExtent = data[0].boundingbox;
-      var placemark_lat = data[0].lat;
-      var placemark_lon = data[0].lon;
-
-      map.beforeRender(pan);        
-      map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
     }
+    else {
+      alert("Couldn't find location");
+    }
+  };
+  Map.prototype.getCurrentLocation = function() {
+    this._geolocation = new ol.Geolocation({
+      tracking: true
+    });
+  };
 
-    return Map;
-  });
+  Map.prototype.updateMap = function(data) {
+    var pan = ol.animation.pan({
+      duration: 1000,
+      source: this._view.getCenter()
+    });
+
+    var FoundExtent = data[0].boundingbox;
+    var placemark_lat = data[0].lat;
+    var placemark_lon = data[0].lon;
+
+    this._map.beforeRender(pan);
+    this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+  };
+
+  return Map;
+});
