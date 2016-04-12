@@ -43,6 +43,9 @@
                     e.preventDefault();
                     $("#wrapper").toggleClass("toggled");
                 });
+                $( "td.location" ).on("click", function() {
+                    _table.changeCurrentLocation($(this));
+                });
             });
 
 			//This code implements livesearch for the Stad textfield

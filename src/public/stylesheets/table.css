@@ -2,12 +2,12 @@
   margin:auto;
 }
 
-#currentLocation{
+.currentLocation{
   background-color: #3DDF9E;
 }
 
 .activeCell{
-  background-color: #8F908F;
+  background-color: #cccccb;
 }
 
 th, td{
