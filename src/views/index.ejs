@@ -15,18 +15,38 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-//			console.log(smhidata);
 			//Creates objects for the components
-			var _table = new Table();
+			var _table = new Table(smhidata);
 			var _graph = new Graph(smhidata);
 			var _map = new Map();
 			var slider = new Slider('#bootslide', {});
 
 			//Inits the objects to create the components
-			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
 			_graph.drawGraph();
 			_map.initMap(smhidata);
+
+            $( document ).ready(function() {
+                /**
+                 * Draws the table
+                 */
+                _table.drawTable();
+
+                $("td.toggleable").click(function(){
+                    $("td").removeClass("activeCell");
+                    $(this).addClass("activeCell");
+                });
+                /**
+                 * For toggling the sidebar
+                 */
+                $("#menu-toggle").click(function(e) {
+                    e.preventDefault();
+                    $("#wrapper").toggleClass("toggled");
+                });
+                $( "td.location" ).on("click", function() {
+                    _table.changeCurrentLocation($(this));
+                });
+            });
 
 			//This code implements livesearch for the Stad textfield
 			//var input = document.getElementById('CitySearch');
@@ -77,15 +97,6 @@
 			});
 		})
 
-        $( document ).ready(function() {
-            /**
-             * For toggling the sidebar
-             */
-            $("#menu-toggle").click(function(e) {
-                e.preventDefault();
-                $("#wrapper").toggleClass("toggled");
-            });
-        });
         $(window).resize(function() {
             if( $(window).width() < 767 ) {
                 $("#searchForm").appendTo("#sideBar");
@@ -165,7 +176,21 @@
                             <div id="graph_div" class="graph pageElement"></div>
                         </div>
                         <div class ="row"> <!-- TABLE -->
-                            <div id="table_div" class="table pageElement"></div>
+                            <div id="table_div table-responsive" class="table pageElement">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Ort</th>
+                                            <th>Väder</th>
+                                            <th>Temperatur</th>
+                                            <th>Nederbörd</th>
+                                            <th>Vindhastighet</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div> <!-- GRAPH AND TABLE -->
                 </div>
