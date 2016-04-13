@@ -25,6 +25,9 @@ define(['map'], function (map) {
       });
 
       for(i=0; i<smhidata.length; i++){
+
+      //  console.log(smhidata[i].name)
+
         var point = new ol.geom.Point(
           ol.proj.transform([smhidata[i].lon, smhidata[i].lat], 'EPSG:4326', 'EPSG:3857')
           );
