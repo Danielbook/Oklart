@@ -1,36 +1,46 @@
-define(['map']
-  , function (
-    map
-  ) {
-
+define([
+  'map'
+], function (
+  map
+){
   /**
-   * CONSTRUCTOR
+   *
+   * @param smhidata
+   * @constructor
    */
-
   var Map = function(smhidata) {
-    // this._data = data;
-    // console.log(this._data);
     this._data = smhidata;
     this._map = "";
     this._view = "";
     this._myPosLatLon = "";
     this._geolocation = "";
     this._cartoDBLight = "";
+    this._temperatureSource = "";
+    this._rainSource = "";
     this.getCurrentLocation();
   };
 
-  Map.prototype.temperatureLayer = function() {
-
+  /**
+   * Inits the map
+   */
+  Map.prototype.initMap = function() {
+    this.temperatureLayer();
+    this.heatMap();
+    this.mapLayers();
+    this.setupMapControls();
+    this.getCurrentLocation();
   };
 
-  Map.prototype.initMap = function() {
-    /* ----------- Temperature layer -------------- */
+  /**
+   * Setup the temperature layer
+   */
+  Map.prototype.temperatureLayer = function() {
     // Source for the vector layer
-    var temperatureSource = new ol.source.Vector({
+    this._temperatureSource = new ol.source.Vector({
       projection: 'EPSG:4326'
     });
 
-    var RainSource = new ol.source.Vector({
+    this._rainSource = new ol.source.Vector({
       projection: 'EPSG:4326'
     });
 
@@ -53,7 +63,7 @@ define(['map']
         })
       }));
 
-      temperatureSource.addFeatures([pointFeatureTemp]); //Fill the temperatureSource with point features
+      this._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
 
       //Style for each rain point
       pointFeatureRain.setStyle(new ol.style.Style({
@@ -65,13 +75,14 @@ define(['map']
           })
         })
       }));
-
-      RainSource.addFeatures([pointFeatureRain]); //Fill the temperatureSource with point features
+      this._rainSource.addFeatures([pointFeatureRain]); //Fill the this._temperatureSource with point features
     }
+  };
 
-    /* -------- Temperature heatmap -------------- */
-    //http://jsfiddle.net/GFarkas/61dafv93/
-
+  /**
+   * Setup the heatmap
+   */
+  Map.prototype.heatMap = function() { //http://jsfiddle.net/GFarkas/61dafv93/
     HMtempData = new ol.source.Vector();
     //Max- and min-temp for the heatmap to scale correctly
     var minScale = 0.1;
@@ -88,7 +99,7 @@ define(['map']
       var weight = (maxScale-minScale)*(temper - minTemp)/(maxTemp - minTemp) + minScale; // http://goo.gl/vGO5rr
       var pointFeature = new ol.Feature({
         geometry: lonLat,
-        weight: weight,
+        weight: weight
       });
 
       HMtempData.addFeature(pointFeature);
@@ -102,9 +113,12 @@ define(['map']
       blur: 80,
       opacity: .8
     });
+  };
 
-    /* --------------------------------------------- */
-
+  /**
+   * Setup the map layers
+   */
+  Map.prototype.mapLayers = function() {
     /* Layers */
     var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
@@ -122,7 +136,7 @@ define(['map']
         crossOrigin: null
       }),
       sphericalMercator: true,
-      opacity: 0.5,
+      opacity: 0.5
       //extent: extent,
     });
 
@@ -132,7 +146,7 @@ define(['map']
         crossOrigin: null
       }),
       sphericalMercator: true,
-      opacity: 0.5,
+      opacity: 0.5
       //extent: extent,
     });
 
@@ -142,7 +156,7 @@ define(['map']
         crossOrigin: null
       }),
       sphericalMercator: true,
-      opacity: 0.5,
+      opacity: 0.5
       //extent: extent,
     });
 
@@ -152,17 +166,17 @@ define(['map']
         crossOrigin: null
       }),
       sphericalMercator: true,
-      opacity: 0.5,
+      opacity: 0.5
       //extent: extent,
     });
 
     // Temperature layer
     var temperatureVecLayer = new ol.layer.Vector({
-      source: temperatureSource
+      source: this._temperatureSource
     });
     // Rain layer
     var RainVecLayer = new ol.layer.Vector({
-      source: RainSource
+      source: this._rainSource
     });
 
     /* EJ FÅTT DETTA ATT FUNGERA ÄN
@@ -178,23 +192,18 @@ define(['map']
     //Bounding box
     this._view = new ol.View({
       center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
-      zoom: 4,
+      zoom: 4
       //maxZoom: 10,
       //minZoom: 4,
       //extent: extent
     });
-
-    this.setupMapControls();
-    this.getCurrentLocation();
   };
 
   /**
    * Setup controls for map
    */
   Map.prototype.setupMapControls = function() {
-    /**
-     * Define a namespace for the application.
-     */
+    // Define a namespace for the application.
     window.app = {};
     var app = window.app;
 
@@ -342,7 +351,7 @@ define(['map']
   };
 
   /**
-   * Get current location for the map
+   * Set current location to the map
    */
   Map.prototype.setToCurrentLocation = function() {
     if(this._geolocation) {
@@ -356,12 +365,20 @@ define(['map']
       alert("Couldn't find location");
     }
   };
+
+  /**
+   * Get current location from geolocation
+   */
   Map.prototype.getCurrentLocation = function() {
     this._geolocation = new ol.Geolocation({
       tracking: true
     });
   };
 
+  /**
+   * Updates the map to current location
+   * @param data
+   */
   Map.prototype.updateMap = function(data) {
     var pan = ol.animation.pan({
       duration: 1000,
