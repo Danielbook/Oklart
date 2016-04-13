@@ -15,14 +15,29 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-            //console.log(smhidata);
+
+            console.log(smhidata);
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
 			var _map = new Map();
 			var slider = new Slider('#bootslide', {});
 
-			//Inits the objects to create the components
+            //This is a time handler. It prints current day and hour for the slider
+            var dateHandler = new Date(smhidata[1].timeseries[1].validTime);
+            console.log("dateHandler: " + dateHandler);
+            var weekday = new Array();
+            weekday[0] = "Söndag";
+            weekday[1] = "Måndag";
+            weekday[2] = "Tisdag";
+            weekday[3] = "Onsdag";
+            weekday[4] = "Torsdag";
+            weekday[5] = "Fredag";
+            weekday[6] = "Lördag";
+            document.getElementById("tid").innerHTML = dateHandler.getHours() + ":00";
+            document.getElementById("dag").innerHTML = weekday[dateHandler.getUTCDay()];
+
+            //Inits the objects to create the components
 			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
 			_graph.drawGraph();
@@ -33,17 +48,16 @@
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
 
-			//This function displays time chosen via the slider and updates graph range
+			//This function displays time and day chosen via the slider
             slider.on("slideStop", function(slideEvt) {
 				var sliderValue = slider.getValue();
 				_graph.updateTime(sliderValue);
 
-                var sliderTime = smhidata[1].timeseries[sliderValue].validTime.slice(11,16);
-                //console.log(sliderTime);
-                document.getElementById("tid").innerHTML = sliderTime;
+                dateHandler = new Date(smhidata[1].timeseries[sliderValue].validTime);
+                document.getElementById("tid").innerHTML = dateHandler.getUTCHours() + ":00";
+                document.getElementById("dag").innerHTML = weekday[dateHandler.getUTCDay()];
 
-				//console.log(sliderValues);
-			});
+            });
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
@@ -144,13 +158,14 @@
                             <div id="map" class="map"></div>
                              <b>1</b>
                              <input id="bootslide" type="text"  value=""
-                                                 data-slider-min="1"
-                                                     data-slider-max="29"
-                                                 data-slider-step="1"
-                                                 data-slider-value="14"/>
+                                     data-slider-min="1"
+                                     data-slider-max="29"
+                                     data-slider-step="1"
+                                     data-slider-value="1"/>
                              <b>30</b>
                             <div>
                                 <output id="tid"></output>
+                                <output id="dag"></output>
                             </div>
                             <b id="idag"></b>
                             <b id="imorgon"></b>
