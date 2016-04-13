@@ -4,7 +4,7 @@ define([
   map
 ){
   /**
-   *
+   * Constructor for the map
    * @param smhidata
    * @constructor
    */
@@ -17,6 +17,11 @@ define([
     this._cartoDBLight = "";
     this._temperatureSource = "";
     this._rainSource = "";
+
+    this._OWMtempLayer = "";
+    this._OWMrainLayer = "";
+    this._OWMcloudLayer = "";
+
     this.getCurrentLocation();
   };
 
@@ -44,9 +49,9 @@ define([
       projection: 'EPSG:4326'
     });
 
-    for(i=0; i<this._data.length; i++){
+    for(var idx = 0; idx < this._data.length; idx++) {
       var point = new ol.geom.Point(
-        ol.proj.transform([this._data[i].lon, this._data[i].lat], 'EPSG:4326', 'EPSG:3857')
+        ol.proj.transform([this._data[idx].lon, this._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
       );
       var pointFeatureTemp = new ol.Feature(point);
       var pointFeatureRain = new ol.Feature(point);
@@ -54,7 +59,7 @@ define([
       // Style for each temperature point
       pointFeatureTemp.setStyle(new ol.style.Style({
         text: new ol.style.Text({
-          text: String(this._data[i].timeseries[0].t), // .t = temperature
+          text: String(this._data[idx].timeseries[0].t), // .t = temperature
 
           scale: 1.3,
           fill: new ol.style.Fill({
@@ -68,7 +73,7 @@ define([
       //Style for each rain point
       pointFeatureRain.setStyle(new ol.style.Style({
         text: new ol.style.Text({
-          text: String(this._data[i].timeseries[0].pit), // .t = temperature
+          text: String(this._data[idx].timeseries[0].pit), // .t = temperature
           scale: 1.3,
           fill: new ol.style.Fill({
             color: '#000'
@@ -90,10 +95,9 @@ define([
     var minTemp = -10;
     var maxTemp = 15;
 
-
-    for(i=0; i<this._data.length; i++){
-      var coord = ol.proj.transform([this._data[i].lon, this._data[i].lat], 'EPSG:4326', 'EPSG:3857');
-      var temper = this._data[i].timeseries[0].t;
+    for(var idx = 0; idx < this._data.length; idx++){
+      var coord = ol.proj.transform([this._data[idx].lon, this._data[idx].lat], 'EPSG:4326', 'EPSG:3857');
+      var temper = this._data[idx].timeseries[0].t;
       var lonLat = new ol.geom.Point(coord);
       //scale [minTemp, maxTemp] to range [minScale, maxScale]
       var weight = (maxScale-minScale)*(temper - minTemp)/(maxTemp - minTemp) + minScale; // http://goo.gl/vGO5rr
@@ -119,7 +123,6 @@ define([
    * Setup the map layers
    */
   Map.prototype.mapLayers = function() {
-    /* Layers */
     var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
     //Base map layer
@@ -129,8 +132,8 @@ define([
       })
     });
 
-    /* OpenWeathermap tile layers */
-    var OWMtempLayer = new ol.layer.Tile({
+    // OpenWeathermap tile layers
+    this._OWMtempLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
         url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png',
         crossOrigin: null
@@ -140,7 +143,7 @@ define([
       //extent: extent,
     });
 
-    var OWMrainLayer = new ol.layer.Tile({
+    this._OWMrainLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
         url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png',
         crossOrigin: null
@@ -150,7 +153,7 @@ define([
       //extent: extent,
     });
 
-    var OWMcloudLayer = new ol.layer.Tile({
+    this._OWMcloudLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
         url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png',
         crossOrigin: null
@@ -160,7 +163,7 @@ define([
       //extent: extent,
     });
 
-    var OWMsnowLayer = new ol.layer.Tile({
+    this._OWMsnowLayer = new ol.layer.Tile({
       source: new ol.source.OSM({
         url: 'http://{s}.tile.openweathermap.org/map/snow/{z}/{x}/{y}.png',
         crossOrigin: null
@@ -174,6 +177,7 @@ define([
     var temperatureVecLayer = new ol.layer.Vector({
       source: this._temperatureSource
     });
+
     // Rain layer
     var RainVecLayer = new ol.layer.Vector({
       source: this._rainSource
@@ -189,7 +193,7 @@ define([
      });
      +*/
 
-    //Bounding box
+    // Bounding box
     this._view = new ol.View({
       center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
       zoom: 4
@@ -222,8 +226,6 @@ define([
       cloudBtn.className = 'icon ion-cloud';
       snowBtn.className = 'icon ion-ios-snowy';
 
-
-
       // temperatureButton.innerHTML = 'T';
       // rainBtn.innerHTML = 'R';
       // cloudBtn.innerHTML = 'C';
@@ -234,10 +236,10 @@ define([
 
       //Function to handle temperature button
       var handleTemperatureButton = function() {
-        this_.getMap().addLayer(OWMtempLayer);
-        this_.getMap().removeLayer(OWMsnowLayer);
-        this_.getMap().removeLayer(OWMcloudLayer);
-        this_.getMap().removeLayer(OWMrainLayer);
+        this_.getMap().addLayer(this._OWMtempLayer);
+        this_.getMap().removeLayer(this._OWMsnowLayer);
+        this_.getMap().removeLayer(this._OWMcloudLayer);
+        this_.getMap().removeLayer(this._OWMrainLayer);
 
 
         temperatureButton.disabled = true;
@@ -252,10 +254,10 @@ define([
 
       //Function to handle rain button
       var handleRainBtn = function() {
-        this_.getMap().removeLayer(OWMtempLayer);
-        this_.getMap().removeLayer(OWMsnowLayer);
-        this_.getMap().removeLayer(OWMcloudLayer);
-        this_.getMap().addLayer(OWMrainLayer);
+        this_.getMap().removeLayer(this._OWMtempLayer);
+        this_.getMap().removeLayer(this._OWMsnowLayer);
+        this_.getMap().removeLayer(this._OWMcloudLayer);
+        this_.getMap().addLayer(this._OWMrainLayer);
 
 
         rainBtn.disabled = true;
@@ -269,10 +271,10 @@ define([
       };
 
       var handleCloudBtn = function() {
-        this_.getMap().removeLayer(OWMtempLayer);
-        this_.getMap().removeLayer(OWMsnowLayer);
-        this_.getMap().addLayer(OWMcloudLayer);
-        this_.getMap().removeLayer(OWMrainLayer);
+        this_.getMap().removeLayer(this._OWMtempLayer);
+        this_.getMap().removeLayer(this._OWMsnowLayer);
+        this_.getMap().addLayer(this._OWMcloudLayer);
+        this_.getMap().removeLayer(this._OWMrainLayer);
 
         cloudBtn.disabled = true;
         cloudBtn.style.backgroundColor = 'gray';
@@ -286,10 +288,10 @@ define([
       };
 
       var handleSnowBtn = function() {
-        this_.getMap().removeLayer(OWMtempLayer);
-        this_.getMap().addLayer(OWMsnowLayer);
-        this_.getMap().removeLayer(OWMcloudLayer);
-        this_.getMap().removeLayer(OWMrainLayer);
+        this_.getMap().removeLayer(this._OWMtempLayer);
+        this_.getMap().addLayer(this._OWMsnowLayer);
+        this_.getMap().removeLayer(this._OWMcloudLayer);
+        this_.getMap().removeLayer(this._OWMrainLayer);
 
         snowBtn.disabled = true;
         snowBtn.style.backgroundColor = 'gray';
@@ -343,7 +345,7 @@ define([
               ]),
 
       layers: [
-        this._cartoDBLight,
+        this._cartoDBLight
         //cloudLayer
       ],
       view: this._view
