@@ -1,3 +1,5 @@
+"use strict";
+
 define([
   'map'
 ], function (
@@ -10,7 +12,7 @@ define([
    */
   var Map = function(smhidata) {
     this._data = smhidata;
-    this._map = "";
+    this._map = new ol.Map({target: 'map'});
     this._view = "";
     this._myPosLatLon = "";
     this._geolocation = "";
@@ -22,7 +24,7 @@ define([
     this._OWMrainLayer = "";
     this._OWMcloudLayer = "";
 
-    this.getCurrentLocation();
+    this._geolocation = this.getCurrentLocation();
   };
 
   /**
@@ -32,8 +34,8 @@ define([
     this.temperatureLayer();
     this.heatMap();
     this.mapLayers();
-    this.setupMapControls();
-    this.getCurrentLocation();
+    this.setupMapControls(this._OWMtempLayer, this._OWMrainLayer, this._OWMcloudLayer);
+    this.setToLocation(this._map, this._geolocation);
   };
 
   /**
@@ -88,7 +90,7 @@ define([
    * Setup the heatmap
    */
   Map.prototype.heatMap = function() { //http://jsfiddle.net/GFarkas/61dafv93/
-    HMtempData = new ol.source.Vector();
+    var HMtempData = new ol.source.Vector();
     //Max- and min-temp for the heatmap to scale correctly
     var minScale = 0.1;
     var maxScale = 1.0;
@@ -110,7 +112,7 @@ define([
     }
 
     // create the layer
-    heatMapLayer = new ol.layer.Heatmap({
+    var heatMapLayer = new ol.layer.Heatmap({
       source: HMtempData,
       gradient: ['#00AAE5', '#397BA0', '#724D5B', '#982E2D', '#BF1000'],
       radius: 20,
@@ -211,10 +213,10 @@ define([
     window.app = {};
     var app = window.app;
 
-    app.LayerControl = function(opt_options) {
+    app.LayerControl = function(_map, opt_options) {
       var options = opt_options || {};
 
-      /* Buttons */
+      // Buttons
       var temperatureButton = document.createElement('button');
       var rainBtn = document.createElement('button');
       var cloudBtn = document.createElement('button');
@@ -231,16 +233,14 @@ define([
       // cloudBtn.innerHTML = 'C';
       // snowBtn.innerHTML = 'S';
 
-      /* Event listeners */
-      var this_ = this;
-
       //Function to handle temperature button
       var handleTemperatureButton = function() {
-        this_.getMap().addLayer(this._OWMtempLayer);
-        this_.getMap().removeLayer(this._OWMsnowLayer);
-        this_.getMap().removeLayer(this._OWMcloudLayer);
-        this_.getMap().removeLayer(this._OWMrainLayer);
 
+        console.log(_map);
+        _map.addLayer(this.OWMtempLayer);
+        _map.removeLayer(this.OWMsnowLayer);
+        _map.removeLayer(this.OWMcloudLayer);
+        _map.removeLayer(this.OWMrainLayer);
 
         temperatureButton.disabled = true;
         temperatureButton.style.backgroundColor = 'gray';
@@ -254,11 +254,10 @@ define([
 
       //Function to handle rain button
       var handleRainBtn = function() {
-        this_.getMap().removeLayer(this._OWMtempLayer);
-        this_.getMap().removeLayer(this._OWMsnowLayer);
-        this_.getMap().removeLayer(this._OWMcloudLayer);
-        this_.getMap().addLayer(this._OWMrainLayer);
-
+        _map.removeLayer(this._OWMtempLayer);
+        _map.removeLayer(this._OWMsnowLayer);
+        _map.removeLayer(this._OWMcloudLayer);
+        _map.addLayer(this._OWMrainLayer);
 
         rainBtn.disabled = true;
         rainBtn.style.backgroundColor = 'gray';
@@ -271,10 +270,10 @@ define([
       };
 
       var handleCloudBtn = function() {
-        this_.getMap().removeLayer(this._OWMtempLayer);
-        this_.getMap().removeLayer(this._OWMsnowLayer);
-        this_.getMap().addLayer(this._OWMcloudLayer);
-        this_.getMap().removeLayer(this._OWMrainLayer);
+        _map.removeLayer(this._OWMtempLayer);
+        _map.removeLayer(this._OWMsnowLayer);
+        _map.addLayer(this._OWMcloudLayer);
+        _map.removeLayer(this._OWMrainLayer);
 
         cloudBtn.disabled = true;
         cloudBtn.style.backgroundColor = 'gray';
@@ -284,14 +283,13 @@ define([
         temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
         snowBtn.disabled = false;
         snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-
       };
 
       var handleSnowBtn = function() {
-        this_.getMap().removeLayer(this._OWMtempLayer);
-        this_.getMap().addLayer(this._OWMsnowLayer);
-        this_.getMap().removeLayer(this._OWMcloudLayer);
-        this_.getMap().removeLayer(this._OWMrainLayer);
+        _map.removeLayer(this._OWMtempLayer);
+        _map.addLayer(this._OWMsnowLayer);
+        _map.removeLayer(this._OWMcloudLayer);
+        _map.removeLayer(this._OWMrainLayer);
 
         snowBtn.disabled = true;
         snowBtn.style.backgroundColor = 'gray';
@@ -301,7 +299,6 @@ define([
         rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         temperatureButton.disabled = false;
         temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
-
       };
 
       temperatureButton.addEventListener('click', handleTemperatureButton, false);
@@ -333,34 +330,19 @@ define([
 
     ol.inherits(app.LayerControl, ol.control.Control);
 
-    this._map = new ol.Map({
-      target: 'map', //Attach map to 'map' div
-      controls:
-              ol.control.defaults({
-                attributionOptions:({
-                  collapsible: false
-                })
-              }).extend([
-                new app.LayerControl()
-              ]),
-
-      layers: [
-        this._cartoDBLight
-        //cloudLayer
-      ],
-      view: this._view
-    });
+    this._map.addLayer(this._cartoDBLight);
+    this._map.getControls().extend([ new app.LayerControl(this._map) ]);
+    this._map.setView(this._view);
   };
 
   /**
    * Set current location to the map
    */
-  Map.prototype.setToCurrentLocation = function() {
-    if(this._geolocation) {
-      this._geolocation.once('change', function(evt) {
+  Map.prototype.setToLocation = function(map, loc) {
+     if(loc) {
+       loc.once('change', function() {
         // Save position and set map center
-        var pos = geolocation.getPosition();
-        this._map.getView().setCenter(ol.proj.fromLonLat(pos));
+        map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
       });
     }
     else {
@@ -372,7 +354,7 @@ define([
    * Get current location from geolocation
    */
   Map.prototype.getCurrentLocation = function() {
-    this._geolocation = new ol.Geolocation({
+    return new ol.Geolocation({
       tracking: true
     });
   };
