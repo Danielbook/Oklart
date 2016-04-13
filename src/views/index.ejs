@@ -48,11 +48,7 @@
                 });
             });
 
-			//This code implements livesearch for the Stad textfield
-			//var input = document.getElementById('CitySearch');
-			//var options = {};
-			//new google.maps.places.Autocomplete(input, options);
-
+		    //Autocomplete for the Searchbar
             var input = document.getElementById('CitySearch');
             var awesomplete = new Awesomplete(input, {
             minChars: 1,
@@ -60,12 +56,12 @@
             autoFirst: true
             });
 
+            //Saving the name of the cities in an array
             var list = new Array();
             for(i=0; i<smhidata.length; i++){
 
             list[i] = smhidata[i].name; 
             }
-
             awesomplete.list = list;
           
 			

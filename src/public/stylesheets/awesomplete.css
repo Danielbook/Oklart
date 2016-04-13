@@ -51,27 +51,11 @@ div.awesomplete > ul:empty {
 	}
 }
 
-	/* Pointer */
-	div.awesomplete > ul:before {
-		content: "";
-		position: absolute;
-		top: -.43em;
-		left: 1em;
-		width: 0; height: 0;
-		padding: .4em;
-		background: white;
-		border: inherit;
-		border-right: 0;
-		border-bottom: 0;
-		-webkit-transform: rotate(45deg);
-		transform: rotate(45deg);
-	}
-
 	div.awesomplete > ul > li {
 		position: relative;
 		padding: .2em .5em;
 		cursor: pointer;
-	}
+	} 
 	
 	div.awesomplete > ul > li:hover {
 		background: hsl(200, 40%, 80%);
@@ -82,16 +66,12 @@ div.awesomplete > ul:empty {
 		background: hsl(205, 40%, 40%);
 		color: white;
 	}
-	
-		div.awesomplete mark {
-			background: hsl(65, 100%, 50%);
-		}
-		
+			
 		div.awesomplete li:hover mark {
 			background: hsl(68, 100%, 41%);
 		}
 		
 		div.awesomplete li[aria-selected="true"] mark {
-			background: hsl(86, 100%, 21%);
+			background: hsl(205, 40%, 40%);
 			color: inherit;
 		}
