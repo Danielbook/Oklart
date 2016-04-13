@@ -89,8 +89,10 @@
 					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
 						_map.updateMap(data);
 					})
+                    return false;
 				}
-			});
+			}); 
+
 		})
 
         $(window).resize(function() {

@@ -26,7 +26,7 @@ define(['map'], function (map) {
 
       for(i=0; i<smhidata.length; i++){
 
-      //  console.log(smhidata[i].name)
+        //console.log(smhidata[i].name)
 
         var point = new ol.geom.Point(
           ol.proj.transform([smhidata[i].lon, smhidata[i].lat], 'EPSG:4326', 'EPSG:3857')
@@ -166,18 +166,6 @@ define(['map'], function (map) {
     var RainVecLayer = new ol.layer.Vector({
       source: RainSource
     });
-
-
-    /* EJ FÅTT DETTA ATT FUNGERA ÄN
-    var layer_cloud = new ol.layer.Tile({
-      source: new ol.source.OSM({
-         // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
-         url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
-        
-      })
-    });
-    +*/
-
 
   //Bounding box
   view = new ol.View({
