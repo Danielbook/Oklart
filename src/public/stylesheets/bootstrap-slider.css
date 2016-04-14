@@ -136,6 +136,11 @@
 }
 .slider .tooltip-inner {
     white-space: nowrap;
+    position: relative;
+    margin-left: -16px;
+}
+.slider .tooltip.bottom .tooltip-arrow{
+    margin-left: -13px;
 }
 .slider .hide {
     display: none;
