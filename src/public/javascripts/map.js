@@ -189,23 +189,13 @@ define([
       source: this._rainSource
     });
 
-    /* EJ FÅTT DETTA ATT FUNGERA ÄN
-     var layer_cloud = new ol.layer.Tile({
-     source: new ol.source.OSM({
-     // url: 'http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png'
-     url: 'http://{s}.tile.openweathermap.org/map/clouds/{z}/{x}/{y}.png'
-
-     })
-     });
-+*/
-
-    // Bounding box
+    //Map view variable
     this._view = new ol.View({
       center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
-      zoom: 4
-      //maxZoom: 10,
-      //minZoom: 4,
-      //extent: extent
+      zoom: 4,
+      maxZoom: 9,
+      minZoom: 3,
+      extent: ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857')
     });
 
   };
