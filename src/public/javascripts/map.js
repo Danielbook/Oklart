@@ -241,7 +241,7 @@ define([
     // snowBtn.innerHTML = 'S';
 
     var handleGoToMyLocationBtn = function() {
-      _this.goToMyLocation();
+      _this.updateMap();
     };
 
     //Function to handle temperature button
@@ -310,8 +310,8 @@ define([
       temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
     };
 
-    goToMyLocationBtn.addEventListener('click', null, false);
-    goToMyLocationBtn.addEventListener('click', null, false);
+    goToMyLocationBtn.addEventListener('click', handleGoToMyLocationBtn, false);
+    goToMyLocationBtn.addEventListener('click', handleGoToMyLocationBtn, false);
     temperatureBtn.addEventListener('click', handletemperatureBtn, false);
     temperatureBtn.addEventListener('touchstart', handletemperatureBtn, false);
     rainBtn.addEventListener('click', handleRainBtn, false);
@@ -370,19 +370,27 @@ define([
    * @param data
    */
   Map.prototype.updateMap = function(data) {
+    var loc = this._myLocation;
     var pan = ol.animation.pan({
       duration: 1000,
       source: this._view.getCenter()
     });
 
-    //var FoundExtent = data[0].boundingbox;
-    var placemark_lat = data[0].lat;
-    var placemark_lon = data[0].lon;
+    if(data) {
+      //var FoundExtent = data[0].boundingbox;
+      var placemark_lat = data[0].lat;
+      var placemark_lon = data[0].lon;
 
-    this._map.beforeRender(pan);
-    this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+      this._map.beforeRender(pan);
+      this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+    }
+
+    else { // Use my location
+
+      this._map.beforeRender(pan);
+      this._map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
+    }
   };
-
 
   return Map;
 });
