@@ -2,7 +2,8 @@
 <html>
 <% include templates/header.ejs %>
 <body>
-	<script>
+
+    <script>
 		//Load the google charts packages that is used
 		//google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
 		google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
@@ -15,7 +16,7 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-//			console.log(smhidata);
+			console.log(smhidata);
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
