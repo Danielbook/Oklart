@@ -14,7 +14,7 @@ define([
     this._data = smhidata;
     this._map = new ol.Map({target: 'map'});
     this._view = new ol.View({
-      center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
+      center: ol.proj.fromLonLat([16.1924, 58.5877]), // Norrköping
       zoom: 4
       //maxZoom: 10,
       //minZoom: 4,
@@ -30,7 +30,7 @@ define([
     this._OWMrainLayer = "";
     this._OWMcloudLayer = "";
 
-    this._myLocation = this.getCurrentLocation();
+    this._userLocation = this.getCurrentLocation();
   };
 
   /**
@@ -344,7 +344,7 @@ define([
    * Set current location to the map
    */
   Map.prototype.goToMyLocation = function() {
-    var loc = this._myLocation, map = this._map;
+    var loc = this._userLocation, map = this._map;
     if(loc) {
       loc.once('change', function() {
         // Save position and set map center
@@ -370,7 +370,7 @@ define([
    * @param data
    */
   Map.prototype.updateMap = function(data) {
-    var loc = this._myLocation;
+    var loc = this._userLocation;
     var pan = ol.animation.pan({
       duration: 1000,
       source: this._view.getCenter()
