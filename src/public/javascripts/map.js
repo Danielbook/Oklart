@@ -348,15 +348,43 @@ define([
 
   Map.prototype.updateLayers = function(Map) {
 
-    var zoomLevel = Map._map.getView().getZoom();
-    console.log(zoomLevel);
+    var currZoom = Map._map.getView().getZoom();
+    console.log("Currzoom lvl = " + currZoom);
+
+    //Clear the source for the temp layer
+    Map._temperatureSource.clear();
+
+    for(var idx=0; idx < Map._data.length; idx++){
+      var dataZoom = Map._data[idx].zoomlevel; // get curr zoom level on map
+
+      //add icon if datazoom<=currzoom
+      if(dataZoom <= currZoom){
+
+        var point = new ol.geom.Point(
+          ol.proj.transform([Map._data[idx].lon, Map._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
+          );      
+        var pointFeatureTemp = new ol.Feature(point);
+
+        // Style for each temperature point
+        pointFeatureTemp.setStyle(new ol.style.Style({
+          text: new ol.style.Text({
+            text: String(Map._data[idx].name), // .t = temperature
+
+            scale: 1.3,
+            fill: new ol.style.Fill({
+              color: '#000'
+            })
+          })
+        }));
+
+        //Finally add style to icon
+        Map._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
+
+      };
+    };
 
 
-
-    if(zoomLevel <= 3 ){
-        Map._temperatureSource.clear();
-      }
-  };
+    };
 
   /**
    * Set current location to the map
