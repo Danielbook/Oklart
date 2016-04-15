@@ -2,18 +2,18 @@
 
 define([
   'map'
-], function (
-  map
-){
+  ], function (
+    map
+    ){
   /**
    * Constructor for the map
    * @param smhidata
    * @constructor
    */
-  var Map = function(smhidata) {
+   var Map = function(smhidata) {
     this._data = smhidata;
     this._map = new ol.Map({target: 'map'});
-    this._view = "";
+    this._view = new ol.View;
     this._myPosLatLon = "";
     this._geolocation = "";
     this._cartoDBLight = "";
@@ -23,6 +23,8 @@ define([
     this._OWMtempLayer = "";
     this._OWMrainLayer = "";
     this._OWMcloudLayer = "";
+    this._rainVecLayer = "";
+    this._temperatureVecLayer= "";
 
     this._geolocation = this.getCurrentLocation();
   };
@@ -30,18 +32,19 @@ define([
   /**
    * Inits the map
    */
-  Map.prototype.initMap = function() {
-    this.temperatureLayer();
+   Map.prototype.initMap = function() {
+    this.initSources();
     this.heatMap();
     this.mapLayers();
     this.setupMapControls(this._OWMtempLayer, this._OWMrainLayer, this._OWMcloudLayer);
     this.setToLocation(this._map, this._geolocation);
+    this.updateLayers(this);
   };
 
   /**
    * Setup the temperature layer
    */
-  Map.prototype.temperatureLayer = function() {
+   Map.prototype.initSources = function() {
     // Source for the vector layer
     this._temperatureSource = new ol.source.Vector({
       projection: 'EPSG:4326'
@@ -54,14 +57,14 @@ define([
     for(var idx = 0; idx < this._data.length; idx++) {
       var point = new ol.geom.Point(
         ol.proj.transform([this._data[idx].lon, this._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
-      );
+        );
       var pointFeatureTemp = new ol.Feature(point);
       var pointFeatureRain = new ol.Feature(point);
 
       // Style for each temperature point
       pointFeatureTemp.setStyle(new ol.style.Style({
         text: new ol.style.Text({
-          text: String(this._data[idx].timeseries[0].t), // .t = temperature
+          text: String(this._data[idx].name), // .t = temperature
 
           scale: 1.3,
           fill: new ol.style.Fill({
@@ -69,6 +72,7 @@ define([
           })
         })
       }));
+
 
       this._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
 
@@ -124,7 +128,7 @@ define([
   /**
    * Setup the map layers
    */
-  Map.prototype.mapLayers = function() {
+   Map.prototype.mapLayers = function() {
     var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
     //Base map layer
@@ -176,12 +180,12 @@ define([
     });
 
     // Temperature layer
-    var temperatureVecLayer = new ol.layer.Vector({
+    this._temperatureVecLayer = new ol.layer.Vector({
       source: this._temperatureSource
     });
 
     // Rain layer
-    var RainVecLayer = new ol.layer.Vector({
+    this._rainVecLayer = new ol.layer.Vector({
       source: this._rainSource
     });
 
@@ -193,7 +197,7 @@ define([
 
      })
      });
-     +*/
++*/
 
     // Bounding box
     this._view = new ol.View({
@@ -203,12 +207,13 @@ define([
       //minZoom: 4,
       //extent: extent
     });
+
   };
 
   /**
    * Setup controls for map
    */
-  Map.prototype.setupMapControls = function() {
+   Map.prototype.setupMapControls = function() {
     // Define a namespace for the application.
     window.app = {};
     var app = window.app;
@@ -228,15 +233,11 @@ define([
       cloudBtn.className = 'icon ion-cloud';
       snowBtn.className = 'icon ion-ios-snowy';
 
-      // temperatureButton.innerHTML = 'T';
-      // rainBtn.innerHTML = 'R';
-      // cloudBtn.innerHTML = 'C';
-      // snowBtn.innerHTML = 'S';
-
       //Function to handle temperature button
       var handleTemperatureButton = function() {
 
-        console.log(_map);
+        console.log(_map.getView().getZoom());
+        /*
         _map.addLayer(this.OWMtempLayer);
         _map.removeLayer(this.OWMsnowLayer);
         _map.removeLayer(this.OWMcloudLayer);
@@ -250,6 +251,7 @@ define([
         cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
         snowBtn.disabled = false;
         snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        */
       };
 
       //Function to handle rain button
@@ -330,22 +332,43 @@ define([
 
     ol.inherits(app.LayerControl, ol.control.Control);
 
+
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([ new app.LayerControl(this._map) ]);
     this._map.setView(this._view);
+    this._map.addLayer(this._temperatureVecLayer);
+    console.log(this._data);
+
+    var that = this;
+
+    this._map.getView().on('change:resolution', function(){
+      Map.prototype.updateLayers(that);
+    });
+  };
+
+  Map.prototype.updateLayers = function(Map) {
+
+    var zoomLevel = Map._map.getView().getZoom();
+    console.log(zoomLevel);
+
+
+
+    if(zoomLevel <= 3 ){
+        Map._temperatureSource.clear();
+      }
   };
 
   /**
    * Set current location to the map
    */
-  Map.prototype.setToLocation = function(map, loc) {
+   Map.prototype.setToLocation = function(map, loc) {
      if(loc) {
        loc.once('change', function() {
         // Save position and set map center
         map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
       });
-    }
-    else {
+     }
+     else {
       alert("Couldn't find location");
     }
   };
@@ -353,7 +376,7 @@ define([
   /**
    * Get current location from geolocation
    */
-  Map.prototype.getCurrentLocation = function() {
+   Map.prototype.getCurrentLocation = function() {
     return new ol.Geolocation({
       tracking: true
     });
@@ -363,7 +386,7 @@ define([
    * Updates the map to current location
    * @param data
    */
-  Map.prototype.updateMap = function(data) {
+   Map.prototype.updateMap = function(data) {
     var pan = ol.animation.pan({
       duration: 1000,
       source: this._view.getCenter()
