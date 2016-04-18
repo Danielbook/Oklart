@@ -60,7 +60,7 @@
   {"name": "Mölndal" , "lat":57.66  , "lon":12.00, "zoomlevel": 8 },
   {"name": "Mölnlycke" , "lat":57.66  , "lon":12.14, "zoomlevel": 8 },
   {"name": "Nacka" , "lat": 59.31 , "lon":18.17, "zoomlevel": 8 },
-  {"name": "Norrköping" , "lat":58.61 , "lon":16.18, "zoomlevel": 0 },
+  {"name": "Norrköping" , "lat":58.61 , "lon":16.18, "zoomlevel": 7 },
   {"name": "Norrtälje" , "lat": 59.76 , "lon":18.72, "zoomlevel": 8 },
   {"name": "Nybro" , "lat": 56.75 , "lon":15.92, "zoomlevel": 8 },
   {"name": "Nyköping" , "lat": 58.75 , "lon":16.99, "zoomlevel": 8 },

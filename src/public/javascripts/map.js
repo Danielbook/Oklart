@@ -363,7 +363,14 @@ define([
             fill: new ol.style.Fill({
               color: '#000'
             })
-          })
+          }),         
+          image: new ol.style.Icon({
+            anchor: [0.5, -0.4],
+            scale: 0.08,
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: './images/icons/cloudy.png'
+          }),
         }));
 
         //Finally add style to icon
