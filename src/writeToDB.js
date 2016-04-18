@@ -4,95 +4,187 @@ var http = require('http');
 var request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
-var request = require("request")
+var request = require("request");
+
+function createurls (l, k){
+
+	var locations = new Array();
+
+	for(var i = 0; i < l.length; i++){
+
+		var location = {
+			name : "",
+			url : "",
+			sampleurls : [],
+			data : {},
+			zoomlevel : -1
+		}
+
+		var idx = 0;
+		location.name = l[i].name;
+		location.zoomlevel = l[i].zoomlevel;
+		for(var dlat = -k ; dlat <= k ;dlat=dlat+k ){
+			for(var dlon = -k; dlon <= k; dlon=dlon+k){
+				var lat = l[i].lat + dlat;
+				lat = lat.toFixed(3);
+				var lon = l[i].lon + dlon;
+				lon = lon.toFixed(3);
+
+				if(dlat == 0 && dlon == 0)
+					location.url =  "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
+				else{
+					location.sampleurls[idx] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
+					idx++;
+				}	
+			}
+		}
+
+		locations.push(location);
+	}
 
 
-//Takes a list of locations and reads from SMHI for each loaction. The data for each point is inserted into mongodb.
-var insertData = function (locations){
+	return locations;
+}
+
+function pushtoDB(data){
+
+	var db = MongoClient.connect('mongodb://adam:123@ds015919.mlab.com:15919/weatherdata', function(err, db) {
+	if(err){
+        throw err;
+	}
+
+    myCollection = db.collection('data');
+    myCollection.remove({});
+
+ 	myCollection.insert(data, function(err, result) {
+	    if(err){
+			throw err;	
+			console.log("Something went wrong when inserting data to db");
+		}
+	        
+		console.log("Data has been inserted")
+	})
+
+	})
+
+}
+
+function calcMinMax(data, k){
+
+	var sampleurlslist = [];
+	for(var i = 0; i < data.length; i++){
+		sampleurlslist[i] = new Array();
+		for(var dlat = -k ; dlat <= k ;dlat=dlat+k ){
+			for(var dlon = -k; dlon <= k; dlon=dlon+k){
+				var lat = data[i].lat + dlat;
+				lat = lat.toFixed(3);
+				var lon = data[i].lon + dlon;
+				lon = lon.toFixed(3);
+
+				sampleurlslist[i].push("http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json")
+			}
+		}
+	}
+
+	async.each(sampleurlslist,
+
+		function(sampleurls, out_callback){
+			var idx = sampleurlslist.indexOf(sampleurls);
+			console.log(idx);
+
+			data[idx].mintimeseries = [];
+			data[idx].maxtimeseries = [];
+
+			async.each(sampleurls,
+				function(sampleurl,  callback){
+					var id = sampleurls.indexOf(sampleurl);
+
+					for(var j = 0; j < data[idx].timeseries.length ; j++){
+						var min = JSON.parse(JSON.stringify(data[idx].timeseries[j]));
+						var max = JSON.parse(JSON.stringify(data[idx].timeseries[j]));
+
+						data[idx].mintimeseries[j] = {};
+						data[idx].maxtimeseries[j] = {};
+	
+						// console.log("min: " + min);
+						// console.log("max: " + max);
+
+						var res = data[idx].timeseries[j];
+						for (var property in res) {
+						    if (res.hasOwnProperty(property)) {
+
+						        if(min[property] > res[property]){
+						        	min[property] = res[property];
+						        }					        
+						        
+						        if(max[property] < res[property]){
+						        	max[property] = res[property];
+						        }
+						    }
+						}
+					data[idx].mintimeseries[j] = JSON.parse(JSON.stringify(min));
+					data[idx].maxtimeseries[j] = JSON.parse(JSON.stringify(max));
+
+					}
+
+					// console.log(sampleurl + " is " + sampleurlslist[idx][id]);
+
+					callback();
+				},
+				function(err){
+					out_callback();
+				}
+			)
+		},
+		function(err){
+			console.log("data[idx].maxtimeseries.t: " + data[100].maxtimeseries[2].t);
+			console.log("data[idx].mintimeseries.t: " + data[100].mintimeseries[2].t);
+			
+			pushtoDB(data);
+			console.log("I go here once");
+		}
+	);
+}
+
+var oldinsertData = function (locations){
 	var urls = [];
+	var sampleurls = [];
+	var data = new Array();
 
 	for(var i = 0; i < locations.length; i++){
 		urls[i] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + locations[i].lat + "/lon/" + locations[i].lon + "/data.json";
+		sampleurls[i] = new Array();
 	}
 
-	var db = MongoClient.connect('mongodb://adam:123@ds015919.mlab.com:15919/weatherdata', function(err, db) {
-		if(err){
-	        throw err;
-		}
-	
+    // 1st para in async.each() is the array of urls
+	async.each(urls,
+  	  // 2nd param is the function that each item is passed to
+	  function(url, callback){
+      // Call the http get async function and call callback when one datapoint has been inserted in db
+	    http.get(url, function(res){
+	    var body = '';
+	    var location = locations[urls.indexOf(url)];
 
-	    console.log("Writing data to DB...");
-	    myCollection = db.collection('data');
-	    myCollection.remove({});
-	    urls.forEach(function(url){
-	    	request({
-			    url: url,
-			    json: true
-			}, function (error, response, body) {
-			    if (!error && response.statusCode === 200) {
+		    res.on('data', function(chunk){
+		        body += chunk;
+		    });
 
-			    	var smhiResponse = {};
-					smhiResponse = body;
-					var index = urls.indexOf(url);
-					
+		    res.on('end', function(){
+		    	var smhiResponse = JSON.parse(body);
+		    	smhiResponse.name = location.name;
+		    	smhiResponse.zoomlevel = location.zoomlevel;
 
-					//console.log(urls.indexOf(url));
-					smhiResponse.zoomlevel = locations[index].zoomlevel;
-					smhiResponse.name = locations[index].name;
+		    	data.push(smhiResponse);
 
-			    	smhiResponse.timeseries[0].temp_t = smhiResponse.timeseries[0].t - smhiResponse.timeseries[1].t
-			    	for(var j = 1; j < smhiResponse.timeseries.length - 1 ; j++){
-			    		smhiResponse.timeseries[j].temp_t = smhiResponse.timeseries[j].t - (smhiResponse.timeseries[j-1].t + smhiResponse.timeseries[j+1].t)/2 ;
-				    }
-				    smhiResponse.timeseries[smhiResponse.timeseries.length-1].temp_t = smhiResponse.timeseries[smhiResponse.timeseries.length-1].t - smhiResponse.timeseries[1].t
-
-				    myCollection.insert(smhiResponse, function(err, result) {
-					    if(err)
-					        throw err;	
-					})
-			    }
+				callback();
+				})
 			})
-	    })
-
-	});
-		// // 1st para in async.each() is the array of urls
-		// async.each(urls,
-	 //  	  // 2nd param is the function that each item is passed to
-		//   function(url, callback){
-	 //      // Call the http get async function and call callback when one datapoint has been inserted in db
-		//     http.get(url, function(res){
-		//     var body = '';
-		//     var location = locations[urls.indexOf(url)].name;
-
-		// 	    res.on('data', function(chunk){
-		// 	        body += chunk;
-		// 	    });
-
-		// 	    res.on('end', function(){
-		// 	    	var smhiResponse = JSON.parse(body);
-		// 	    	smhiResponse.name = location;
-			    	
-		// 	    	for(var i = 0; i < smhiResponse.timeseries.length ; i++){
-		// 	    		smhiResponse.timeseries[i].ourSpat = 0.7;
-		// 	    		smhiResponse.timeseries[i].ourTemp = 0.6;
-		// 	    	}
-			    	
-		// 	    	//Add datapoint to db
-		// 		    myCollection.insert(smhiResponse, function(err, result) {
-		// 			    if(err)
-		// 			        throw err;
-
-		// 				callback();
-		// 			})
-		// 		})
-		// 	})
-		//   },
-		//   // 3rd param is the function to call when everything's done
-		//   function(err){
-		//   	console.log("Data has been inserted in db");
-		//   }
-		// );
-	// })
+	  },
+	  // 3rd param is the function to call when everything's done
+	  function(err){
+	  	calcMinMax(data, 0.5);
+	  }
+	);
 }
 
-module.exports = insertData;
+module.exports = oldinsertData;
