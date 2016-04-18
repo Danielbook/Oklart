@@ -1,0 +1,28 @@
+.table {
+  margin:auto;
+}
+
+.currentLocation{
+  background-color: #3DDF9E;
+}
+
+.activeCell{
+  background-color: #cccccb;
+}
+
+th, td{
+  text-align: center;
+}
+
+td.toggleable{
+  -webkit-transition: background-color 300ms;
+  -moz-transition: background-color 300ms;
+  -ms-transition: background-color 300ms;
+  -o-transition: background-color 300ms;
+  transition: background-color 300ms;
+}
+
+td.toggleable:hover {
+  background-color: #d3d3d2;
+  cursor: pointer;
+}
