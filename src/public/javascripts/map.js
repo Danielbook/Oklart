@@ -116,6 +116,42 @@ define([
     });
   };
 
+  Map.prototype.weatherType = function(wdp) { //Snow and rain
+    if(wdp.pcat == 0) { // No precipatopm
+      if(wdp.tcc < 1) { // Sunny
+        return "sun";
+      }
+      else if(wdp.tcc > 1 && wdp.tcc < 4) { // Sunny with a chance of clouds
+        return "sun cloud";
+      }
+      else if(wdp.tcc <= 6 && wdp.tcc > 4) { // Cloudy
+        return "cloudy";
+      }
+      else if(wdp.tcc <= 8 && wdp.tcc > 6) { // Heavy clouds
+        return "heavy clouds";
+      }
+    }
+    else if(wdp.pcat == 1) {
+      if(wdp.pit > 5) { // Heavy snow
+        return "heavy snow";
+      }
+      else{ // Snow
+        return "snow";
+      }
+    }
+    else if(wdp.pcat == 2) { // Snow and rain
+      return "snow and rain";
+    }
+    else if(wdp.pcat == 3) {
+      if(wdp.pit > 5) { // Heavy rain
+        return "heavy rain";
+      }
+      else { // Rain
+        return "rain";
+      }
+    }
+  };
+
   /**
    * Setup controls for map
    */
@@ -153,7 +189,8 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        var weatherIcon = './images/icons/midsummer.png';
+        //var weatherIcon = './images/icons/midsummer.png';
+        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[0]) + ".png";
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
@@ -165,7 +202,7 @@ define([
             })
           }),
           image: new ol.style.Icon({
-            anchor: [0.5, -0.15],
+            anchor: [0.5, -0.2],
             scale: 0.08,
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
