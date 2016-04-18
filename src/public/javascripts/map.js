@@ -193,8 +193,8 @@ define([
     this._view = new ol.View({
       center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
       zoom: 4,
-      maxZoom: 9,
-      minZoom: 3,
+      maxZoom: 8,
+      minZoom: 4,
       extent: ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857')
     });
 
@@ -347,7 +347,7 @@ define([
     for(var idx=0; idx < Map._data.length; idx++){
       var dataZoom = Map._data[idx].zoomlevel; // get curr zoom level on map
 
-      //add icon if datazoom<=currzoom
+      //add icon only if datazoom<=currzoom
       if(dataZoom <= currZoom){
 
         var point = new ol.geom.Point(
@@ -359,7 +359,6 @@ define([
         pointFeatureTemp.setStyle(new ol.style.Style({
           text: new ol.style.Text({
             text: String(Map._data[idx].name), // .t = temperature
-
             scale: 1.3,
             fill: new ol.style.Fill({
               color: '#000'
