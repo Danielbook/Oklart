@@ -16,7 +16,6 @@
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
 			console.log(smhidata);
-
 			//Creates objects for the components
 			var _table = new Table(smhidata);
 			var _graph = new Graph(smhidata);
@@ -24,8 +23,8 @@
 			var slider = new Slider('#bootslide', {});
 
 			//Inits the objects to create the components
-			_graph.initGraph(smhidata);
-			_graph.drawGraph();
+			_graph.initGraph(smhidata, 2, 't');
+
 			_map.initMap();
 
             $( document ).ready(function() {
@@ -70,7 +69,7 @@
 			
             slider.on("slideStop", function(slideEvt) {
 				var sliderValues = slider.getValue();
-
+                _graph.initGraph(smhidata, 10, 'gust');
 				_graph.updateTime(sliderValues);
 
 //				console.log(sliderValues);
