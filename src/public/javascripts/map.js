@@ -33,6 +33,9 @@ define([
     this._temperatureVecLayer= "";
     this._RainVecLayer = "";
 
+    this._markerSource = "";
+    this._markerVecLayer = "";
+
     this._userLocation = this.getCurrentLocation();
   };
 
@@ -45,6 +48,7 @@ define([
     this.mapLayers();
     this.setupMapControls();
     this.goToMyLocation();
+    this.addMarker(this);
     this.updateLayers(this);
   };
 
@@ -272,7 +276,7 @@ define([
     }
   };
 
-  Map.prototype.LayerControl = function(_this, opt_options) {
+  Map.prototype.LayerControl = function(that, opt_options) {
     var options = opt_options || {};
 
     // Buttons
@@ -295,15 +299,15 @@ define([
     // snowBtn.innerHTML = 'S';
 
     var handleGoToMyLocationBtn = function() {
-      _this.updateMap();
+      that.updateMap();
     };
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
-      _this._map.addLayer(_this._temperatureVecLayer);
-      _this._map.removeLayer(_this._OWMsnowLayer);
-      _this._map.removeLayer(_this._OWMcloudLayer);
-      _this._map.removeLayer(_this._OWMrainLayer);
+      that._map.addLayer(that._temperatureVecLayer);
+      that._map.removeLayer(that._OWMsnowLayer);
+      that._map.removeLayer(that._OWMcloudLayer);
+      that._map.removeLayer(that._OWMrainLayer);
 
       temperatureBtn.disabled = true;
       temperatureBtn.style.backgroundColor = 'gray';
@@ -317,10 +321,10 @@ define([
 
     //Function to handle rain button
     var handleRainBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
-      _this._map.removeLayer(_this._OWMsnowLayer);
-      _this._map.removeLayer(_this._OWMcloudLayer);
-      _this._map.addLayer(_this._OWMrainLayer);
+      that._map.removeLayer(that._temperatureVecLayer);
+      that._map.removeLayer(that._OWMsnowLayer);
+      that._map.removeLayer(that._OWMcloudLayer);
+      that._map.addLayer(that._OWMrainLayer);
 
       rainBtn.disabled = true;
       rainBtn.style.backgroundColor = 'gray';
@@ -333,10 +337,10 @@ define([
     };
 
     var handleCloudBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
-      _this._map.removeLayer(_this._OWMsnowLayer);
-      _this._map.addLayer(_this._OWMcloudLayer);
-      _this._map.removeLayer(_this._OWMrainLayer);
+      that._map.removeLayer(that._temperatureVecLayer);
+      that._map.removeLayer(that._OWMsnowLayer);
+      that._map.addLayer(that._OWMcloudLayer);
+      that._map.removeLayer(that._OWMrainLayer);
 
       cloudBtn.disabled = true;
       cloudBtn.style.backgroundColor = 'gray';
@@ -349,10 +353,10 @@ define([
     };
 
     var handleSnowBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
-      _this._map.addLayer(_this._OWMsnowLayer);
-      _this._map.removeLayer(_this._OWMcloudLayer);
-      _this._map.removeLayer(_this._OWMrainLayer);
+      that._map.removeLayer(that._temperatureVecLayer);
+      that._map.addLayer(that._OWMsnowLayer);
+      that._map.removeLayer(that._OWMcloudLayer);
+      that._map.removeLayer(that._OWMrainLayer);
 
       snowBtn.disabled = true;
       snowBtn.style.backgroundColor = 'gray';
@@ -392,8 +396,39 @@ define([
       element: buttonDiv,
       target: options.target
     });
+  };
 
+  /**
+   * Adds a marker on the users location
+   */
+  Map.prototype.addMarker = function(that){
+    that._markerSource = new ol.source.Vector({
+      projection: 'EPSG:4326'
+    });
 
+    var markerFeature = new ol.Feature({
+      geometry: new ol.geom.Point([16.1924, 58.5877]),
+      name: 'Current position'
+    });
+
+    var markerStyle = new ol.style.Style({
+      image: new ol.style.Icon({
+        anchor:       [0.5, 46],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'pixels',
+        src:          'images/marker.png'
+      })
+    });
+
+    markerFeature.setStyle(markerStyle);
+
+    that._markerSource.addFeatures(markerFeature);
+
+    that._markerVecLayer = new ol.layer.Vector({
+      source: that._markerSource
+    });
+
+    that._map.addLayer(that._markerVecLayer);
   };
 
   /**
