@@ -15,17 +15,8 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-
-            //console.log(smhidata);
-			//Creates objects for the components
-			var _table = new Table();
-			var _graph = new Graph(smhidata);
-			var _map = new Map();
-			var slider = new Slider('#bootslide', {});
-
             //This is a time handler. It prints current day and hour for the slider
             var dateHandler = new Date();
-            dateHandler.setDate(dateHandler.getDate() + 20);
             var weekday = new Array();
             weekday[0] = "Söndag";
             weekday[1] = "Måndag";
@@ -34,9 +25,44 @@
             weekday[4] = "Torsdag";
             weekday[5] = "Fredag";
             weekday[6] = "Lördag";
+
+            console.log(smhidata);
+			//Creates objects for the components
+			var _table = new Table();
+			var _graph = new Graph(smhidata);
+			var _map = new Map();
+			var slider = new Slider('#bootslide', {
+                //ticks: [1, 36, 73],
+                //ticks_positions: [0, 50, 100],
+                //ticks_labels:[weekday[dateHandler.getUTCDay()], weekday[dateHandler.getUTCDay()+1], weekday[dateHandler.getUTCDay()+2] ]
+            });
+/*
+            var today = new Date(smhidata[1].timeseries[1].validTime);
+            //today = weekday[dateHandler.getUTCDay()];
+            var tomorrow;
+            var index;
+            console.log("today: " + today);
+
+            for(var i = 0; i < 73; i++)
+            {
+                tomorrow = new Date(smhidata[1].timeseries[i].validTime);
+                if( weekday[tomorrow.getDay()] != weekday[today.getUTCDay()] ){
+                    //console.log("TOMORROW " + weekday[tomorrow.getUTCDay()]);
+                    //console.log("TODAY: " + weekday[today.getUTCDay()]);
+                    console.log("hours: " + today.getUTCHours());
+                    console.log("i = " + i);
+                    index = i;
+                    break;
+                }
+            }
+
+            slider.setAttribute("ticks", [1, index, 73]);
+            console.log("Pos: " + slider.ticks);
+*/
+
             slider.tooltipInner.innerText = pad(dateHandler.getHours()) + ":00";
             document.getElementById("tid").innerHTML = pad(dateHandler.getHours()) + ":00";
-            document.getElementById("dag").innerHTML = weekday[dateHandler.getDay()];
+            document.getElementById("dag").innerHTML = weekday[dateHandler.getUTCDay()];
 
             //This function adds a 0 before the displayed hour if needed. E.g. 8:00 becomes 08:00.
             function pad(n) {return ("0" + n).slice(-2); }
@@ -51,6 +77,7 @@
 			var input = document.getElementById('CitySearch');
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
+
                                     //Slider handler functions
         //---------------------------------------------------------------------------------
             //This function displays time and day chosen via the slider
@@ -83,7 +110,6 @@
             slider.on("slide", function(slideEvt){
                 var sliderValue = slider.getValue();
                 dateHandler = new Date(smhidata[1].timeseries[sliderValue].validTime);
-
                 var sliderHours = pad(dateHandler.getUTCHours()) + ":00";
 
                 slider.tooltipInner.innerHTML = sliderHours;
@@ -199,7 +225,7 @@
                             <div id="map" class="map"></div>
                              <input id="bootslide" type="text"  value=""
                                      data-slider-min="1"
-                                     data-slider-max="29"
+                                     data-slider-max="73"
                                      data-slider-step="1"
                                      data-slider-value="1"
                                      data-slider-tooltip
