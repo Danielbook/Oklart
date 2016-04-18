@@ -33,6 +33,9 @@ define([
     this._temperatureVecLayer= "";
     this._RainVecLayer = "";
 
+    this._markerSource = "";
+    this._markerVecLayer = "";
+
     this._userLocation = this.getCurrentLocation();
   };
 
@@ -45,6 +48,7 @@ define([
     this.mapLayers();
     this.setupMapControls();
     this.goToMyLocation();
+    this.addMarker(this);
     this.updateLayers(this);
   };
 
@@ -392,8 +396,39 @@ define([
       element: buttonDiv,
       target: options.target
     });
+  };
 
+  /**
+   * Adds a marker on the users location
+   */
+  Map.prototype.addMarker = function(that){
+    that._markerSource = new ol.source.Vector({
+      projection: 'EPSG:4326'
+    });
 
+    var markerFeature = new ol.Feature({
+      geometry: new ol.geom.Point([16.1924, 58.5877]),
+      name: 'Current position'
+    });
+
+    var markerStyle = new ol.style.Style({
+      image: new ol.style.Icon({
+        anchor:       [0.5, 46],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'pixels',
+        src:          './images/marker.png'
+      })
+    });
+
+    markerFeature.setStyle(markerStyle);
+
+    that._markerSource.addFeatures(markerFeature);
+
+    that._markerVecLayer = new ol.layer.Vector({
+      source: that._markerSource
+    });
+
+    that._map.addLayer(that._markerVecLayer);
   };
 
   /**
@@ -440,6 +475,7 @@ define([
       this._map.beforeRender(pan);
       this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
     }
+
 
     else { // Use my location
 
