@@ -1,15 +1,17 @@
+"use strict";
+
 define([
   'table'
 ], function (
   table
-) {
+){
 
   /**
-  * CONSTRUCTOR 
-  */
+   * CONSTRUCTOR
+   */
   var Table = function(smhidata) {
     this._data = smhidata;
-    this._currentLocation = "Södertälje";
+    this._currentLocation = "Höganäs";
     this._chosenWeather = "Temperatur";
   };
 

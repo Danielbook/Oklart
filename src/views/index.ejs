@@ -15,16 +15,18 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
+			console.log(smhidata);
+
 			//Creates objects for the components
 			var _table = new Table(smhidata);
 			var _graph = new Graph(smhidata);
-			var _map = new Map();
+			var _map = new Map(smhidata);
 			var slider = new Slider('#bootslide', {});
 
 			//Inits the objects to create the components
 			_graph.initGraph(smhidata);
 			_graph.drawGraph();
-			_map.initMap(smhidata);
+			_map.initMap();
 
             $( document ).ready(function() {
                 /**
