@@ -1,5 +1,37 @@
-define(['graph'], function (graph) { 
+define(['graph'], function (graph) {
 
+  transpose = function(a) {
+
+    // Calculate the width and height of the Array
+    var w = a.length ? a.length : 0,
+        h = a[0] instanceof Array ? a[0].length : 0;
+
+    // In case it is a zero matrix, no transpose routine needed.
+    if(h === 0 || w === 0) { return []; }
+
+    /**
+     * @var {Number} i Counter
+     * @var {Number} j Counter
+     * @var {Array} t Transposed data is stored in this array.
+     */
+    var i, j, t = [];
+
+    // Loop through every item in the outer array (height)
+    for(i=0; i<h; i++) {
+
+      // Insert a new row (array)
+      t[i] = [];
+
+      // Loop through every item per item in outer array (width)
+      for(j=0; j<w; j++) {
+
+        // Save transposed data.
+        t[i][j] = a[j][i];
+      }
+    }
+
+    return t;
+  };
   var _data,
       _options,
       _lineChart,
@@ -11,44 +43,40 @@ define(['graph'], function (graph) {
    * @constructor
    */
   var Graph = function() {
-    // console.log(this._data);
   };
 
   /**
    * Initialize a graph and create the DataTable
    */
-  Graph.prototype.initGraph = function(smhidata) {
+  Graph.prototype.initGraph = function(smhidata, locationindex, par ) {
 
     var TimeArr = [];
     var TempArr = [];
     var MinTempArr = [];
     var MaxTempArr = [];
+    //var locationindex  = 100;
+    //var par = 'gust';
 
   for(var i = 0; i < 24; i++){
-    var currhour = smhidata[0].timeseries[i].validTime;
+    var data = smhidata[locationindex].timeseries[i];
+    var min = smhidata[locationindex].mintimeseries[i];
+    var max = smhidata[locationindex].maxtimeseries[i];
+
+    var currhour = smhidata[locationindex].timeseries[i].validTime;
     currhour = currhour.substring(11,16);
     currhour = currhour.toString();
-    TimeArr.push(smhidata[0].timeseries[i])
-    TempArr.push(smhidata[0].timeseries[i].t);
-    MinTempArr.push(smhidata[0].timeseries[i].t -1);
-    MaxTempArr.push(smhidata[0].timeseries[i].t +1);
+    TimeArr.push(smhidata[locationindex].timeseries[i].validTime.slice(11,16));
+    TempArr.push(data[par]);
+    MinTempArr.push(min[par]);
+    MaxTempArr.push(max[par]);
   }
+
+    //The MIN/MAX needs to be in a Matrix
     var Temps = [MinTempArr,MaxTempArr];
     var seriesArr = [];
-    console.log("TempsB: ", Temps);
 
-    var newArray = [];
-    for(var i = 0; i < Temps.length; i++){
-      newArray.push([]);
-    };
-
-    for(var i = 0; i < Temps.length; i++){
-      for(var j = 0; j < Temps.length; j++){
-        newArray[j].push(Temps[i][j]);
-      };
-    };
-
-    console.log("TempsEfter: " , Temps);
+    //transpose if matrix due to how HS reads data
+    MinMaxArr = transpose(Temps);
 
       //push values to series
     seriesArr.push(
@@ -57,13 +85,14 @@ define(['graph'], function (graph) {
           data: TempArr,
           zIndex: 1,
           marker: {
+            enabled: false,
             fillColor: 'white',
-            lineWidth: 2,
+            lineWidth: 1,
             lineColor: Highcharts.getOptions().colors[0]
           }
         }, {
           name: 'MinMax',
-          data: newArray,
+          data: MinMaxArr,
           type: 'arearange',
           lineWidth: 0,
           linkedTo: ':previous',
@@ -72,14 +101,13 @@ define(['graph'], function (graph) {
           zIndex: 0
         }
     );
-      console.log(seriesArr);
-
       //options for Highgraph
     var options = {
       chart: {
             renderTo: 'graph_div',
           defaultSeriesType: 'line'
       },
+      colors: ['#4798DC'],
       title: {
         text: 'Temperatur'
       },
@@ -96,6 +124,7 @@ define(['graph'], function (graph) {
       },
 
       tooltip: {
+
         crosshairs: true,
         shared: true,
         valueSuffix: '°C'

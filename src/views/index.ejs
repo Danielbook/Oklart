@@ -25,8 +25,8 @@
 
 			//Inits the objects to create the components
 			_table.initTable(smhidata);
-			_graph.initGraph(smhidata);
-			_graph.drawGraph();
+			_graph.initGraph(smhidata, 2, 't');
+
 			_map.initMap(smhidata);
 
 			//This code implements livesearch for the Stad textfield
@@ -36,7 +36,7 @@
 
 			slider.on("slideStop", function(slideEvt) {
 				var sliderValues = slider.getValue();
-
+                _graph.initGraph(smhidata, 10, 'gust');
 				_graph.updateTime(sliderValues);
 
 //				console.log(sliderValues);
