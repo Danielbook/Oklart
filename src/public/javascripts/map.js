@@ -294,6 +294,8 @@ define([
       element: buttonDiv,
       target: options.target
     });
+
+    handleCloudBtn(); //Set active layer to cloud layer on page load
   };
 
   /**
