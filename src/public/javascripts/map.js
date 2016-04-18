@@ -153,7 +153,7 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        var weatherIcon = './images/icons/cloudy.png';
+        var weatherIcon = './images/icons/midsummer.png';
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
@@ -165,7 +165,7 @@ define([
             })
           }),
           image: new ol.style.Icon({
-            anchor: [0.5, -0.4],
+            anchor: [0.5, -0.15],
             scale: 0.08,
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
