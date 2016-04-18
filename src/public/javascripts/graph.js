@@ -32,11 +32,6 @@ define(['graph'], function (graph) {
 
     return t;
   };
-  var _data,
-      _options,
-      _lineChart,
-      _tableData;
-
   /**
    *
    * @param smhidata  data from SMHI
@@ -50,6 +45,49 @@ define(['graph'], function (graph) {
    */
   Graph.prototype.initGraph = function(smhidata, locationindex, par ) {
 
+    var Cpar; //Chosen Parameter
+    var Suff; //Chosen parameter suffix
+    console.log(par);
+    if(par == 't'){
+      Cpar = 'Temperatur';
+      Suff = '°C';
+    }
+    else if(par == 'gust'){
+      Cpar = 'Byvind';
+      Suff = 'm/s';
+    }
+    else if(par == 'ws'){
+      Cpar = 'Vindhastighet';
+      Suff = 'm/s';
+    }
+    else if(par == 'r'){
+      Cpar = 'Luftfuktighet';
+      Suff = '%';
+    }
+    else if(par == 'tcc'){
+      Cpar = 'Molnmängd';
+      Suff = 'Molnmängd';
+    }
+    else if(par == 'msl'){
+      Cpar = 'Lufttryck';
+      Suff = 'hPa';
+    }
+    else if(par == 'pis'){
+      Cpar = 'Nederbördsintensitet, snö';
+      Suff = 'mm/h';
+    }
+    else if(par == 'pit'){
+      Cpar = 'Nederbördsintensitet';
+      Suff = 'mm/h';
+    }
+    else if(par == 'tstm'){
+      Cpar = 'Sannolikhet för åska';
+      Suff = '%';
+    }
+    else if(par == 'vis'){
+      Cpar = 'Sikt';
+      Suff = 'km';
+    }
     var TimeArr = [];
     var TempArr = [];
     var MinTempArr = [];
@@ -109,7 +147,7 @@ define(['graph'], function (graph) {
       },
       colors: ['#4798DC'],
       title: {
-        text: 'Temperatur'
+        text: Cpar
       },
 
       xAxis: {
@@ -127,7 +165,7 @@ define(['graph'], function (graph) {
 
         crosshairs: true,
         shared: true,
-        valueSuffix: '°C'
+        valueSuffix: Suff
       },
 
       legend: {
