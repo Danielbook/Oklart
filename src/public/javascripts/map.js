@@ -416,7 +416,7 @@ define([
         anchor:       [0.5, 46],
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
-        src:          'images/marker.png'
+        src:          './images/marker.png'
       })
     });
 
@@ -475,6 +475,7 @@ define([
       this._map.beforeRender(pan);
       this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
     }
+
 
     else { // Use my location
 
