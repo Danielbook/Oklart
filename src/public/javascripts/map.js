@@ -228,21 +228,21 @@ define([
     });
   };
 
-  Map.prototype.updateLayers = function(Map) {
-    var currZoom = Map._map.getView().getZoom();
+  Map.prototype.updateLayers = function(that) {
+    var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
     //Clear the source for the temp layer
-    Map._temperatureSource.clear();
+    that._temperatureSource.clear();
 
-    for(var idx=0; idx < Map._data.length; idx++){
-      var dataZoom = Map._data[idx].zoomlevel; // get curr zoom level on map
+    for(var idx=0; idx < that._data.length; idx++){
+      var dataZoom = that._data[idx].zoomlevel; // get curr zoom level on map
 
       //add icon only if datazoom<=currzoom
       if(dataZoom <= currZoom){
 
         var point = new ol.geom.Point(
-          ol.proj.transform([Map._data[idx].lon, Map._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
+          ol.proj.transform([that._data[idx].lon, that._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
         );
         var pointFeatureTemp = new ol.Feature(point);
 
@@ -251,7 +251,7 @@ define([
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
           text: new ol.style.Text({
-            text: String(Map._data[idx].name), // .t = temperature
+            text: String(that._data[idx].name), // .t = temperature
             scale: 1.3,
             fill: new ol.style.Fill({
               color: '#000'
@@ -262,17 +262,17 @@ define([
             scale: 0.08,
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: weatherIcon,
+            src: weatherIcon
           })
         }));
 
         //Finally add style to icon
-        Map._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
+        that._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
       }
     }
   };
 
-  Map.prototype.LayerControl = function(_this, opt_options) {
+  Map.prototype.LayerControl = function(that, opt_options) {
     var options = opt_options || {};
 
     // Buttons
@@ -295,15 +295,15 @@ define([
     // snowBtn.innerHTML = 'S';
 
     var handleGoToMyLocationBtn = function() {
-      _this.updateMap();
+      that.updateMap();
     };
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
-      _this._map.addLayer(_this._temperatureVecLayer);
-      _this._map.removeLayer(_this._OWMsnowLayer);
-      _this._map.removeLayer(_this._OWMcloudLayer);
-      _this._map.removeLayer(_this._OWMrainLayer);
+      that._map.addLayer(that._temperatureVecLayer);
+      that._map.removeLayer(that._OWMsnowLayer);
+      that._map.removeLayer(that._OWMcloudLayer);
+      that._map.removeLayer(that._OWMrainLayer);
 
       temperatureBtn.disabled = true;
       temperatureBtn.style.backgroundColor = 'gray';
@@ -317,10 +317,10 @@ define([
 
     //Function to handle rain button
     var handleRainBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
-      _this._map.removeLayer(_this._OWMsnowLayer);
-      _this._map.removeLayer(_this._OWMcloudLayer);
-      _this._map.addLayer(_this._OWMrainLayer);
+      that._map.removeLayer(that._temperatureVecLayer);
+      that._map.removeLayer(that._OWMsnowLayer);
+      that._map.removeLayer(that._OWMcloudLayer);
+      that._map.addLayer(that._OWMrainLayer);
 
       rainBtn.disabled = true;
       rainBtn.style.backgroundColor = 'gray';
@@ -333,10 +333,10 @@ define([
     };
 
     var handleCloudBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
-      _this._map.removeLayer(_this._OWMsnowLayer);
-      _this._map.addLayer(_this._OWMcloudLayer);
-      _this._map.removeLayer(_this._OWMrainLayer);
+      that._map.removeLayer(that._temperatureVecLayer);
+      that._map.removeLayer(that._OWMsnowLayer);
+      that._map.addLayer(that._OWMcloudLayer);
+      that._map.removeLayer(that._OWMrainLayer);
 
       cloudBtn.disabled = true;
       cloudBtn.style.backgroundColor = 'gray';
@@ -349,10 +349,10 @@ define([
     };
 
     var handleSnowBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
-      _this._map.addLayer(_this._OWMsnowLayer);
-      _this._map.removeLayer(_this._OWMcloudLayer);
-      _this._map.removeLayer(_this._OWMrainLayer);
+      that._map.removeLayer(that._temperatureVecLayer);
+      that._map.addLayer(that._OWMsnowLayer);
+      that._map.removeLayer(that._OWMcloudLayer);
+      that._map.removeLayer(that._OWMrainLayer);
 
       snowBtn.disabled = true;
       snowBtn.style.backgroundColor = 'gray';
