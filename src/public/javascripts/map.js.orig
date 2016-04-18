@@ -2,17 +2,18 @@
 
 define([
   'map'
-], function (
-  map
-){
+  ], function (
+    map
+    ){
   /**
    * Constructor for the map
    * @param smhidata
    * @constructor
    */
-  var Map = function(smhidata) {
+   var Map = function(smhidata) {
     this._data = smhidata;
     this._map = new ol.Map({target: 'map'});
+<<<<<<< HEAD
     this._view = new ol.View({
       center: ol.proj.fromLonLat([16.1924, 58.5877]), // Norrköping
       zoom: 4
@@ -20,6 +21,9 @@ define([
       //minZoom: 4,
       //extent: extent
     });
+=======
+    this._view = new ol.View;
+>>>>>>> MapZoomIcons
     this._myPosLatLon = "";
     this._geolocation = "";
     this._cartoDBLight = "";
@@ -29,9 +33,8 @@ define([
     this._OWMtempLayer = "";
     this._OWMrainLayer = "";
     this._OWMcloudLayer = "";
-
+    this._rainVecLayer = "";
     this._temperatureVecLayer= "";
-    this._RainVecLayer = "";
 
     this._userLocation = this.getCurrentLocation();
   };
@@ -39,19 +42,24 @@ define([
   /**
    * Inits the map
    */
-  Map.prototype.initMap = function() {
-    this.temperatureLayer();
+   Map.prototype.initMap = function() {
+    this.initSources();
     this.heatMap();
     this.mapLayers();
+<<<<<<< HEAD
     this.setupMapControls();
     this.goToMyLocation();
+=======
+    this.setupMapControls(this._OWMtempLayer, this._OWMrainLayer, this._OWMcloudLayer);
+    this.setToLocation(this._map, this._geolocation);
     this.updateLayers(this);
+>>>>>>> MapZoomIcons
   };
 
   /**
    * Setup the temperature layer
    */
-  Map.prototype.temperatureLayer = function() {
+   Map.prototype.initSources = function() {
     // Source for the vector layer
     this._temperatureSource = new ol.source.Vector({
       projection: 'EPSG:4326'
@@ -64,14 +72,14 @@ define([
     for(var idx = 0; idx < this._data.length; idx++) {
       var point = new ol.geom.Point(
         ol.proj.transform([this._data[idx].lon, this._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
-      );
+        );
       var pointFeatureTemp = new ol.Feature(point);
       var pointFeatureRain = new ol.Feature(point);
 
       // Style for each temperature point
       pointFeatureTemp.setStyle(new ol.style.Style({
         text: new ol.style.Text({
-          text: String(this._data[idx].timeseries[0].t), // .t = temperature
+          text: String(this._data[idx].name), // .t = temperature
 
           scale: 1.3,
           fill: new ol.style.Fill({
@@ -79,6 +87,7 @@ define([
           })
         })
       }));
+
 
       this._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
 
@@ -134,7 +143,7 @@ define([
   /**
    * Setup the map layers
    */
-  Map.prototype.mapLayers = function() {
+   Map.prototype.mapLayers = function() {
     var extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
     //Base map layer
@@ -191,10 +200,11 @@ define([
     });
 
     // Rain layer
-    this._RainVecLayer = new ol.layer.Vector({
+    this._rainVecLayer = new ol.layer.Vector({
       source: this._rainSource
     });
 
+<<<<<<< HEAD
     /* EJ FÅTT DETTA ATT FUNGERA ÄN
      var layer_cloud = new ol.layer.Tile({
      source: new ol.source.OSM({
@@ -206,20 +216,154 @@ define([
      +*/
 
     // Bounding box
+=======
+    //Map view variable
+    this._view = new ol.View({
+      center: ol.proj.fromLonLat([15.380859, 62.160372]), //Mitt i sverige
+      zoom: 4,
+      maxZoom: 8,
+      minZoom: 4,
+      extent: ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857')
+    });
+>>>>>>> MapZoomIcons
 
   };
 
   /**
    * Setup controls for map
    */
+<<<<<<< HEAD
   Map.prototype.setupMapControls = function() {
     ol.inherits(this.LayerControl, ol.control.Control);
+=======
+   Map.prototype.setupMapControls = function() {
+    // Define a namespace for the application.
+    window.app = {};
+    var app = window.app;
+
+    app.LayerControl = function(_map, opt_options) {
+      var options = opt_options || {};
+
+      // Buttons
+      var temperatureButton = document.createElement('button');
+      var rainBtn = document.createElement('button');
+      var cloudBtn = document.createElement('button');
+      var snowBtn = document.createElement('button');
+
+      // http://ionicons.com/
+      temperatureButton.className = 'icon ion-thermometer';
+      rainBtn.className = 'icon ion-umbrella';
+      cloudBtn.className = 'icon ion-cloud';
+      snowBtn.className = 'icon ion-ios-snowy';
+
+      //Function to handle temperature button
+      var handleTemperatureButton = function() {
+
+        console.log(_map.getView().getZoom());
+        /*
+        _map.addLayer(this.OWMtempLayer);
+        _map.removeLayer(this.OWMsnowLayer);
+        _map.removeLayer(this.OWMcloudLayer);
+        _map.removeLayer(this.OWMrainLayer);
+
+        temperatureButton.disabled = true;
+        temperatureButton.style.backgroundColor = 'gray';
+        rainBtn.disabled = false;
+        rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        cloudBtn.disabled = false;
+        cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        snowBtn.disabled = false;
+        snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        */
+      };
+
+      //Function to handle rain button
+      var handleRainBtn = function() {
+        _map.removeLayer(this._OWMtempLayer);
+        _map.removeLayer(this._OWMsnowLayer);
+        _map.removeLayer(this._OWMcloudLayer);
+        _map.addLayer(this._OWMrainLayer);
+
+        rainBtn.disabled = true;
+        rainBtn.style.backgroundColor = 'gray';
+        temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+        temperatureButton.disabled = false;
+        cloudBtn.disabled = false;
+        cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        snowBtn.disabled = false;
+        snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      };
+
+      var handleCloudBtn = function() {
+        _map.removeLayer(this._OWMtempLayer);
+        _map.removeLayer(this._OWMsnowLayer);
+        _map.addLayer(this._OWMcloudLayer);
+        _map.removeLayer(this._OWMrainLayer);
+
+        cloudBtn.disabled = true;
+        cloudBtn.style.backgroundColor = 'gray';
+        rainBtn.disabled = false;
+        rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        temperatureButton.disabled = false;
+        temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+        snowBtn.disabled = false;
+        snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      };
+
+      var handleSnowBtn = function() {
+        _map.removeLayer(this._OWMtempLayer);
+        _map.addLayer(this._OWMsnowLayer);
+        _map.removeLayer(this._OWMcloudLayer);
+        _map.removeLayer(this._OWMrainLayer);
+
+        snowBtn.disabled = true;
+        snowBtn.style.backgroundColor = 'gray';
+        cloudBtn.disabled = false;
+        cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        rainBtn.disabled = false;
+        rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+        temperatureButton.disabled = false;
+        temperatureButton.style.backgroundColor = 'rgba(0,60,136,.5)';
+      };
+
+      temperatureButton.addEventListener('click', handleTemperatureButton, false);
+      temperatureButton.addEventListener('touchstart', handleTemperatureButton, false);
+      rainBtn.addEventListener('click', handleRainBtn, false);
+      rainBtn.addEventListener('touchstart', handleRainBtn, false);
+      cloudBtn.addEventListener('click', handleCloudBtn, false);
+      cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
+      snowBtn.addEventListener('click', handleSnowBtn, false);
+      snowBtn.addEventListener('touchstart', handleSnowBtn, false);
+
+      /* Button div */
+      var buttonDiv = document.createElement('div'); //Background div
+      buttonDiv.className = 'map-buttonDiv';
+
+      var buttonContainer = document.createElement('div'); //div containing buttons
+      buttonDiv.appendChild(buttonContainer);
+      buttonContainer.className = 'map-controls';
+      buttonContainer.appendChild(temperatureButton);
+      buttonContainer.appendChild(rainBtn);
+      buttonContainer.appendChild(cloudBtn);
+      buttonContainer.appendChild(snowBtn);
+
+      ol.control.Control.call(this, {
+        element: buttonDiv,
+        target: options.target
+      });
+    };
+
+    ol.inherits(app.LayerControl, ol.control.Control);
+>>>>>>> MapZoomIcons
+
 
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([
       new this.LayerControl(this)
     ]);
     this._map.setView(this._view);
+    this._map.addLayer(this._temperatureVecLayer);
+    console.log(this._data);
 
     var that = this;
 
@@ -228,50 +372,7 @@ define([
     });
   };
 
-  Map.prototype.updateLayers = function(Map) {
-    var currZoom = Map._map.getView().getZoom();
-    console.log("Currzoom lvl = " + currZoom);
-
-    //Clear the source for the temp layer
-    Map._temperatureSource.clear();
-
-    for(var idx=0; idx < Map._data.length; idx++){
-      var dataZoom = Map._data[idx].zoomlevel; // get curr zoom level on map
-
-      //add icon only if datazoom<=currzoom
-      if(dataZoom <= currZoom){
-
-        var point = new ol.geom.Point(
-          ol.proj.transform([Map._data[idx].lon, Map._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
-        );
-        var pointFeatureTemp = new ol.Feature(point);
-
-        var weatherIcon = './images/icons/cloudy.png';
-
-        // Style for each temperature point
-        pointFeatureTemp.setStyle(new ol.style.Style({
-          text: new ol.style.Text({
-            text: String(Map._data[idx].name), // .t = temperature
-            scale: 1.3,
-            fill: new ol.style.Fill({
-              color: '#000'
-            })
-          }),
-          image: new ol.style.Icon({
-            anchor: [0.5, -0.4],
-            scale: 0.08,
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            src: weatherIcon,
-          })
-        }));
-
-        //Finally add style to icon
-        Map._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
-      }
-    }
-  };
-
+<<<<<<< HEAD
   Map.prototype.LayerControl = function(_this, opt_options) {
     var options = opt_options || {};
 
@@ -300,7 +401,7 @@ define([
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
-      _this._map.addLayer(_this._temperatureVecLayer);
+      _this._map.addLayer(_this._OWMtempLayer);
       _this._map.removeLayer(_this._OWMsnowLayer);
       _this._map.removeLayer(_this._OWMcloudLayer);
       _this._map.removeLayer(_this._OWMrainLayer);
@@ -317,7 +418,7 @@ define([
 
     //Function to handle rain button
     var handleRainBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
+      _this._map.removeLayer(_this._OWMtempLayer);
       _this._map.removeLayer(_this._OWMsnowLayer);
       _this._map.removeLayer(_this._OWMcloudLayer);
       _this._map.addLayer(_this._OWMrainLayer);
@@ -333,7 +434,7 @@ define([
     };
 
     var handleCloudBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
+      _this._map.removeLayer(_this._OWMtempLayer);
       _this._map.removeLayer(_this._OWMsnowLayer);
       _this._map.addLayer(_this._OWMcloudLayer);
       _this._map.removeLayer(_this._OWMrainLayer);
@@ -349,7 +450,7 @@ define([
     };
 
     var handleSnowBtn = function() {
-      _this._map.removeLayer(_this._temperatureVecLayer);
+      _this._map.removeLayer(_this._OWMtempLayer);
       _this._map.addLayer(_this._OWMsnowLayer);
       _this._map.removeLayer(_this._OWMcloudLayer);
       _this._map.removeLayer(_this._OWMrainLayer);
@@ -392,8 +493,6 @@ define([
       element: buttonDiv,
       target: options.target
     });
-
-
   };
 
   /**
@@ -408,6 +507,67 @@ define([
        });
     }
     else {
+=======
+  Map.prototype.updateLayers = function(Map) {
+
+    var currZoom = Map._map.getView().getZoom();
+    console.log("Currzoom lvl = " + currZoom);
+
+    //Clear the source for the temp layer
+    Map._temperatureSource.clear();
+
+    for(var idx=0; idx < Map._data.length; idx++){
+      var dataZoom = Map._data[idx].zoomlevel; // get curr zoom level on map
+
+      //add icon only if datazoom<=currzoom
+      if(dataZoom <= currZoom){
+
+        var point = new ol.geom.Point(
+          ol.proj.transform([Map._data[idx].lon, Map._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
+          );      
+        var pointFeatureTemp = new ol.Feature(point);
+
+        var weatherIcon = './images/icons/cloudy.png';
+
+        // Style for each temperature point
+        pointFeatureTemp.setStyle(new ol.style.Style({
+          text: new ol.style.Text({
+            text: String(Map._data[idx].name), // .t = temperature
+            scale: 1.3,
+            fill: new ol.style.Fill({
+              color: '#000'
+            })
+          }),         
+          image: new ol.style.Icon({
+            anchor: [0.5, -0.4],
+            scale: 0.08,
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: weatherIcon,
+          }),
+        }));
+
+        //Finally add style to icon
+        Map._temperatureSource.addFeatures([pointFeatureTemp]); //Fill the this._temperatureSource with point features
+
+      };
+    };
+
+
+    };
+
+  /**
+   * Set current location to the map
+   */
+   Map.prototype.setToLocation = function(map, loc) {
+     if(loc) {
+       loc.once('change', function() {
+        // Save position and set map center
+        map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
+      });
+     }
+     else {
+>>>>>>> MapZoomIcons
       alert("Couldn't find location");
     }
   };
@@ -415,7 +575,7 @@ define([
   /**
    * Get current location from geolocation
    */
-  Map.prototype.getCurrentLocation = function() {
+   Map.prototype.getCurrentLocation = function() {
     return new ol.Geolocation({
       tracking: true
     });
@@ -425,8 +585,12 @@ define([
    * Updates the map to current location
    * @param data
    */
+<<<<<<< HEAD
   Map.prototype.updateMap = function(data) {
     var loc = this._userLocation;
+=======
+   Map.prototype.updateMap = function(data) {
+>>>>>>> MapZoomIcons
     var pan = ol.animation.pan({
       duration: 1000,
       source: this._view.getCenter()
