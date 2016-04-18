@@ -119,7 +119,7 @@ define(['graph'], function (graph) {
       //push values to series
     seriesArr.push(
         {
-          name: 'Temperatur',
+          name: Cpar,
           data: TempArr,
           zIndex: 1,
           marker: {
@@ -129,7 +129,7 @@ define(['graph'], function (graph) {
             lineColor: Highcharts.getOptions().colors[0]
           }
         }, {
-          name: 'MinMax',
+          name: 'Min/Max',
           data: MinMaxArr,
           type: 'arearange',
           lineWidth: 0,
