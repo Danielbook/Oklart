@@ -26,40 +26,14 @@
             weekday[5] = "Fredag";
             weekday[6] = "Lördag";
 
-            console.log(smhidata);
+            //console.log(smhidata);
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
 			var _map = new Map();
-			var slider = new Slider('#bootslide', {
-                //ticks: [1, 36, 73],
-                //ticks_positions: [0, 50, 100],
-                //ticks_labels:[weekday[dateHandler.getUTCDay()], weekday[dateHandler.getUTCDay()+1], weekday[dateHandler.getUTCDay()+2] ]
-            });
-/*
-            var today = new Date(smhidata[1].timeseries[1].validTime);
-            //today = weekday[dateHandler.getUTCDay()];
-            var tomorrow;
-            var index;
-            console.log("today: " + today);
+			var slider = new Slider('#bootslide', {});
 
-            for(var i = 0; i < 73; i++)
-            {
-                tomorrow = new Date(smhidata[1].timeseries[i].validTime);
-                if( weekday[tomorrow.getDay()] != weekday[today.getUTCDay()] ){
-                    //console.log("TOMORROW " + weekday[tomorrow.getUTCDay()]);
-                    //console.log("TODAY: " + weekday[today.getUTCDay()]);
-                    console.log("hours: " + today.getUTCHours());
-                    console.log("i = " + i);
-                    index = i;
-                    break;
-                }
-            }
-
-            slider.setAttribute("ticks", [1, index, 73]);
-            console.log("Pos: " + slider.ticks);
-*/
-
+            // Sets the current day and time
             slider.tooltipInner.innerText = pad(dateHandler.getHours()) + ":00";
             document.getElementById("tid").innerHTML = pad(dateHandler.getHours()) + ":00";
             document.getElementById("dag").innerHTML = weekday[dateHandler.getUTCDay()];
@@ -78,51 +52,58 @@
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
 
+            //This function returns time for a specified position. (String position, int timeIndex).
+            function getDate(position,timeIndex){
+                var pos = position.toLowerCase();
+                var index = timeIndex;
+                var counter = 0;
+
+                for(var i = 0; i < smhidata.length; i++) {
+                    if(pos == smhidata[i].name.toLowerCase()){
+                        break;
+                    }
+                    counter += 1;
+                }
+                //Creates a specified Date with correct City and time index
+                var date = new Date(smhidata[counter].timeseries[index].validTime);
+
+                //Specified date-array: specDate[hour, day];
+                var specDate = [pad(date.getUTCHours()) + ":00", weekday[date.getUTCDay()]];
+                return specDate;
+            }
+
+            //This function displays current time from slider values.
+            function setSliderDate(dateHandler){
+                slider.tooltipInner.innerText = dateHandler[0];
+                document.getElementById("tid").innerHTML = dateHandler[0];
+                document.getElementById("dag").innerHTML = dateHandler[1];
+            }
                                     //Slider handler functions
         //---------------------------------------------------------------------------------
-            //This function displays time and day chosen via the slider
+            //These functions display time and day chosen from slider value AND from position.
+            //"Gävle" IS CURRENTLY A FILLER! needs input from search field!
             slider.on("slideStop", function(slideEvt) {
                 var sliderValue = slider.getValue();
-                dateHandler = new Date(smhidata[1].timeseries[sliderValue].validTime);
-
-                var sliderHours = pad(dateHandler.getUTCHours()) + ":00";
-                var sliderDays = weekday[dateHandler.getUTCDay()];
-
-                _graph.updateTime(sliderValue); //Is this still needed?
-
-                slider.tooltipInner.innerHTML = sliderHours;
-                slider.tooltipInner.innerText = sliderHours;
-
-                document.getElementById("tid").innerHTML = sliderHours;
-                document.getElementById("dag").innerHTML = sliderDays;
+                dateHandler = getDate("Gävle", sliderValue );
+                setSliderDate(dateHandler)
             });
-
 
             slider.on("slideStart", function(slideEvt){
                 var sliderValue = slider.getValue();
-                dateHandler = new Date(smhidata[1].timeseries[sliderValue].validTime);
-
-                var sliderHours = pad(dateHandler.getUTCHours()) + ":00";
-                slider.tooltipInner.innerHTML = sliderHours;
-                slider.tooltipInner.innerText = sliderHours;
+                dateHandler = getDate("Gävle", sliderValue );
+                setSliderDate(dateHandler)
             });
 
             slider.on("slide", function(slideEvt){
                 var sliderValue = slider.getValue();
-                dateHandler = new Date(smhidata[1].timeseries[sliderValue].validTime);
-                var sliderHours = pad(dateHandler.getUTCHours()) + ":00";
-
-                slider.tooltipInner.innerHTML = sliderHours;
-                slider.tooltipInner.innerText = sliderHours;
+                dateHandler = getDate("Gävle", sliderValue );
+                setSliderDate(dateHandler)
             });
 
             slider.on("change", function(slideEvt){
                 var sliderValue = slider.getValue();
-                dateHandler = new Date(smhidata[1].timeseries[sliderValue].validTime);
-                var sliderHours = pad(dateHandler.getUTCHours()) + ":00";
-
-                slider.tooltipInner.innerHTML = sliderHours;
-                slider.tooltipInner.innerText = sliderHours;
+                dateHandler = getDate("Gävle", sliderValue );
+                setSliderDate(dateHandler)
             });
         //---------------------------------------------------------------------------------
 			//This function runs when the Sök button is clicked
@@ -132,7 +113,6 @@
 					_map.updateMap(data);
 				})
 			};
-
 			//This function runs when the Stad textfield is highlighted and a key is pressed
 			$("#CitySearch").keypress(function(e){
 				//If the pressed button is enter
@@ -164,9 +144,6 @@
             }
         });
 
-        function getDate() {
-
-        }
 
 	</script>
 
