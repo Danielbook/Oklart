@@ -138,10 +138,10 @@
 .slider .tooltip-inner {
     white-space: nowrap;
     position: relative;
-    margin-left: -16px;
+    margin-left: -27px;
 }
 .slider .tooltip.bottom .tooltip-arrow{
-    margin-left: -13px;
+    margin-left: -18px;
 }
 .slider .hide {
     display: none;
@@ -190,18 +190,16 @@
 }
 .slider-handle {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #337ab7;
-    background-image: -webkit-linear-gradient(top, #537FA3 0%, #0480be 100%);
-    background-image: -o-linear-gradient(top, #537FA3 0%, #0480be 100%);
-    background-image: linear-gradient(to bottom, #537FA3 0%, #537FA3 100%);
+    width: 10px;
+    height: 26px;
+    radius: 15px;
+    background: white;
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
     filter: none;
     -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-    border: 0px solid transparent;
+    border: 1px solid;
 }
 .slider-handle.round {
     border-radius: 50%;

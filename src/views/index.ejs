@@ -11,101 +11,33 @@
 		requirejs.config({ baseUrl: './javascripts/' });
 
 		//In this function our javascripts are accesable and instanses of the included objects can be created
-		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
+		requirejs(['table', 'graph', 'map', 'slider'], function (Table, Graph, Map, Slider) {
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-            //This is a time handler. It prints current day and hour for the slider
-            var dateHandler = new Date();
-            var weekday = new Array();
-            weekday[0] = "Söndag";
-            weekday[1] = "Måndag";
-            weekday[2] = "Tisdag";
-            weekday[3] = "Onsdag";
-            weekday[4] = "Torsdag";
-            weekday[5] = "Fredag";
-            weekday[6] = "Lördag";
 
             //console.log(smhidata);
 			//Creates objects for the components
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
 			var _map = new Map();
-			var slider = new Slider('#bootslide', {});
+			//var slider = new Slider('#bootslide', {});
+            var _slider = new Slider(smhidata);
 
-            // Sets the current day and time
-            slider.tooltipInner.innerText = pad(dateHandler.getHours()) + ":00";
-            document.getElementById("tid").innerHTML = pad(dateHandler.getHours()) + ":00";
-            document.getElementById("dag").innerHTML = weekday[dateHandler.getUTCDay()];
-
-            //This function adds a 0 before the displayed hour if needed. E.g. 8:00 becomes 08:00.
-            function pad(n) {return ("0" + n).slice(-2); }
 
             //Inits the objects to create the components
 			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
 			_graph.drawGraph();
 			_map.initMap(smhidata);
+            //_slider.initSlider(smhidata);
 
 			//This code implements livesearch for the Stad textfield
 			var input = document.getElementById('CitySearch');
 			var options = {};
 			new google.maps.places.Autocomplete(input, options);
 
-            //This function returns time for a specified position. (String position, int timeIndex).
-            function getDate(position,timeIndex){
-                var pos = position.toLowerCase();
-                var index = timeIndex;
-                var counter = 0;
 
-                for(var i = 0; i < smhidata.length; i++) {
-                    if(pos == smhidata[i].name.toLowerCase()){
-                        break;
-                    }
-                    counter += 1;
-                }
-                //Creates a specified Date with correct City and time index
-                var date = new Date(smhidata[counter].timeseries[index].validTime);
-
-                //Specified date-array: specDate[hour, day];
-                var specDate = [pad(date.getUTCHours()) + ":00", weekday[date.getUTCDay()]];
-                return specDate;
-            }
-
-            //This function displays current time from slider values.
-            function setSliderDate(dateHandler){
-                slider.tooltipInner.innerText = dateHandler[0];
-                document.getElementById("tid").innerHTML = dateHandler[0];
-                document.getElementById("dag").innerHTML = dateHandler[1];
-            }
-                                    //Slider handler functions
-        //---------------------------------------------------------------------------------
-            //These functions display time and day chosen from slider value AND from position.
-            //"Gävle" IS CURRENTLY A FILLER! needs input from search field!
-            slider.on("slideStop", function(slideEvt) {
-                var sliderValue = slider.getValue();
-                dateHandler = getDate("Gävle", sliderValue );
-                setSliderDate(dateHandler)
-            });
-
-            slider.on("slideStart", function(slideEvt){
-                var sliderValue = slider.getValue();
-                dateHandler = getDate("Gävle", sliderValue );
-                setSliderDate(dateHandler)
-            });
-
-            slider.on("slide", function(slideEvt){
-                var sliderValue = slider.getValue();
-                dateHandler = getDate("Gävle", sliderValue );
-                setSliderDate(dateHandler)
-            });
-
-            slider.on("change", function(slideEvt){
-                var sliderValue = slider.getValue();
-                dateHandler = getDate("Gävle", sliderValue );
-                setSliderDate(dateHandler)
-            });
-        //---------------------------------------------------------------------------------
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
@@ -200,12 +132,12 @@
                     <div class="col-md-6">
                         <div class="pageElement">
                             <div id="map" class="map"></div>
-                             <input id="bootslide" type="text"  value=""
+                             <input id="bootslide" type="text" class="slider"
                                      data-slider-min="1"
                                      data-slider-max="73"
                                      data-slider-step="1"
-                                     data-slider-value="1"
-                                     data-slider-tooltip
+                                     data-slider-value="2"
+                                     data-slider-handle="square"
                                      data-slider-tooltip-position="bottom"
                               />
                             <div>
