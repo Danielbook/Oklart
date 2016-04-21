@@ -13,7 +13,15 @@ define([
   var Map = function(smhidata) {
     this._extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
     this._data = smhidata;
-    this._map = new ol.Map({target: 'map'});
+    this._map = new ol.Map({
+      target: 'map',
+      controls: ol.control.defaults({
+          attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+            collapsible: false
+          })
+      }),
+    });
+    
     this._view = new ol.View({
       center: ol.proj.fromLonLat([16.1924, 58.5877]), // Norrköping
       zoom: 4,
@@ -202,7 +210,7 @@ define([
             })
           }),
           image: new ol.style.Icon({
-            anchor: [0.5, -0.2],
+            anchor: [0.5, -0.22],
             scale: 0.08,
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
