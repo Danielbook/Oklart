@@ -5,6 +5,9 @@ define([
 ], function (
   map
 ){
+
+  var time=0;
+
   /**
    * Constructor for the map
    * @param smhidata
@@ -21,7 +24,7 @@ define([
           })
       }),
     });
-    
+
     this._view = new ol.View({
       center: ol.proj.fromLonLat([16.1924, 58.5877]), // Norrköping
       zoom: 4,
@@ -57,7 +60,7 @@ define([
     this.setupMapControls();
     this.goToMyLocation();
     this.addMarker(this);
-    this.updateLayers(this);
+    this.updateLayers(this,time);
   };
 
   /**
@@ -175,11 +178,17 @@ define([
     var that = this;
 
     this._map.getView().on('change:resolution', function(){
-      Map.prototype.updateLayers(that);
+      Map.prototype.updateLayers(that,time);
     });
   };
 
-  Map.prototype.updateLayers = function(that) {
+
+  /**
+   * @param  {that, Map object}
+   * @param  {time, integer}
+   * @return {[type]}
+   */
+  Map.prototype.updateLayers = function(that, _time) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
@@ -197,8 +206,7 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        //var weatherIcon = './images/icons/midsummer.png';
-        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[0]) + ".png";
+        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[time]) + ".png";
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
