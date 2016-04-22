@@ -44,7 +44,7 @@ define([
 
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
-    console.log(user.gpsLocation);
+    //console.log(user.gpsLocation);
   };
 
   /**
