@@ -11,7 +11,7 @@
 		requirejs.config({ baseUrl: './javascripts/' });
 
 		//In this function our javascripts are accesable and instanses of the included objects can be created
-		requirejs(['table', 'graph', 'map', 'slider'], function (Table, Graph, Map, Slider) {
+		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
@@ -21,16 +21,23 @@
 			var _table = new Table();
 			var _graph = new Graph(smhidata);
 			var _map = new Map();
-			//var slider = new Slider('#bootslide', {});
-            var _slider = new Slider(smhidata);
+            var _slider = new Slide(smhidata);
 
+
+            $(document).ready(function(){
+                //document.getElementById("bootslide");
+                _slider.initSlider();
+            });
+
+            $('.button').on('click', function(e) {
+                //slider functions
+            });
 
             //Inits the objects to create the components
 			_table.initTable(smhidata);
 			_graph.initGraph(smhidata);
 			_graph.drawGraph();
 			_map.initMap(smhidata);
-            //_slider.initSlider(smhidata);
 
 			//This code implements livesearch for the Stad textfield
 			var input = document.getElementById('CitySearch');
