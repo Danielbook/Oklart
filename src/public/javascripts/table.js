@@ -100,6 +100,7 @@ define([
         return "rain";
       }
     }
+    return "midsummer";
   };
 
   /**
