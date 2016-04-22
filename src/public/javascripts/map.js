@@ -215,7 +215,7 @@ define([
             scale: 1.3,
             fill: new ol.style.Fill({
               color: '#000'
-            })
+            }),
           }),
           image: new ol.style.Icon({
             anchor: [0.5, -0.22],
@@ -223,13 +223,69 @@ define([
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: weatherIcon
-          })
+          }),
+          data: that._data[idx]
         }));
-
         //Finally add style to icon
         that._cloudSource.addFeatures([pointFeatureTemp]); //Fill the this._cloudSource with point features
       }
     }
+
+      var element = document.getElementById('popup');
+
+      var popup = new ol.Overlay({
+        element: element,
+        positioning: 'bottom-center',
+        stopEvent: false
+      });
+      that._map.addOverlay(popup);
+
+
+      // display popup on click
+      that._map.on('click', function(evt) {
+        var feature = that._map.forEachFeatureAtPixel(evt.pixel,
+            function(feature) {
+              return feature;
+            });
+        if (feature) {
+          popup.setPosition(evt.coordinate);
+
+          var dataObject;
+          for(var idx=0; idx < that._data.length; idx++){
+              if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
+                dataObject=that._data[idx];
+              }
+          }
+
+      
+          
+          $(element).popover({
+            'placement': 'top',
+            'html': true,
+            'content': "Nederbörd: " + dataObject.timeseries[0].pit + "mm/h \n",
+          });
+
+          $(element).popover('show');
+
+          } 
+          else {
+          $(element).popover('destroy');
+          } 
+      });
+
+
+
+      // change mouse cursor when over marker
+      that._map.on('pointermove', function(e) {
+        if (e.dragging) {
+          $(element).popover('destroy');
+          return;
+        }
+        var pixel = that._map.getEventPixel(e.originalEvent);
+        var hit = that._map.hasFeatureAtPixel(pixel);
+        //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
+        document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
+      });
   };
 
   Map.prototype.LayerControl = function(that, opt_options) {
