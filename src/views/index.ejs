@@ -16,16 +16,24 @@
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
 			console.log(smhidata);
+
+            var user = {
+                gpsLocation: [0,0],
+                location: 0,
+                weather: "t",
+                time: 0
+            };
+
 			//Creates objects for the components
-			var _table = new Table(smhidata);
-			var _graph = new Graph(smhidata);
-			var _map = new Map(smhidata);
+			var _graph = new Graph(smhidata, user);
+            var _table = new Table(smhidata, user);
+			var _map = new Map(smhidata, user);
 			var slider = new Slider('#bootslide', {});
 
 			//Inits the objects to create the components
 			_graph.initGraph(smhidata, 2, 't');
 
-			_map.initMap();
+			_map.initMap(user);
 
             $( document ).ready(function() {
                 /**
@@ -79,7 +87,7 @@
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
 				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-					_map.updateMap(data);
+					_map.updateMap(data, user);
 				})
 			};
 
@@ -89,7 +97,7 @@
 				if(e.which == 13){
 					var AdresFalt = $("#CitySearch") ;
 					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-						_map.updateMap(data);
+						_map.updateMap(data, user);
 					})
                     return false;
 				}

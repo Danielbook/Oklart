@@ -1,9 +1,13 @@
 "use strict";
 
 define([
-  'table'
+  'table',
+  'graph',
+  'map'
 ], function (
-  table
+  table,
+  graph,
+  map
 ){
 
   /**
@@ -11,8 +15,8 @@ define([
    */
   var Table = function(smhidata) {
     this._data = smhidata;
-    this._currentLocation = "Höganäs";
-    this._chosenWeather = "Temperatur";
+    this._currentLocation = "";
+    this._chosenWeather = "";
   };
 
 
@@ -46,6 +50,14 @@ define([
       }
     }
     return "";
+  };
+
+  Table.prototype.updateLocation = function(currentLocation) {
+    this._currentLocation = currentLocation
+  };
+
+  Table.prototype.updateChosenWeather = function(chosenWeather) {
+    this._chosenWeather = chosenWeather;
   };
 
   /**
@@ -112,6 +124,7 @@ define([
       $("td").removeClass( "currentLocation" )
 
     newLocation.addClass("currentLocation");
+
   };
 
   /**
