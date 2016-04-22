@@ -25,4 +25,15 @@ td.toggleable{
 td.toggleable:hover {
   background-color: #d3d3d2;
   cursor: pointer;
+
+}
+
+.minTemp{
+  color: blue;
+  font-size:8pt;
+}
+
+.maxTemp{
+  color: red;
+  font-size:8pt;
 }
