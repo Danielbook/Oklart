@@ -20,7 +20,7 @@ body{
 }
 
 .map-buttonDiv{
-  height:97.4%;
+  height: 97.0%;
   position: absolute;
   top: 0em;
   right: 0em;
@@ -34,6 +34,15 @@ body{
     border-radius: 4px;
     padding: 2px;
 
+}
+
+.popover{
+  min-width: 180px;
+}
+
+.ol-full-screen{
+    top: 93%;
+    right: 94%;
 }
 
 .card{

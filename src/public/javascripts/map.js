@@ -9,15 +9,28 @@ define([
   table,
   graph
 ){
+
+  var time=0;
+
   /**
    * Constructor for the map
    * @param smhidata
    * @constructor
    */
-  var Map = function(smhidata, user) {
-    this._extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+  
+  var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
+    this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+
     this._data = smhidata;
-    this._map = new ol.Map({target: 'map'});
+    this._map = new ol.Map({
+      target: 'map',
+      controls: ol.control.defaults({
+          attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+            collapsible: false
+          })
+      }),
+    });
+
     this._view = new ol.View({
       center: ol.proj.fromLonLat([16.1924, 58.5877]), // Norrköping
       zoom: 4,
@@ -55,7 +68,7 @@ define([
     this.setupMapControls();
     this.goToMyLocation(user.gpsLocation);
     this.addMarker(this);
-    this.updateLayers(this);
+    this.updateLayers(this,time);
   };
 
   /**
@@ -166,18 +179,28 @@ define([
 
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([
+      new ol.control.FullScreen()
+    ]);
+    this._map.getControls().extend([
       new this.LayerControl(this)
     ]);
+    
     this._map.setView(this._view);
 
     var that = this;
 
     this._map.getView().on('change:resolution', function(){
-      Map.prototype.updateLayers(that);
+      Map.prototype.updateLayers(that,time);
     });
   };
 
-  Map.prototype.updateLayers = function(that) {
+
+  /**
+   * @param  {that, Map object}
+   * @param  {time, integer}
+   * @return {[type]}
+   */
+  Map.prototype.updateLayers = function(that, _time) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
@@ -195,8 +218,7 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        //var weatherIcon = './images/icons/midsummer.png';
-        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[0]) + ".png";
+        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[time]) + ".png";
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
@@ -205,21 +227,88 @@ define([
             scale: 1.3,
             fill: new ol.style.Fill({
               color: '#000'
-            })
+            }),
           }),
           image: new ol.style.Icon({
-            anchor: [0.5, -0.2],
+            anchor: [0.5, -0.22],
             scale: 0.08,
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: weatherIcon
-          })
+          }),
+          data: that._data[idx]
         }));
-
         //Finally add style to icon
         that._cloudSource.addFeatures([pointFeatureTemp]); //Fill the this._cloudSource with point features
       }
     }
+
+      var element = document.getElementById('popup');
+
+      var popup = new ol.Overlay({
+        element: element,
+        positioning: 'bottom-center',
+        stopEvent: false
+      });
+      that._map.addOverlay(popup);
+
+
+      // display popup on click
+      that._map.on('click', function(evt) {
+        var feature = that._map.forEachFeatureAtPixel(evt.pixel,
+            function(feature) {
+              return feature;
+            });
+
+        //if hit on icon
+        if (feature) {
+          popup.setPosition(evt.coordinate);
+
+          var dataObject;
+          for(var idx=0; idx < that._data.length; idx++){
+              if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
+                dataObject=that._data[idx];
+              }
+          }
+
+          console.log(dataObject.name);
+
+          $('#popover-content').html("asdf");
+          
+          $(element).popover({
+            placement: 'bottom',
+            html: true,
+          });
+
+          //Set content in popover
+          $(element).data('bs.popover').options.content = function(){
+            return "<b>" + dataObject.name + "</b><br>" + 
+                   "Nederbörd: " + dataObject.mintimeseries[time].pit + "-" + dataObject.maxtimeseries[time].pit +" mm<br>" + 
+                   "Temperatur: "+ dataObject.mintimeseries[time].t   + "-" + dataObject.maxtimeseries[time].t   +" °C<br>" +
+                   "Vind: "        + dataObject.mintimeseries[time].ws  + "-" + dataObject.maxtimeseries[time].ws  +" m/s<br>";
+    
+          }
+
+          $(element).popover('show');
+        } 
+        else {
+          $(element).popover('destroy');
+        } 
+      });
+
+
+
+      // change mouse cursor when over marker
+      that._map.on('pointermove', function(e) {
+        if (e.dragging) {
+          $(element).popover('destroy');
+          return;
+        }
+        var pixel = that._map.getEventPixel(e.originalEvent);
+        var hit = that._map.hasFeatureAtPixel(pixel);
+        //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
+        document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
+      });
   };
 
   Map.prototype.LayerControl = function(that, opt_options) {
