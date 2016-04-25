@@ -15,8 +15,6 @@ define([
    */
   var Table = function(smhidata) {
     this._data = smhidata;
-    this._currentLocation = "";
-    this._chosenWeather = "";
   };
 
 
@@ -51,15 +49,7 @@ define([
     }
     return "";
   };
-
-  Table.prototype.updateLocation = function(currentLocation) {
-    this._currentLocation = currentLocation
-  };
-
-  Table.prototype.updateChosenWeather = function(chosenWeather) {
-    this._chosenWeather = chosenWeather;
-  };
-
+  
   /**
    * Function to show correct icon in the table
    *
@@ -142,8 +132,8 @@ define([
       $('#tableBody').append("<tr>" +
         "<td id="+idx+" class='location'>"+this._data[idx].name+"</td>" + // Ort
         "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
-        "<td id="+idx+"t onclick= updateLocation("+idx+",'t',0) class='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" + // Temperatur
-        "<td id="+idx+"pit onclick= updateLocation("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+" mm</td>" + // Nederbörd
+        "<td id="+idx+"t onclick= updateLocation("+idx+",'t',0) class='toggleable'><span class='minTemp'>" + this._data[idx].mintimeseries[0].t + "°</span> "+this._data[idx].timeseries[0].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[0].t + "°</span></td>" + // Temperatur
+        "<td id="+idx+"pit onclick= updateLocation("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+"-"+ this._data[idx].maxtimeseries[0].pit +" mm</td>" + // Nederbörd
         "<td id="+idx+"gust onclick= updateLocation("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
         "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
@@ -152,7 +142,5 @@ define([
       }
     }
   };
-
-
   return Table;
 });
