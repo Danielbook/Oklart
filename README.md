@@ -1,7 +1,8 @@
-# Säkert - En väderapplikation med osäkerhetsvisualisering
+# Oklart - En väderapplikation med osäkerhetsvisualisering
 TNM094 Kandidatprojekt 2016
 
-## För att starta hemsida, laddda ner .zip fil, extrahera, gå in i terminalen, navigera till SMHIapp och exekvera npm start. (Obs node måste vara installerat på datorn).
+## För att starta hemsida, laddda ner .zip fil, extrahera, gå in i terminalen, navigera till SMHIapp och skriv npm install. (Obs node och bower måste vara installerat på datorn).
+Därefter kör du npm start för att starta servern. (körs på localhost:3000);
 
 ![Logo](http://i.imgur.com/gC2Mcf2.png)
 
