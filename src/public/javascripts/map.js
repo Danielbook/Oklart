@@ -4,18 +4,17 @@ define([
   'map',
   'table',
   'graph'
-  ], function (
-    map,
-    table,
-    graph
-    ){
+], function (
+  map,
+  table,
+  graph
+){
 
   /**
    * Constructor for the map
    * @param smhidata
    * @constructor
    */
-
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
@@ -26,7 +25,7 @@ define([
         attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
           collapsible: false
         })
-      }),
+      })
     });
 
     this._view = new ol.View({
@@ -61,8 +60,9 @@ define([
 
   /**
    * Inits the map
+   * @param user
    */
-   Map.prototype.initMap = function(user) {
+  Map.prototype.initMap = function(user) {
     this.mapLayers();
     this.setupMapControls();
     this.goToMyLocation(user.gpsLocation);
@@ -70,16 +70,19 @@ define([
     this.updateLayers(this);
   };
 
+  /**
+   * Updates the maps time
+   * @param time
+   */
   Map.prototype.updateTime = function(time){
     this._time = time;
     this.updateLayers(this);
-  }
+  };
 
   /**
    * Setup the map layers
    */
-   Map.prototype.mapLayers = function() {
-
+  Map.prototype.mapLayers = function() {
     //Base map layer
     this._cartoDBLight = new ol.layer.Tile({
       source: new ol.source.OSM({
@@ -139,6 +142,11 @@ define([
     });
   };
 
+  /**
+   * Function to check for weather type
+   * @param wdp - string, Weather data point
+   * @returns {string} - weather type, ties to the correct image
+   */
   Map.prototype.weatherType = function(wdp) { //Snow and rain
     if(wdp.pcat == 0) { // No precipatopm
       if(wdp.tcc < 1) { // Sunny
@@ -178,17 +186,17 @@ define([
   /**
    * Setup controls for map
    */
-   Map.prototype.setupMapControls = function() {
+  Map.prototype.setupMapControls = function() {
     ol.inherits(this.LayerControl, ol.control.Control);
 
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([
       new ol.control.FullScreen()
-      ]);
+    ]);
     this._map.getControls().extend([
       new this.LayerControl(this)
-      ]);
-    
+    ]);
+
     this._map.setView(this._view);
 
     var that = this;
@@ -200,18 +208,16 @@ define([
 
 
   /**
-   * @param  {that, Map object}
-   * @param  {time, integer}
+   * Updates the maps layers
    * @return {[type]}
+   * @param that - this
    */
-   Map.prototype.updateLayers = function(that) {
+  Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
-
     //Clear the source for the temp layer
     that._cloudSource.clear();
-
 
     for(var idx=0; idx < that._data.length; idx++){
       var dataZoom = that._data[idx].zoomlevel; // get curr zoom level on map
@@ -221,7 +227,7 @@ define([
 
         var point = new ol.geom.Point(
           ol.proj.transform([that._data[idx].lon, that._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
-          );
+        );
         var pointFeatureTemp = new ol.Feature(point);
 
         var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[that._time]) + ".png";
@@ -259,69 +265,70 @@ define([
     that._map.addOverlay(popup);
 
 
-      // display popup on click
-      that._map.on('click', function(evt) {
-        var feature = that._map.forEachFeatureAtPixel(evt.pixel,
-          function(feature) {
-            return feature;
-          });
+    // display popup on click
+    that._map.on('click', function(evt) {
+      var feature = that._map.forEachFeatureAtPixel(evt.pixel,
+        function(feature) {
+          return feature;
+        });
 
-        //if hit on icon
-        if (feature) {
-          popup.setPosition(evt.coordinate);
+      //if hit on icon
+      if (feature) {
+        popup.setPosition(evt.coordinate);
 
-          var dataObject;
-          for(var idx=0; idx < that._data.length; idx++){
-              if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-                updateLocation(idx,'t',0);
-                dataObject=that._data[idx];
-              }
+        var dataObject;
+        for(var idx=0; idx < that._data.length; idx++){
+          if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
+            updateLocation(idx,'t',0);
+            dataObject=that._data[idx];
           }
+        }
 
-          console.log(dataObject.name);
-          
-          $(element).popover({
-            placement: 'bottom',
-            html: true,
-          });
+        console.log(dataObject.name);
 
-          //Set content in popover
-          $(element).data('bs.popover').options.content = function(){
-            return "<b>" + dataObject.name + "</b><br>" + 
-            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
+        $(element).popover({
+          placement: 'bottom',
+          html: true,
+        });
+
+        //Set content in popover
+        $(element).data('bs.popover').options.content = function() {
+          return "<b>" + dataObject.name + "</b><br>" +
+            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" +
             "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
             "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
 
-          }
+        };
 
-          $(element).popover('show');
-        } 
-        else {
-          $(element).popover('destroy');
-        } 
-      });
+        $(element).popover('show');
+      }
+      else {
+        $(element).popover('destroy');
+      }
+    });
 
-
-
-      // change mouse cursor when over marker
-      that._map.on('pointermove', function(e) {
-        if (e.dragging) {
-          $(element).popover('destroy');
-          return;
-        }
-        var pixel = that._map.getEventPixel(e.originalEvent);
-        var hit = that._map.hasFeatureAtPixel(pixel);
-        //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
-        document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
-      });
-    };
-
-  
+    // change mouse cursor when over marker
+    that._map.on('pointermove', function(e) {
+      if (e.dragging) {
+        $(element).popover('destroy');
+        return;
+      }
+      var pixel = that._map.getEventPixel(e.originalEvent);
+      var hit = that._map.hasFeatureAtPixel(pixel);
+      //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
+      document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
+    });
+  };
 
 
-
-Map.prototype.LayerControl = function(that, opt_options) {
-  var options = opt_options || {};
+  /**
+   * Setups the layer controls on the map
+   * @param that - this
+   * @param opt_options
+   * @constructor
+   */
+  Map.prototype.LayerControl = function(that, opt_options) {
+    var options = opt_options || {};
 
     // Buttons
     var goToMyLocationBtn = document.createElement('button');
@@ -358,7 +365,7 @@ Map.prototype.LayerControl = function(that, opt_options) {
       cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      
+
     };
 
     //Function to handle rain button
@@ -444,8 +451,9 @@ Map.prototype.LayerControl = function(that, opt_options) {
 
   /**
    * Adds a marker on the users location
+   * @param that - this
    */
-   Map.prototype.addMarker = function(that){
+  Map.prototype.addMarker = function(that){
     that._markerSource = new ol.source.Vector({
       projection: 'EPSG:4326'
     });
@@ -477,8 +485,9 @@ Map.prototype.LayerControl = function(that, opt_options) {
 
   /**
    * Set current location to the map
+   * @param gpsLocation {array} - users location
    */
-   Map.prototype.goToMyLocation = function(gpsLocation) {
+  Map.prototype.goToMyLocation = function(gpsLocation) {
     var loc = gpsLocation, map = this._map;
     if(loc) {
       loc.once('change', function() {
@@ -493,18 +502,19 @@ Map.prototype.LayerControl = function(that, opt_options) {
 
   /**
    * Get current location from geolocation
+   * @return {ol.Geolocation} - Users location
    */
-   Map.prototype.getCurrentLocation = function() {
+  Map.prototype.getCurrentLocation = function() {
     return new ol.Geolocation({
       tracking: true
     });
   };
 
   /**
-   * Updates the map to current location
-   * @param data
+   * Updates the map to chosen location
+   * @param data - Data sent from navbar
    */
-   Map.prototype.updateMap = function(data) {
+  Map.prototype.updateMap = function(data) {
     var loc = this.gpsLocation;
     var pan = ol.animation.pan({
       duration: 1000,
