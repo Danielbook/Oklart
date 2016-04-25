@@ -338,7 +338,7 @@ define([
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
-      /*
+      
       that._map.addLayer(that._OWMtempLayer);
       that._map.removeLayer(that._OWMsnowLayer);
       that._map.removeLayer(that._cloudVecLayer);
@@ -353,7 +353,7 @@ define([
       cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      */
+      
     };
 
     //Function to handle rain button
