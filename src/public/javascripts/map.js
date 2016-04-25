@@ -208,8 +208,10 @@ define([
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
+
     //Clear the source for the temp layer
     that._cloudSource.clear();
+
 
     for(var idx=0; idx < that._data.length; idx++){
       var dataZoom = that._data[idx].zoomlevel; // get curr zoom level on map
@@ -277,8 +279,6 @@ define([
           }
 
           console.log(dataObject.name);
-
-          $('#popover-content').html("asdf");
           
           $(element).popover({
             placement: 'bottom',
