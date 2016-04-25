@@ -10,28 +10,40 @@
 		//Requirejs is setup
 		requirejs.config({ baseUrl: './javascripts/' });
 
+        var _graph;
+        var _table;
+        var _slider;
+        var smhidata;
 		//In this function our javascripts are accesable and instanses of the included objects can be created
-		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
+		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
 			//Stores data sent from Node.js into smhidata
-			var smhidata = <%-JSON.stringify(dataobject)%>;
+			smhidata = <%-JSON.stringify(dataobject)%>;
 
-			console.log(smhidata);
+			//console.log(smhidata);
+            user = {
+                gpsLocation:[0,0],
+                location: 0,
+                weather:"t",
+                time:0
+            };
+
 			//Creates objects for the components
-			var _table = new Table(smhidata);
-			var _graph = new Graph(smhidata);
-			var _map = new Map(smhidata);
-			var slider = new Slider('#bootslide', {});
+			_table = new Table(smhidata);
+			_graph = new Graph(smhidata);
+			_map = new Map(smhidata, user);
+            _slider = new Slide(smhidata);
 
-			//Inits the objects to create the components
-			_graph.initGraph(smhidata, 2, 't');
+        
 
-			_map.initMap();
+            _graph.initGraph(smhidata, user.location, user.weather);
+			_map.initMap(user);
 
             $( document ).ready(function() {
                 /**
                  * Draws the table
                  */
                 _table.drawTable();
+                _slider.initSlider();
 
                 $("td.toggleable").click(function(){
                     $("td").removeClass("activeCell");
@@ -46,40 +58,37 @@
                 });
                 $( "td.location" ).on("click", function() {
                     _table.changeCurrentLocation($(this));
-                });
-            });
+                });            });
+
 
 		    //Autocomplete for the Searchbar
             var input = document.getElementById('CitySearch');
             var awesomplete = new Awesomplete(input, {
-            minChars: 1,
-            maxItems: 5,
-            autoFirst: true,
-            filter: Awesomplete.FILTER_STARTSWITH
+                minChars: 1,
+                maxItems: 5,
+                autoFirst: true,
+                filter: Awesomplete.FILTER_STARTSWITH
             });
 
             //Saving the name of the cities in an array
             var list = new Array();
-            for(i=0; i<smhidata.length; i++){
+                for(i=0; i<smhidata.length; i++) {
 
-            list[i] = smhidata[i].name; 
+                list[i] = smhidata[i].name;
             }
-            awesomplete.list = list;
-          
-			
-            slider.on("slideStop", function(slideEvt) {
-				var sliderValues = slider.getValue();
-                _graph.initGraph(smhidata, 10, 'gust');
-				_graph.updateTime(sliderValues);
 
-//				console.log(sliderValues);
+            awesomplete.list = list;
+
+           _slider.on("slideStop", function(slideEvt) {
+				var sliderValue = _slider.getValue();
+                user.time = sliderValue;
 			});
 
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
 				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-					_map.updateMap(data);
+					_map.updateMap(data, user);
 				})
 			};
 
@@ -89,13 +98,18 @@
 				if(e.which == 13){
 					var AdresFalt = $("#CitySearch") ;
 					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-						_map.updateMap(data);
+						_map.updateMap(data, user);
 					})
                     return false;
 				}
 			}); 
-
 		})
+
+        function update(idx,par, time){
+            _graph.initGraph(smhidata, idx, par);
+            console.log("Update to location index: " + idx);
+            console.log("Update to parameter: " + par);
+        }
 
         $(window).resize(function() {
             if( $(window).width() < 767 ) {
@@ -106,6 +120,7 @@
                 $("#wrapper").removeClass("toggled");
             }
         });
+
 
 	</script>
     <nav class="navbar navbar-custom navbar-fixed-top">
@@ -161,14 +176,19 @@
                     <div class="col-md-6">
                         <div class="pageElement">
                             <div id="map" class="map"><div id="popup"></div></div>
-                             <b>1</b>
-                             <input id="bootslide" type="text" class="span2" value=""
-                                                 data-slider-min="1"
-                                                 data-slider-max="29"
-                                                 data-slider-step="1"
-                                                 data-slider-tooltip_split="true"
-                                                 data-slider-value="[0,29]"/>
-                             <b>30</b>
+                             <input id="bootslide" type="text" class="slider"
+                                     data-slider-min="1"
+                                     data-slider-max="73"
+                                     data-slider-step="1"
+                                     data-slider-value="2"
+                                     data-slider-handle="square"
+                                     data-slider-tooltip-position="bottom"
+                              />
+                            <div>
+                                <output id="tid"></output>
+                                <output id="dag"></output>
+                            </div>
+                            <b id="idag"></b>
                         </div>
                     </div>
                     <div class="col-md-6"> <!-- GRAPH AND TABLE -->

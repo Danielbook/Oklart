@@ -1,9 +1,13 @@
 "use strict";
 
 define([
-  'map'
+  'map',
+  'table',
+  'graph'
 ], function (
-  map
+  map,
+  table,
+  graph
 ){
 
   var time=0;
@@ -13,8 +17,10 @@ define([
    * @param smhidata
    * @constructor
    */
+  
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+
     this._data = smhidata;
     this._map = new ol.Map({
       target: 'map',
@@ -49,16 +55,18 @@ define([
     this._markerSource = "";
     this._markerVecLayer = "";
 
-    this._userLocation = this.getCurrentLocation();
+    user.gpsLocation = this.getCurrentLocation();
+    this.gpsLocation = user.gpsLocation;
+    //console.log(user.gpsLocation);
   };
 
   /**
    * Inits the map
    */
-  Map.prototype.initMap = function() {
+  Map.prototype.initMap = function(user) {
     this.mapLayers();
     this.setupMapControls();
-    this.goToMyLocation();
+    this.goToMyLocation(user.gpsLocation);
     this.addMarker(this);
     this.updateLayers(this,time);
   };
@@ -458,8 +466,8 @@ define([
   /**
    * Set current location to the map
    */
-  Map.prototype.goToMyLocation = function() {
-    var loc = this._userLocation, map = this._map;
+  Map.prototype.goToMyLocation = function(gpsLocation) {
+    var loc = gpsLocation, map = this._map;
     if(loc) {
       loc.once('change', function() {
         // Save position and set map center
@@ -485,7 +493,7 @@ define([
    * @param data
    */
   Map.prototype.updateMap = function(data) {
-    var loc = this._userLocation;
+    var loc = this.gpsLocation;
     var pan = ol.animation.pan({
       duration: 1000,
       source: this._view.getCenter()
@@ -500,9 +508,7 @@ define([
       this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
     }
 
-
     else { // Use my location
-
       this._map.beforeRender(pan);
       this._map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
     }
