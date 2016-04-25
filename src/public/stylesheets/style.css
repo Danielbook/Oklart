@@ -36,6 +36,11 @@ body{
 
 }
 
+.ol-full-screen{
+    top: 93%;
+    right: 94%;
+}
+
 .card{
   padding:0;
 }

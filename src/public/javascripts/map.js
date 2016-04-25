@@ -171,8 +171,12 @@ define([
 
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([
+      new ol.control.FullScreen()
+    ]);
+    this._map.getControls().extend([
       new this.LayerControl(this)
     ]);
+    
     this._map.setView(this._view);
 
     var that = this;
@@ -247,6 +251,8 @@ define([
             function(feature) {
               return feature;
             });
+
+        //if hit on icon
         if (feature) {
           popup.setPosition(evt.coordinate);
 
@@ -257,20 +263,26 @@ define([
               }
           }
 
-      
+          console.log(dataObject.name);
+
+          $('#popover-content').html("asdf");
           
           $(element).popover({
-            'placement': 'top',
-            'html': true,
-            'content': "Nederbörd: " + dataObject.timeseries[0].pit + "mm/h \n",
+            placement: 'top',
+            html: true,
           });
 
-          $(element).popover('show');
+          //Set content in popover
+          $(element).data('bs.popover').options.content = function(){
+           return "<b>" + dataObject.name + "\n " + "</b>" + 
+                  "\n Nederbörd: " + dataObject.mintimeseries[time].pit + "mm - " + dataObject.maxtimeseries[time].pit +"mm"; 
+          }
 
-          } 
-          else {
+          $(element).popover('show');
+        } 
+        else {
           $(element).popover('destroy');
-          } 
+        } 
       });
 
 
