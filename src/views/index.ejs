@@ -15,7 +15,7 @@
 			//Stores data sent from Node.js into smhidata
 			var smhidata = <%-JSON.stringify(dataobject)%>;
 
-			//console.log(smhidata);
+			console.log(smhidata);
 
             var user = {
                 gpsLocation: [0,0],
@@ -23,6 +23,60 @@
                 weather: "t",
                 time: 0
             };
+
+//------------------------------------------------------------------------------------------------
+            var nearestPos = [];
+
+            //Position: Borlänge"
+            var userLat = smhidata[3].lat;
+            var userLong = smhidata[3].lon;
+
+            var variable = calculateNear(userLat,userLong);
+            console.log("VAR = " + variable);
+
+            function calculateNear(userLat, userLong){
+                var firstlat = smhidata[0].lat;
+                var firstlon = smhidata[0].lon;
+
+                var result = haversine(userLat,firstlat,userLong,firstlon);
+                console.log("Result from haversine: " + result);
+
+                for (var i=0;i<smhidata.length;i++){
+                    var ans = haversine(userLat,smhidata[i].lat,userLong,smhidata[i].lon);
+
+                    //Always push when array is empty
+                    if(nearestPos.length <= 4){
+                        nearestPos.push({res : result, idx : i});
+                    }
+
+                    if (ans < result && ans != 0 ){//nearest
+                        result = ans;
+
+                        for (var j=0;j<4;j++){
+                            if(result < nearestPos[j].res){
+                                nearestPos[j] = i;
+                            }
+                        }
+                    }
+                }
+            };
+
+            function haversine(lat1, lat2, lng1, lng2){
+                rad = 3961; // for km use 3961, for miles use 6372.8
+                deltaLat = toRad(lat2-lat1);
+                deltaLng = toRad(lng2-lng1);
+                lat1 = toRad(lat1);
+                lat2 = toRad(lat2);
+                a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) + Math.sin(deltaLng/2) * Math.sin(deltaLng/2) * Math.cos(lat1) * Math.cos(lat2);
+                c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return  rad * c;
+            };
+
+            function toRad(Value) {
+                /** Converts numeric degrees to radians */
+                return Value * Math.PI / 180;
+            };
+//------------------------------------------------------------------------------------------------
 
 			//Creates objects for the components
 			var _table = new Table(smhidata);
