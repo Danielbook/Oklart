@@ -71,6 +71,10 @@ define([
     this.updateLayers(this,time);
   };
 
+  Map.prototype.updateTime = function(time){
+    this.updateLayers(this, time);
+  }
+
   /**
    * Setup the map layers
    */
@@ -218,7 +222,7 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[time]) + ".png";
+        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[_time]) + ".png";
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
@@ -283,9 +287,9 @@ define([
           //Set content in popover
           $(element).data('bs.popover').options.content = function(){
             return "<b>" + dataObject.name + "</b><br>" + 
-                   "Nederbörd: " + dataObject.mintimeseries[time].pit + "-" + dataObject.maxtimeseries[time].pit +" mm<br>" + 
-                   "Temperatur: "+ dataObject.mintimeseries[time].t   + "-" + dataObject.maxtimeseries[time].t   +" °C<br>" +
-                   "Vind: "        + dataObject.mintimeseries[time].ws  + "-" + dataObject.maxtimeseries[time].ws  +" m/s<br>";
+                   "Nederbörd: " + dataObject.mintimeseries[_time].pit + "-" + dataObject.maxtimeseries[_time].pit +" mm<br>" + 
+                   "Temperatur: "+ dataObject.mintimeseries[_time].t   + "-" + dataObject.maxtimeseries[_time].t   +" °C<br>" +
+                   "Vind: "        + dataObject.mintimeseries[_time].ws  + "-" + dataObject.maxtimeseries[_time].ws  +" m/s<br>";
     
           }
 
@@ -334,10 +338,12 @@ define([
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
+      /*
       that._map.addLayer(that._OWMtempLayer);
       that._map.removeLayer(that._OWMsnowLayer);
       that._map.removeLayer(that._cloudVecLayer);
       that._map.removeLayer(that._OWMrainLayer);
+
 
       temperatureBtn.disabled = true;
       temperatureBtn.style.backgroundColor = 'gray';
@@ -347,6 +353,7 @@ define([
       cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      */
     };
 
     //Function to handle rain button
