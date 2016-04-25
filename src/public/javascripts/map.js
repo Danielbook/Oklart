@@ -10,8 +10,6 @@ define([
   graph
 ){
 
-  var time=0;
-
   /**
    * Constructor for the map
    * @param smhidata
@@ -54,6 +52,7 @@ define([
 
     this._markerSource = "";
     this._markerVecLayer = "";
+    this._time = 0;
 
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
@@ -68,11 +67,12 @@ define([
     this.setupMapControls();
     this.goToMyLocation(user.gpsLocation);
     this.addMarker(this);
-    this.updateLayers(this,time);
+    this.updateLayers(this);
   };
 
   Map.prototype.updateTime = function(time){
-    this.updateLayers(this, time);
+    this._time = time;
+    this.updateLayers(this);
   }
 
   /**
@@ -204,7 +204,7 @@ define([
    * @param  {time, integer}
    * @return {[type]}
    */
-  Map.prototype.updateLayers = function(that, _time) {
+  Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
@@ -222,7 +222,7 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[_time]) + ".png";
+        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[that._time]) + ".png";
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
@@ -287,9 +287,9 @@ define([
           //Set content in popover
           $(element).data('bs.popover').options.content = function(){
             return "<b>" + dataObject.name + "</b><br>" + 
-                   "Nederbörd: " + dataObject.mintimeseries[_time].pit + "-" + dataObject.maxtimeseries[_time].pit +" mm<br>" + 
-                   "Temperatur: "+ dataObject.mintimeseries[_time].t   + "-" + dataObject.maxtimeseries[_time].t   +" °C<br>" +
-                   "Vind: "        + dataObject.mintimeseries[_time].ws  + "-" + dataObject.maxtimeseries[_time].ws  +" m/s<br>";
+                   "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
+                   "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
+                   "Vind: "        + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
     
           }
 
