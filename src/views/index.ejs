@@ -79,11 +79,6 @@
 
             awesomplete.list = list;
 
-           _slider.on("slideStop", function(slideEvt) {
-				var sliderValue = _slider.getValue();
-                user.time = sliderValue;
-			});
-
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
@@ -105,7 +100,11 @@
 			}); 
 		})
 
-        function update(idx,par, time){
+        function updateTime(time){
+            _map.updateTime(time);
+        }
+
+        function updateLocation(idx,par, time){
             _graph.initGraph(smhidata, idx, par);
             document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
             console.log("Update to location index: " + idx);

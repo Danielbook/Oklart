@@ -55,6 +55,8 @@ define(['slide'],
 
             this._slider.on("change", function(slideEvt){
                 var value = that._slider.getValue();
+                console.log(value);
+                updateTime(value);
                 that.dateHandler = that.getDate("Gävle", value );
                 that.setSliderDate(that.dateHandler)
             });

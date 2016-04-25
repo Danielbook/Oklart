@@ -122,9 +122,10 @@ define([
     this._currentLocation = newLocation.context.innerText;
     
     var id = newLocation.context.id;
-    update(id, 't', 0);
+    updateLocation(id, 't', 0);
 
-    $("#"+id+"t").removeClass( "currentLocation" );
+    $(".toggleable").removeClass( "activeCell" );
+    $("#"+id+"t").addClass( "activeCell" );
 
     for(var idx = 0; idx < this._data.length; idx++)
       $("td").removeClass( "currentLocation" );
@@ -143,9 +144,9 @@ define([
       $('#tableBody').append("<tr>" +
         "<td id="+idx+" class='location'>"+this._data[idx].name+"</td>" + // Ort
         "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
-        "<td id="+idx+"t onclick= update("+idx+",'t',0) class='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" + // Temperatur
-        "<td id="+idx+"pit onclick= update("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+" mm</td>" + // Nederbörd
-        "<td id="+idx+"gust onclick= update("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
+        "<td id="+idx+"t onclick= updateLocation("+idx+",'t',0) class='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" + // Temperatur
+        "<td id="+idx+"pit onclick= updateLocation("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+" mm</td>" + // Nederbörd
+        "<td id="+idx+"gust onclick= updateLocation("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
         "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
       if(this._data[idx].name === this._currentLocation){

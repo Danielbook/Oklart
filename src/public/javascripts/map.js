@@ -271,7 +271,7 @@ define([
           var dataObject;
           for(var idx=0; idx < that._data.length; idx++){
               if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-                update(idx,'t',0);
+                updateLocation(idx,'t',0);
                 dataObject=that._data[idx];
               }
           }
