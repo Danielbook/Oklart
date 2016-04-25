@@ -133,13 +133,14 @@ define([
    */
   Table.prototype.drawTable = function() {
     var closestCities = 5;
+
     for(var idx = 0; idx < closestCities; idx++) {
       $('#tableBody').append("<tr>" +
         "<td class='location'>"+this._data[idx].name+"</td>" + // Ort
         "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
-        "<td class='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" + // Temperatur
-        "<td class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+" mm</td>" + // Nederbörd
-        "<td class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
+        "<td onclick= update("+idx+",'t',0) class='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" + // Temperatur
+        "<td onclick= update("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+" mm</td>" + // Nederbörd
+        "<td onclick= update("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
         "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
       if(this._data[idx].name === this._currentLocation){
@@ -147,5 +148,7 @@ define([
       }
     }
   };
+
+
   return Table;
 });
