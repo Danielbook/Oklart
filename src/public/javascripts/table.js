@@ -122,28 +122,27 @@ define([
    * Function to draw the table
    */
   Table.prototype.drawTable = function() {
-    var locationindex = 2;
-    var minTempArr = [];
-    var maxTempArr = [];
-    var maxPercArr = [];
-    for(var i = 0; i < 24; i++){
-      var data = this._data[locationindex].timeseries[i];
-      var min = this._data[locationindex].mintimeseries[i];
-      var max = this._data[locationindex].maxtimeseries[i];
-
-
-      minTempArr.push(min['t']);
-      maxTempArr.push(max['t']);
-      maxTempArr.push(max['pit']);
-    }
+    //var locationindex = 2;
+    //var minTempArr = [];
+    //var maxTempArr = [];
+    //var maxPercArr = [];
+    //for(var i = 0; i < 24; i++){
+    //  var data = this._data[locationindex].timeseries[i];
+    //  var min = this._data[locationindex].mintimeseries[i];
+    //  var max = this._data[locationindex].maxtimeseries[i];
+    //
+    //  minTempArr.push(min['t']);
+    //  maxTempArr.push(max['t']);
+    //  maxPercArr.push(max['pit']);
+    //}
 
     var closestCities = 5;
     for(var idx = 0; idx < closestCities; idx++) {
       $('#tableBody').append("<tr>" +
         "<td class='location'>"+this._data[idx].name+"</td>" + // Ort
         "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
-        "<td class='toggleable'><span class='minTemp'>" + minTempArr[idx] + "°</span> "+this._data[idx].timeseries[0].t+"° <span class='maxTemp'>" + maxTempArr[idx] + "°</span></td>" + // Temperatur
-        "<td class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+"-"+ maxTempArr[idx] +" mm</td>" + // Nederbörd
+        "<td class='toggleable'><span class='minTemp'>" + this._data[idx].mintimeseries[0].t + "°</span> "+this._data[idx].timeseries[0].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[0].t + "°</span></td>" + // Temperatur
+        "<td class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+"-"+ this._data[idx].maxtimeseries[0].pit +" mm</td>" + // Nederbörd
         "<td class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
         "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
