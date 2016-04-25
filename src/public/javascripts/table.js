@@ -126,10 +126,8 @@ define([
 
     $(".toggleable").removeClass( "activeCell" );
     $("#"+id+"t").addClass( "activeCell" );
-
-    for(var idx = 0; idx < this._data.length; idx++)
-      $("td").removeClass( "currentLocation" );
-
+    
+    $("td").removeClass( "currentLocation" );
     newLocation.addClass("currentLocation");
 
   };

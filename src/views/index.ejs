@@ -104,7 +104,10 @@
             _map.updateTime(time);
         }
 
-        function updateLocation(idx,par, time){
+        function updateLocation(idx,par,time){
+            $("td").removeClass( "currentLocation" );
+            $("#"+idx).addClass("currentLocation");
+
             _graph.initGraph(smhidata, idx, par);
             document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
             console.log("Update to location index: " + idx);
