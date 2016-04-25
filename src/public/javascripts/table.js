@@ -134,7 +134,7 @@ define([
         "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
         "<td id="+idx+"t onclick= updateLocation("+idx+",'t',0) class='toggleable'><span class='minTemp'>" + this._data[idx].mintimeseries[0].t + "°</span> "+this._data[idx].timeseries[0].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[0].t + "°</span></td>" + // Temperatur
         "<td id="+idx+"pit onclick= updateLocation("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+"-"+ this._data[idx].maxtimeseries[0].pit +" mm</td>" + // Nederbörd
-        "<td id="+idx+"gust onclick= updateLocation("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
+        "<td id="+idx+"gust onclick= updateLocation("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+"-"+this._data[idx].maxtimeseries[0].gust+" m/s " +
         "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
       if(this._data[idx].name === this._currentLocation){
