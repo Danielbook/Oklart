@@ -107,6 +107,7 @@
 
         function update(idx,par, time){
             _graph.initGraph(smhidata, idx, par);
+            document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
             console.log("Update to location index: " + idx);
             console.log("Update to parameter: " + par);
         }
@@ -135,7 +136,7 @@
                 <img src="images/logoWhite.png" class="navbar-left" style="height: 50px; z-index: -1">
 
                 <div class="navbar navbar-nav navbar-center">
-                    <h4><%= location %> | <%= time %></h4>
+                    <h4 id='header'><%= location %> | <%= time %></h4>
                 </div>
 
                 <form class="navbar-form navbar-right" id="topBar" role="search">
