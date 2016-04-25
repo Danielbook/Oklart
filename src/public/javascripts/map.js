@@ -272,17 +272,10 @@ define([
 
           var dataObject;
           for(var idx=0; idx < that._data.length; idx++){
-<<<<<<< HEAD
               if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
                 updateLocation(idx,'t',0);
                 dataObject=that._data[idx];
               }
-=======
-            if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-              update(idx,'t',0);
-              dataObject=that._data[idx];
-            }
->>>>>>> aaa386e962279575f346d27c6f1fa42a729a63d8
           }
 
           console.log(dataObject.name);
