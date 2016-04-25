@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./src/bin/www"
+    "start": "node ./src/bin/www",
+    "postinstall" : "bower install"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -15,8 +16,5 @@
     "serve-favicon": "~2.3.0",
     "mongodb": "~2.0",
     "async": "1.5.2"
-  },
-  "devDependencies": {
-    "mongodb": "^2.0.55"
   }
 }
