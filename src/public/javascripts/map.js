@@ -268,14 +268,17 @@ define([
           $('#popover-content').html("asdf");
           
           $(element).popover({
-            placement: 'top',
+            placement: 'bottom',
             html: true,
           });
 
           //Set content in popover
           $(element).data('bs.popover').options.content = function(){
-           return "<b>" + dataObject.name + "\n " + "</b>" + 
-                  "\n Nederbörd: " + dataObject.mintimeseries[time].pit + "mm - " + dataObject.maxtimeseries[time].pit +"mm"; 
+            return "<b>" + dataObject.name + "</b><br>" + 
+                   "Nederbörd: " + dataObject.mintimeseries[time].pit + "-" + dataObject.maxtimeseries[time].pit +" mm<br>" + 
+                   "Temperatur: "+ dataObject.mintimeseries[time].t   + "-" + dataObject.maxtimeseries[time].t   +" °C<br>" +
+                   "Vind: "        + dataObject.mintimeseries[time].ws  + "-" + dataObject.maxtimeseries[time].ws  +" m/s<br>";
+    
           }
 
           $(element).popover('show');

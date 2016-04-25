@@ -36,6 +36,10 @@ body{
 
 }
 
+.popover{
+  min-width: 180px;
+}
+
 .ol-full-screen{
     top: 93%;
     right: 94%;
