@@ -4,18 +4,18 @@ define([
   'map',
   'table',
   'graph'
-], function (
-  map,
-  table,
-  graph
-){
+  ], function (
+    map,
+    table,
+    graph
+    ){
 
   /**
    * Constructor for the map
    * @param smhidata
    * @constructor
    */
-  
+
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
@@ -23,9 +23,9 @@ define([
     this._map = new ol.Map({
       target: 'map',
       controls: ol.control.defaults({
-          attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-            collapsible: false
-          })
+        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+          collapsible: false
+        })
       }),
     });
 
@@ -62,7 +62,7 @@ define([
   /**
    * Inits the map
    */
-  Map.prototype.initMap = function(user) {
+   Map.prototype.initMap = function(user) {
     this.mapLayers();
     this.setupMapControls();
     this.goToMyLocation(user.gpsLocation);
@@ -78,7 +78,7 @@ define([
   /**
    * Setup the map layers
    */
-  Map.prototype.mapLayers = function() {
+   Map.prototype.mapLayers = function() {
 
     //Base map layer
     this._cartoDBLight = new ol.layer.Tile({
@@ -178,23 +178,23 @@ define([
   /**
    * Setup controls for map
    */
-  Map.prototype.setupMapControls = function() {
+   Map.prototype.setupMapControls = function() {
     ol.inherits(this.LayerControl, ol.control.Control);
 
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([
       new ol.control.FullScreen()
-    ]);
+      ]);
     this._map.getControls().extend([
       new this.LayerControl(this)
-    ]);
+      ]);
     
     this._map.setView(this._view);
 
     var that = this;
 
     this._map.getView().on('change:resolution', function(){
-      Map.prototype.updateLayers(that,time);
+      Map.prototype.updateLayers(that);
     });
   };
 
@@ -204,7 +204,7 @@ define([
    * @param  {time, integer}
    * @return {[type]}
    */
-  Map.prototype.updateLayers = function(that) {
+   Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
@@ -219,7 +219,7 @@ define([
 
         var point = new ol.geom.Point(
           ol.proj.transform([that._data[idx].lon, that._data[idx].lat], 'EPSG:4326', 'EPSG:3857')
-        );
+          );
         var pointFeatureTemp = new ol.Feature(point);
 
         var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[that._time]) + ".png";
@@ -247,22 +247,22 @@ define([
       }
     }
 
-      var element = document.getElementById('popup');
+    var element = document.getElementById('popup');
 
-      var popup = new ol.Overlay({
-        element: element,
-        positioning: 'bottom-center',
-        stopEvent: false
-      });
-      that._map.addOverlay(popup);
+    var popup = new ol.Overlay({
+      element: element,
+      positioning: 'bottom-center',
+      stopEvent: false
+    });
+    that._map.addOverlay(popup);
 
 
       // display popup on click
       that._map.on('click', function(evt) {
         var feature = that._map.forEachFeatureAtPixel(evt.pixel,
-            function(feature) {
-              return feature;
-            });
+          function(feature) {
+            return feature;
+          });
 
         //if hit on icon
         if (feature) {
@@ -270,10 +270,10 @@ define([
 
           var dataObject;
           for(var idx=0; idx < that._data.length; idx++){
-              if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-                update(idx,'t',0);
-                dataObject=that._data[idx];
-              }
+            if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
+              update(idx,'t',0);
+              dataObject=that._data[idx];
+            }
           }
 
           console.log(dataObject.name);
@@ -288,10 +288,10 @@ define([
           //Set content in popover
           $(element).data('bs.popover').options.content = function(){
             return "<b>" + dataObject.name + "</b><br>" + 
-                   "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
-                   "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
-                   "Vind: "        + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
-    
+            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
+            "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
+            "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
+
           }
 
           $(element).popover('show');
@@ -314,10 +314,14 @@ define([
         //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
         document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
       });
-  };
+    };
 
-  Map.prototype.LayerControl = function(that, opt_options) {
-    var options = opt_options || {};
+  
+
+
+
+Map.prototype.LayerControl = function(that, opt_options) {
+  var options = opt_options || {};
 
     // Buttons
     var goToMyLocationBtn = document.createElement('button');
@@ -339,7 +343,7 @@ define([
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
-      
+
       that._map.addLayer(that._OWMtempLayer);
       that._map.removeLayer(that._OWMsnowLayer);
       that._map.removeLayer(that._cloudVecLayer);
@@ -441,7 +445,7 @@ define([
   /**
    * Adds a marker on the users location
    */
-  Map.prototype.addMarker = function(that){
+   Map.prototype.addMarker = function(that){
     that._markerSource = new ol.source.Vector({
       projection: 'EPSG:4326'
     });
@@ -474,13 +478,13 @@ define([
   /**
    * Set current location to the map
    */
-  Map.prototype.goToMyLocation = function(gpsLocation) {
+   Map.prototype.goToMyLocation = function(gpsLocation) {
     var loc = gpsLocation, map = this._map;
     if(loc) {
       loc.once('change', function() {
         // Save position and set map center
         map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
-       });
+      });
     }
     else {
       alert("Couldn't find location");
@@ -490,7 +494,7 @@ define([
   /**
    * Get current location from geolocation
    */
-  Map.prototype.getCurrentLocation = function() {
+   Map.prototype.getCurrentLocation = function() {
     return new ol.Geolocation({
       tracking: true
     });
@@ -500,7 +504,7 @@ define([
    * Updates the map to current location
    * @param data
    */
-  Map.prototype.updateMap = function(data) {
+   Map.prototype.updateMap = function(data) {
     var loc = this.gpsLocation;
     var pan = ol.animation.pan({
       duration: 1000,
