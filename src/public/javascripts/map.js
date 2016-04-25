@@ -13,8 +13,8 @@ define([
    * @param smhidata
    * @constructor
    */
-  var Map = function(smhidata) {
-    this._extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+  var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
+    this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
     this._data = smhidata;
     this._map = new ol.Map({
       target: 'map',
