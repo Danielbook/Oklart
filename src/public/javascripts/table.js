@@ -133,22 +133,28 @@ define([
    * @memberof Table
    * @function drawTable
    */
-  Table.prototype.drawTable = function() {
-    var closestCities = 5;
+  Table.prototype.drawTable = function(time, l) {
+    console.log("Draw table with indicies: " + l);
 
-    for(var idx = 0; idx < closestCities; idx++) {
+    for(var idx = 0; idx < l.length; idx++) {
       $('#tableBody').append("<tr>" +
-        "<td id="+idx+" class='location'>"+this._data[idx].name+"</td>" + // Ort
-        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
-        "<td id="+idx+"t onclick= updateLocation("+idx+",'t',0) class='toggleable'><span class='minTemp'>" + this._data[idx].mintimeseries[0].t + "°</span> "+this._data[idx].timeseries[0].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[0].t + "°</span></td>" + // Temperatur
-        "<td id="+idx+"pit onclick= updateLocation("+idx+",'pit',0) class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+"-"+ this._data[idx].maxtimeseries[0].pit +" mm</td>" + // Nederbörd
-        "<td id="+idx+"gust onclick= updateLocation("+idx+",'gust',0) class='toggleable'>"+this._data[idx].timeseries[0].gust+"-"+this._data[idx].maxtimeseries[0].gust+" m/s " +
-        "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
+        "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
+        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
+        "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
+        "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
+        "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
+        "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
-      if(this._data[idx].name === this._currentLocation){
+      if(this._data[l[idx]].name === this._currentLocation){
         $(".location").addClass("currentLocation");
       }
     }
   };
+
+  Table.prototype.updateTable = function(time, l) {
+    $('#tableBody').html("");
+    this.drawTable(time, l);
+  };
+
   return Table;
 });

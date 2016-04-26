@@ -4,7 +4,7 @@ TNM094 Kandidatprojekt 2016
 ## För att starta hemsida, laddda ner .zip fil, extrahera, gå in i terminalen, navigera till SMHIapp och skriv npm install. (Obs node och bower måste vara installerat på datorn).
 Därefter kör du npm start för att starta servern. (körs på localhost:3000);
 
-![Logo](http://i.imgur.com/gC2Mcf2.png)
+![Logo](http://i.imgur.com/vUjHypg.png)
 
 ## Projekt E (Väder-app med osäkerhetsvisualisering)
 ------

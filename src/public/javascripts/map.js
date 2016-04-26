@@ -282,36 +282,38 @@ define([
       if (feature) {
         popup.setPosition(evt.coordinate);
 
-        var dataObject;
-        for(var idx=0; idx < that._data.length; idx++){
-          if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-            updateLocation(idx,'t',0);
-            dataObject=that._data[idx];
+          var dataObject;
+          for(var idx=0; idx < that._data.length; idx++){
+              if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
+                updateLocation(idx,'t',0);
+                updateTable(user.time, idx);
+                dataObject=that._data[idx];
+              }
           }
         }
 
-        console.log(dataObject.name);
+          console.log(dataObject.name);
+          
+          $(element).popover({
+            placement: 'bottom',
+            html: true,
+          });
 
-        $(element).popover({
-          placement: 'bottom',
-          html: true,
-        });
-
-        //Set content in popover
-        $(element).data('bs.popover').options.content = function() {
-          return "<b>" + dataObject.name + "</b><br>" +
-            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" +
+          //Set content in popover
+          $(element).data('bs.popover').options.content = function(){
+            return "<b>" + dataObject.name + "</b><br>" + 
+            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
             "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
             "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
 
         };
 
-        $(element).popover('show');
-      }
-      else {
-        $(element).popover('destroy');
-      }
-    });
+          $(element).popover('show');
+        } 
+        else {
+          $(element).popover('destroy');
+        } 
+      });
 
     // change mouse cursor when over marker
     that._map.on('pointermove', function(e) {
