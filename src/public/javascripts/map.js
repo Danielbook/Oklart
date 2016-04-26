@@ -1,19 +1,14 @@
-"use strict";
-
 define([
-  'map',
-  'table',
-  'graph'
+  'map'
 ], function (
-  map,
-  table,
-  graph
+  map
 ){
+  "use strict";
 
   /**
    * Constructor for the map
-   * @param smhidata
-   * @constructor
+   * @constructor Map
+   * @param smhidata {data} Data from smhi
    */
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -22,7 +17,7 @@ define([
     this._map = new ol.Map({
       target: 'map',
       controls: ol.control.defaults({
-        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        attributionOptions: ({
           collapsible: false
         })
       })
@@ -60,6 +55,8 @@ define([
 
   /**
    * Inits the map
+   * @memberof Map
+   * @method initMap
    * @param user
    */
   Map.prototype.initMap = function(user) {
@@ -72,6 +69,8 @@ define([
 
   /**
    * Updates the maps time
+   * @memberof Map
+   * @method updateTime
    * @param time
    */
   Map.prototype.updateTime = function(time){
@@ -81,6 +80,8 @@ define([
 
   /**
    * Setup the map layers
+   * @memberof Map
+   * @method mapLayers
    */
   Map.prototype.mapLayers = function() {
     //Base map layer
@@ -144,6 +145,8 @@ define([
 
   /**
    * Function to check for weather type
+   * @memberof Map
+   * @method weatherType
    * @param wdp - string, Weather data point
    * @returns {string} - weather type, ties to the correct image
    */
@@ -185,6 +188,8 @@ define([
 
   /**
    * Setup controls for map
+   * @memberof Map
+   * @method setupMapControls
    */
   Map.prototype.setupMapControls = function() {
     ol.inherits(this.LayerControl, ol.control.Control);
@@ -209,8 +214,9 @@ define([
 
   /**
    * Updates the maps layers
-   * @return {[type]}
-   * @param that - this
+   * @memberof Map
+   * @method updateLayers
+   * @param this
    */
   Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
@@ -239,7 +245,7 @@ define([
             scale: 1.3,
             fill: new ol.style.Fill({
               color: '#000'
-            }),
+            })
           }),
           image: new ol.style.Icon({
             anchor: [0.5, -0.22],
@@ -323,9 +329,10 @@ define([
 
   /**
    * Setups the layer controls on the map
+   * @memberof Map
+   * @method LayerControl
    * @param that - this
    * @param opt_options
-   * @constructor
    */
   Map.prototype.LayerControl = function(that, opt_options) {
     var options = opt_options || {};
@@ -451,6 +458,8 @@ define([
 
   /**
    * Adds a marker on the users location
+   * @memberof Map
+   * @method addMarker
    * @param that - this
    */
   Map.prototype.addMarker = function(that){
@@ -485,7 +494,9 @@ define([
 
   /**
    * Set current location to the map
-   * @param gpsLocation {array} - users location
+   * @memberof Map
+   * @method goToMyLocation
+   * @param gpsLocation {ol.Geolocation} - users location
    */
   Map.prototype.goToMyLocation = function(gpsLocation) {
     var loc = gpsLocation, map = this._map;
@@ -502,6 +513,8 @@ define([
 
   /**
    * Get current location from geolocation
+   * @memberof Map
+   * @method getCurrentLocation
    * @return {ol.Geolocation} - Users location
    */
   Map.prototype.getCurrentLocation = function() {
@@ -511,7 +524,9 @@ define([
   };
 
   /**
-   * Updates the map to chosen location
+   * Updates the map to chosen location.
+   * @memberof Map
+   * @method updateMap
    * @param data - Data sent from navbar
    */
   Map.prototype.updateMap = function(data) {
