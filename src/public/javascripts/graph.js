@@ -23,7 +23,7 @@ define([
    * @param locationindex {int} - Location index
    * @param par {string} - Weather parameter from SMHI API
    */
-  Graph.prototype.initGraph = function(locationindex, par) {
+  Graph.prototype.initGraph = function(smhidata, locationindex, par) {
     this.checkParameter(par);
 
     var TimeArr = [];
@@ -33,15 +33,15 @@ define([
     //var locationindex  = 100;
     //var par = 'gust';
 
-  for(var i = 0; i < 24; i++){
-    var data = this._data[locationindex].timeseries[i];
-    var min = this._data[locationindex].mintimeseries[i];
-    var max = this._data[locationindex].maxtimeseries[i];
+  for(var i = 0; i < 24; i++) {
+    var data = smhidata[locationindex].timeseries[i];
+    var min = smhidata[locationindex].mintimeseries[i];
+    var max = smhidata[locationindex].maxtimeseries[i];
 
-    var currhour = this._data[locationindex].timeseries[i].validTime;
+    var currhour = smhidata[locationindex].timeseries[i].validTime;
     currhour = currhour.substring(11,16);
     currhour = currhour.toString();
-    TimeArr.push(this._data[locationindex].timeseries[i].validTime.slice(11,16));
+    TimeArr.push(smhidata[locationindex].timeseries[i].validTime.slice(11,16));
     TempArr.push(data[par]);
     MinTempArr.push(min[par]);
     MaxTempArr.push(max[par]);

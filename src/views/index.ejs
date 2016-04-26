@@ -30,9 +30,8 @@
 			_map = new Map(smhidata, user);
             _slider = new Slide(smhidata);
 
-        
 
-            _graph.initGraph(user.location, user.weather);
+            _graph.initGraph(smhidata, user.location, user.weather);
 			_map.initMap(user);
 
             $( document ).ready(function() {
