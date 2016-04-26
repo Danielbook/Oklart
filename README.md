@@ -31,3 +31,6 @@ Gruppmedlemmar
 - Adam Söderström
 - Emil Juopperi
 - Jens Kaske
+
+### Dokumentation
+För att kompilera dokumentation, kör: npm run jsdoc
