@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./src/bin/www",
-    "postinstall" : "bower install"
+    "postinstall" : "bower install",
+    "jsdoc": "jsdoc -c conf.json -t ./node_modules/ink-docstrap/template -R README.md"
   },
   "dependencies": {
     "body-parser": "~1.13.2",

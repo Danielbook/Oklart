@@ -1,27 +1,25 @@
-"use strict";
-
 define([
-  'table',
-  'graph',
-  'map'
+  'table'
 ], function (
-  table,
-  graph,
-  map
-){
+  table
+) {
+  "use strict";
 
   /**
-   * CONSTRUCTOR
+   * Constructor for Table
+   * @constructor Table
+   * @param smhidata - Data from SMHI
    */
   var Table = function(smhidata) {
     this._data = smhidata;
   };
 
-
   /**
    * Resolving precipation type
+   * @memberof Table
+   * @function precipitationType
    * @param type precipation category
-   * @returns {string} category
+   * @returns {string} - Precipaton type
    */
   Table.prototype.precipitationType = function(type) {
     switch (type) {
@@ -49,12 +47,13 @@ define([
     }
     return "";
   };
-  
+
   /**
    * Function to show correct icon in the table
-   *
-   * @param weatherDataPoint Data point to check weather
+   * @memberof Table
+   * @function weatherType
    * @returns {string} what kind of weather on the specified place
+   * @param wdp {number} - Weather type from SMHI API
    */
   Table.prototype.weatherType = function(wdp) { //Snow and rain
     if(wdp.pcat == 0) { // No precipatopm
@@ -95,6 +94,8 @@ define([
 
   /**
    * Determines if the percipation is snow or rain
+   * @memberof Table
+   * @function snowOrRain
    * @param wdp data provided
    * @returns {int} returns percipation in mm/h
    */
@@ -107,6 +108,12 @@ define([
     }
   };
 
+  /**
+   * Changes the current location in the Table
+   * @memberof Table
+   * @function changeCurrentLocation
+   * @param newLocation {id} - Cell
+   */
   Table.prototype.changeCurrentLocation = function(newLocation){
     console.log(newLocation);
     this._currentLocation = newLocation.context.innerText;
@@ -119,11 +126,12 @@ define([
     
     $("td").removeClass( "currentLocation" );
     newLocation.addClass("currentLocation");
-
   };
 
   /**
    * Function to draw the table
+   * @memberof Table
+   * @function drawTable
    */
   Table.prototype.drawTable = function() {
     var closestCities = 5;
