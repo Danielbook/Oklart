@@ -3,35 +3,44 @@
 <% include templates/header.ejs %>
 <body>
 	<script>
-		//Load the google charts packages that is used
-		//google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
-		google.charts.load('current', {packages: ['corechart', 'table', 'line','controls']});
-
 		//Requirejs is setup
 		requirejs.config({ baseUrl: './javascripts/' });
 
+        var _graph;
+        var _table;
+        var _slider;
+        var smhidata;
+
+        var user = {
+                gpsLocation:[0,0],
+                location: 0,
+                weather:"t",
+                time:0
+            };
 		//In this function our javascripts are accesable and instanses of the included objects can be created
-		requirejs(['table', 'graph', 'map'], function (Table, Graph, Map) {
+		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
 			//Stores data sent from Node.js into smhidata
-			var smhidata = <%-JSON.stringify(dataobject)%>;
+			smhidata = <%-JSON.stringify(dataobject)%>;
 
-			console.log(smhidata);
+			//console.log(smhidata);
+
 			//Creates objects for the components
-			var _table = new Table(smhidata);
-			var _graph = new Graph(smhidata);
-			var _map = new Map(smhidata);
-			var slider = new Slider('#bootslide', {});
+			_table = new Table(smhidata);
+			_graph = new Graph(smhidata);
+			_map = new Map(smhidata, user);
+            _slider = new Slide(smhidata);
 
-			//Inits the objects to create the components
-			_graph.initGraph(smhidata, 2, 't');
+            _graph.initGraph(smhidata, user.location, user.weather);
+			_map.initMap(user);
 
-			_map.initMap();
+            console.log(user);
+            initApp(user.location, user.weather, user.time);
 
             $( document ).ready(function() {
                 /**
                  * Draws the table
                  */
-                _table.drawTable();
+                _slider.initSlider();
 
                 $("td.toggleable").click(function(){
                     $("td").removeClass("activeCell");
@@ -46,40 +55,32 @@
                 });
                 $( "td.location" ).on("click", function() {
                     _table.changeCurrentLocation($(this));
-                });
-            });
+                });            });
+
 
 		    //Autocomplete for the Searchbar
             var input = document.getElementById('CitySearch');
             var awesomplete = new Awesomplete(input, {
-            minChars: 1,
-            maxItems: 5,
-            autoFirst: true,
-            filter: Awesomplete.FILTER_STARTSWITH
+                minChars: 1,
+                maxItems: 5,
+                autoFirst: true,
+                filter: Awesomplete.FILTER_STARTSWITH
             });
 
             //Saving the name of the cities in an array
             var list = new Array();
-            for(i=0; i<smhidata.length; i++){
+                for(i=0; i<smhidata.length; i++) {
 
-            list[i] = smhidata[i].name; 
+                list[i] = smhidata[i].name;
             }
-            awesomplete.list = list;
-          
-			
-            slider.on("slideStop", function(slideEvt) {
-				var sliderValues = slider.getValue();
-                _graph.initGraph(smhidata, 10, 'gust');
-				_graph.updateTime(sliderValues);
 
-//				console.log(sliderValues);
-			});
+            awesomplete.list = list;
 
 			//This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
 				var AdresFalt = $("#CitySearch") ;
 				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-					_map.updateMap(data);
+					_map.updateMap(data, user);
 				})
 			};
 
@@ -89,13 +90,109 @@
 				if(e.which == 13){
 					var AdresFalt = $("#CitySearch") ;
 					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-						_map.updateMap(data);
+						_map.updateMap(data, user);
 					})
                     return false;
 				}
 			}); 
-
 		})
+
+        function initApp(idx,par,time){
+            updateTime(time);
+            updateTable(time,idx);
+            updateLocation(idx,par,time);
+        }
+
+        function updateTime(time){
+            user.time = time;
+            _map.updateTime(time);
+        }
+
+        function updateTable(time, idx){
+            //locations = calculeateNear(index);
+            console.log("Update table to index: " + idx);
+            locations = [idx,idx+1,idx+2,idx+3,idx+4];
+            _table.updateTable(time, locations);
+            $("#"+idx).addClass("currentLocation");
+        }
+
+        function updateLocation(idx,par,time){
+            $("td").removeClass( "currentLocation" );
+            $("#"+idx).addClass("currentLocation");
+
+            _graph.initGraph(smhidata, idx, par);
+            document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
+            console.log("Update to location index: " + idx);
+            console.log("Update to parameter: " + par);
+        }
+
+        var nearestPos = [];
+        var arraySize = 4;
+
+        //userLat & userLond ARE CURRENTLY NOT USING REAL USER LOCATION
+        //Current Position: "Sandviken"
+        var userLat = smhidata[25].lat;
+        var userLong = smhidata[25].lon;
+
+        calculateNear(userLat,userLong);
+        for(var i = 0; i < 4; i++){
+            console.log(smhidata[nearestPos[i].idx].name);
+        }
+
+         //Used to calculate the arraySize-nr of cities closest to a position.
+        function calculateNear(userLat, userLong){
+            var firstlat = smhidata[0].lat;
+            var firstlon = smhidata[0].lon;
+            var arrMaxVal;
+            var arrIndex;
+            var result = haversine(userLat,firstlat,userLong,firstlon);
+
+            //Loops through all cities and compares distance with havesine-function.
+            for (var i=0; i<smhidata.length; i++){
+                var ans = haversine(userLat,smhidata[i].lat,userLong,smhidata[i].lon);
+
+                //If nearest-position-array is empty. Push the four first results and its index in smhidata
+                if(nearestPos.length < arraySize && ans != 0){
+                    nearestPos.push({res: ans, idx: i});
+                }
+                else if(ans < result && ans != 0){      //If the new value is close to current position than the last.
+
+                    arrMaxVal = nearestPos[0].res;
+
+                    //Check where the largest value is in the array and insert the new closer position in that slot.
+                    for (var j = 0; j < arraySize; j++){
+                        if (arrMaxVal < nearestPos[j].res){
+                            arrMaxVal = nearestPos[j].res;
+                            arrIndex = j;
+                        }
+                        else{
+                            arrIndex = 0;
+                        }
+                    }
+                    nearestPos[arrIndex] = {res: ans, idx: i};
+                    result = ans;   //result will be compared to the next ans given from next smhidata-value.
+                }
+            }
+        };
+
+        function haversine(lat1, lat2, lng1, lng2){
+            rad = 3961; // for km use 3961, for miles use 6372.8
+            deltaLat = toRad(lat2-lat1);
+            deltaLng = toRad(lng2-lng1);
+            lat1 = toRad(lat1);
+            lat2 = toRad(lat2);
+            a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) + Math.sin(deltaLng/2) * Math.sin(deltaLng/2) * Math.cos(lat1) * Math.cos(lat2);
+            c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return  rad * c;
+        };
+
+        function toRad(Value) {
+            /** Converts numeric degrees to radians */
+            return Value * Math.PI / 180;
+        };
+
+
+
 
         $(window).resize(function() {
             if( $(window).width() < 767 ) {
@@ -106,6 +203,7 @@
                 $("#wrapper").removeClass("toggled");
             }
         });
+
 
 	</script>
     <nav class="navbar navbar-custom navbar-fixed-top">
@@ -120,7 +218,7 @@
                 <img src="images/logoWhite.png" class="navbar-left" style="height: 50px; z-index: -1">
 
                 <div class="navbar navbar-nav navbar-center">
-                    <h4><%= location %> | <%= time %></h4>
+                    <h4 id='header'><%= location %> | <%= time %></h4>
                 </div>
 
                 <form class="navbar-form navbar-right" id="topBar" role="search">
@@ -161,14 +259,19 @@
                     <div class="col-md-6">
                         <div class="pageElement">
                             <div id="map" class="map"><div id="popup"></div></div>
-                             <b>1</b>
-                             <input id="bootslide" type="text" class="span2" value=""
-                                                 data-slider-min="1"
-                                                 data-slider-max="29"
-                                                 data-slider-step="1"
-                                                 data-slider-tooltip_split="true"
-                                                 data-slider-value="[0,29]"/>
-                             <b>30</b>
+                             <input id="bootslide" type="text" class="slider"
+                                     data-slider-min="1"
+                                     data-slider-max="73"
+                                     data-slider-step="1"
+                                     data-slider-value="2"
+                                     data-slider-handle="square"
+                                     data-slider-tooltip-position="bottom"
+                              />
+                            <div>
+                                <output id="tid"></output>
+                                <output id="dag"></output>
+                            </div>
+                            <b id="idag"></b>
                         </div>
                     </div>
                     <div class="col-md-6"> <!-- GRAPH AND TABLE -->

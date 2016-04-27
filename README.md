@@ -1,7 +1,13 @@
-# Säkert - En väderapplikation med osäkerhetsvisualisering
+# Oklart - En väderapplikation med osäkerhetsvisualisering
 TNM094 Kandidatprojekt 2016
 
-![Logo](http://i.imgur.com/gC2Mcf2.png)
+## För att starta hemsida, laddda ner .zip fil, extrahera, gå in i terminalen, navigera till SMHIapp och skriv npm install. (Obs node och bower måste vara installerat på datorn).
+Därefter kör du npm start för att starta servern. (körs på localhost:3000);
+
+
+<div style="text-align: center;"> 
+    <img src="http://i.imgur.com/vUjHypg.png" alt="logo" style="width: 400px;"/>
+</div>
 
 ## Projekt E (Väder-app med osäkerhetsvisualisering)
 ------
@@ -28,3 +34,6 @@ Gruppmedlemmar
 - Adam Söderström
 - Emil Juopperi
 - Jens Kaske
+
+### Dokumentation
+För att kompilera dokumentation, kör: npm run jsdoc

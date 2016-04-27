@@ -1,0 +1,27 @@
+{
+  "name": "smhiapp",
+  "description": "",
+  "main": "index.ejs",
+  "authors": [
+    "Daniel Böök <Daniel.book@hotmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Danielbook/SMHIapp",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "awesomplete": "^1.1.0",
+    "highcharts": "^4.2.4",
+    "Ionicons": "ionicons#^2.0.1",
+    "jquery": "^2.2.3",
+    "bootstrap-slider": "git://github.com/seiyria/bootstrap-slider.git",
+    "requirejs": "^2.2.0"
+  }
+}

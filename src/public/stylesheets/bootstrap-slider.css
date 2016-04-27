@@ -2,7 +2,7 @@
                       VERSION  6.1.2
 ========================================================= */
 /*! =========================================================
- * bootstrap-slider.js
+ * bootstrap-initSlider.js
  *
  * Maintainers:
  *		Kyle Kemp
@@ -49,6 +49,7 @@
     top: 0;
     bottom: 0;
 }
+
 .slider.slider-horizontal .slider-tick,
 .slider.slider-horizontal .slider-handle {
     margin-left: -10px;
@@ -136,6 +137,11 @@
 }
 .slider .tooltip-inner {
     white-space: nowrap;
+    position: relative;
+    margin-left: -27px;
+}
+.slider .tooltip.bottom .tooltip-arrow{
+    margin-left: -18px;
 }
 .slider .hide {
     display: none;
@@ -184,18 +190,16 @@
 }
 .slider-handle {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #337ab7;
-    background-image: -webkit-linear-gradient(top, #537FA3 0%, #0480be 100%);
-    background-image: -o-linear-gradient(top, #537FA3 0%, #0480be 100%);
-    background-image: linear-gradient(to bottom, #537FA3 0%, #537FA3 100%);
+    width: 10px;
+    height: 26px;
+    radius: 15px;
+    background: white;
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
     filter: none;
     -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-    border: 0px solid transparent;
+    border: 1px solid;
 }
 .slider-handle.round {
     border-radius: 50%;
@@ -242,7 +246,6 @@
 .slider-tick.custom::before {
     line-height: 20px;
     font-size: 20px;
-    content: '\2605'537FA3color: #726204;
 }
 .slider-tick.in-selection {
     background-image: -webkit-linear-gradient(top, #89cdef 0%, #81bfde 100%);
@@ -251,4 +254,8 @@
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff89cdef', endColorstr='#ff81bfde', GradientType=0);
     opacity: 1;
+}
+.slider .slider-tick.round{
+    color: #0f0f0f;
+    background-color: #0f0f0f;
 }

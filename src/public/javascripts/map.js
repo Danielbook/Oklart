@@ -1,19 +1,14 @@
-"use strict";
-
 define([
-  'map',
-  'table',
-  'graph'
-  ], function (
-    map,
-    table,
-    graph
-    ){
+  'map'
+], function (
+  map
+){
+  "use strict";
 
   /**
    * Constructor for the map
-   * @param smhidata
-   * @constructor
+   * @constructor Map
+   * @param smhidata {data} Data from smhi
    */
 
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
@@ -27,6 +22,7 @@ define([
           collapsible: false
         })
       }),
+
     });
 
     this._view = new ol.View({
@@ -34,7 +30,7 @@ define([
       zoom: 4,
       maxZoom: 10,
       minZoom: 4,
-      extent: this._extent,
+      extent: this._extent
     });
     this._myPosLatLon = "";
     this._geolocation = "";
@@ -61,8 +57,12 @@ define([
 
   /**
    * Inits the map
+   * @memberof Map
+   * @method initMap
+   * @param user
    */
-   Map.prototype.initMap = function(user) {
+
+  Map.prototype.initMap = function(user) {
     this.mapLayers();
     this.setupMapControls();
     this.goToMyLocation(user.gpsLocation);
@@ -71,16 +71,23 @@ define([
     this.handleMouse(this);
   };
 
+  /**
+   * Updates the maps time
+   * @memberof Map
+   * @method updateTime
+   * @param time
+   */
   Map.prototype.updateTime = function(time){
     this._time = time;
     this.updateLayers(this);
-  }
+  };
 
   /**
    * Setup the map layers
+   * @memberof Map
+   * @method mapLayers
    */
-   Map.prototype.mapLayers = function() {
-
+  Map.prototype.mapLayers = function() {
     //Base map layer
     this._cartoDBLight = new ol.layer.Tile({
       source: new ol.source.OSM({
@@ -140,6 +147,13 @@ define([
     });
   };
 
+  /**
+   * Function to check for weather type
+   * @memberof Map
+   * @method weatherType
+   * @param wdp - string, Weather data point
+   * @returns {string} - weather type, ties to the correct image
+   */
   Map.prototype.weatherType = function(wdp) { //Snow and rain
     if(wdp.pcat == 0) { // No precipatopm
       if(wdp.tcc < 1) { // Sunny
@@ -178,6 +192,8 @@ define([
 
   /**
    * Setup controls for map
+   * @memberof Map
+   * @method setupMapControls
    */
    Map.prototype.setupMapControls = function() {
     ol.inherits(this.LayerControl, ol.control.Control);
@@ -188,8 +204,9 @@ define([
       ]);
     this._map.getControls().extend([
       new this.LayerControl(this)
-      ]);
+    ]);
     
+
     this._map.setView(this._view);
 
     var that = this;
@@ -202,8 +219,10 @@ define([
 
 
   /**
-   * Handle mouse events
-   * @param  {that, Map object}
+   * Function handle mouse events
+   * @memberof Map
+   * @method handleMouse
+   * @param that - Map object
    */
   Map.prototype.handleMouse = function(that) {
 
@@ -273,6 +292,7 @@ define([
     });
   }
 
+
   Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
@@ -302,7 +322,7 @@ define([
             scale: 1.3,
             fill: new ol.style.Fill({
               color: '#000'
-            }),
+            })
           }),
           image: new ol.style.Icon({
             anchor: [0.5, -0.22],
@@ -320,9 +340,15 @@ define([
     };
 
 
-
-Map.prototype.LayerControl = function(that, opt_options) {
-  var options = opt_options || {};
+  /**
+   * Setups the layer controls on the map
+   * @memberof Map
+   * @method LayerControl
+   * @param that - this
+   * @param opt_options
+   */
+  Map.prototype.LayerControl = function(that, opt_options) {
+    var options = opt_options || {};
 
     // Buttons
     var goToMyLocationBtn = document.createElement('button');
@@ -359,7 +385,6 @@ Map.prototype.LayerControl = function(that, opt_options) {
       cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      
     };
 
     //Function to handle rain button
@@ -445,6 +470,9 @@ Map.prototype.LayerControl = function(that, opt_options) {
 
   /**
    * Adds a marker on the users location
+   * @memberof Map
+   * @method addMarker
+   * @param that - this
    */
    Map.prototype.addMarker = function(that){
     that._markerSource = new ol.source.Vector({
@@ -478,8 +506,12 @@ Map.prototype.LayerControl = function(that, opt_options) {
 
   /**
    * Set current location to the map
+   * @memberof Map
+   * @method goToMyLocation
+   * @param gpsLocation {ol.Geolocation} - users location
    */
-   Map.prototype.goToMyLocation = function(gpsLocation) {
+
+  Map.prototype.goToMyLocation = function(gpsLocation) {
     var loc = gpsLocation, map = this._map;
     if(loc) {
       loc.once('change', function() {
@@ -494,6 +526,9 @@ Map.prototype.LayerControl = function(that, opt_options) {
 
   /**
    * Get current location from geolocation
+   * @memberof Map
+   * @method getCurrentLocation
+   * @return {ol.Geolocation} - Users location
    */
    Map.prototype.getCurrentLocation = function() {
     return new ol.Geolocation({
@@ -502,10 +537,13 @@ Map.prototype.LayerControl = function(that, opt_options) {
   };
 
   /**
-   * Updates the map to current location
-   * @param data
+   * Updates the map to chosen location.
+   * @memberof Map
+   * @method updateMap
+   * @param data - Data sent from navbar
    */
-   Map.prototype.updateMap = function(data) {
+
+  Map.prototype.updateMap = function(data) {
     var loc = this.gpsLocation;
     var pan = ol.animation.pan({
       duration: 1000,
