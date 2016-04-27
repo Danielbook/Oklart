@@ -34,11 +34,13 @@
             _graph.initGraph(smhidata, user.location, user.weather);
 			_map.initMap(user);
 
+            console.log(user);
+            initApp(user.location, user.weather, user.time);
+
             $( document ).ready(function() {
                 /**
                  * Draws the table
                  */
-                _table.drawTable(5, [1, 2, 3, 4, 5]);
                 _slider.initSlider();
 
                 $("td.toggleable").click(function(){
@@ -95,6 +97,12 @@
 				}
 			}); 
 		})
+
+        function initApp(idx,par,time){
+            updateTime(time);
+            updateTable(time,idx);
+            updateLocation(idx,par,time);
+        }
 
         function updateTime(time){
             user.time = time;
