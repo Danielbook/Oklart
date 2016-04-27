@@ -1,7 +1,7 @@
 # Säkert - En väderapplikation med osäkerhetsvisualisering
 TNM094 Kandidatprojekt 2016
 
-![Logo](http://i.imgur.com/gC2Mcf2.png)
+![Logo](http://i.imgur.com/vUjHypg.png)
 
 ## Projekt E (Väder-app med osäkerhetsvisualisering)
 ------
