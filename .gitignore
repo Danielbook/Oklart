@@ -8,6 +8,13 @@
 # Icon must end with two \r
 Icon
 
+### Bower ###
+bower_components
+.bower-cache
+.bower-registry
+.bower-tmp
+
+docs/
 
 # Thumbnails
 ._*
