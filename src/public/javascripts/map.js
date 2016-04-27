@@ -68,6 +68,7 @@ define([
     this.goToMyLocation(user.gpsLocation);
     this.addMarker(this);
     this.updateLayers(this);
+    this.handleMouse(this);
   };
 
   Map.prototype.updateTime = function(time){
@@ -196,21 +197,89 @@ define([
     this._map.getView().on('change:resolution', function(){
       Map.prototype.updateLayers(that);
     });
+
   };
 
 
   /**
+   * Shows popup at clicked city
    * @param  {that, Map object}
-   * @param  {time, integer}
-   * @return {[type]}
    */
-   Map.prototype.updateLayers = function(that) {
+  Map.prototype.handleMouse = function(that) {
+
+    var element = document.getElementById('popup');
+    var popup = new ol.Overlay({
+      element: element,
+      positioning: 'bottom-center',
+      stopEvent: false
+    });
+    that._map.addOverlay(popup);
+
+    // display popup on click
+    that._map.on('click', function(evt) {
+
+      var feature = that._map.forEachFeatureAtPixel(evt.pixel,
+        function(feature) {
+          return feature;
+        });
+
+
+      //if hit on icon
+      if (feature) {
+        popup.setPosition(evt.coordinate);
+
+        var dataObject;
+        for(var idx=0; idx < that._data.length; idx++){
+            if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
+              updateLocation(idx,'t',0);
+              dataObject=that._data[idx];
+            }
+        }
+        
+        $(element).popover({
+          placement: 'bottom',
+          html: true,
+        });
+
+        //Set content in popover
+        $(element).data('bs.popover').options.content = function(){
+          return "<b>"  + dataObject.name + "</b><br>" + 
+          "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
+          "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
+          "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
+
+        }
+
+        $(element).popover('show');
+      } 
+      else {
+        $(element).popover('destroy');
+      } 
+
+    });
+     
+
+
+    // change mouse cursor when over marker
+    that._map.on('pointermove', function(e) {
+      if (e.dragging) {
+        $(element).popover('destroy');
+        return;
+      }
+      var pixel = that._map.getEventPixel(e.originalEvent);
+      var hit = that._map.hasFeatureAtPixel(pixel);
+      //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
+      document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
+    });
+  }
+
+  Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
 
     //Clear the source for the temp layer
-    that._cloudSource.clear();
+        that._cloudSource.clear();
 
 
     for(var idx=0; idx < that._data.length; idx++){
@@ -248,75 +317,7 @@ define([
         that._cloudSource.addFeatures([pointFeatureTemp]); //Fill the this._cloudSource with point features
       }
     }
-
-    var element = document.getElementById('popup');
-
-    var popup = new ol.Overlay({
-      element: element,
-      positioning: 'bottom-center',
-      stopEvent: false
-    });
-    that._map.addOverlay(popup);
-
-
-      // display popup on click
-      that._map.on('click', function(evt) {
-        var feature = that._map.forEachFeatureAtPixel(evt.pixel,
-          function(feature) {
-            return feature;
-          });
-
-        //if hit on icon
-        if (feature) {
-          popup.setPosition(evt.coordinate);
-
-          var dataObject;
-          for(var idx=0; idx < that._data.length; idx++){
-              if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-                updateLocation(idx,'t',0);
-                dataObject=that._data[idx];
-              }
-          }
-
-          console.log(dataObject.name);
-          
-          $(element).popover({
-            placement: 'bottom',
-            html: true,
-          });
-
-          //Set content in popover
-          $(element).data('bs.popover').options.content = function(){
-            return "<b>" + dataObject.name + "</b><br>" + 
-            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
-            "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
-            "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
-
-          }
-
-          $(element).popover('show');
-        } 
-        else {
-          $(element).popover('destroy');
-        } 
-      });
-
-
-
-      // change mouse cursor when over marker
-      that._map.on('pointermove', function(e) {
-        if (e.dragging) {
-          $(element).popover('destroy');
-          return;
-        }
-        var pixel = that._map.getEventPixel(e.originalEvent);
-        var hit = that._map.hasFeatureAtPixel(pixel);
-        //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
-        document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
-      });
     };
-
-  
 
 
 
