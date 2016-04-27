@@ -1,10 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var http = require('http');
-var request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
-var request = require("request");
 
 function createurls (l, k){
 
