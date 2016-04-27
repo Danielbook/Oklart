@@ -118,10 +118,9 @@
         }
 
         function updateLocation(idx,par,time){
-            $("td").removeClass( "currentLocation" );
+            $("td").removeClass("currentLocation");
             $("#"+idx).addClass("currentLocation");
 
-            updateTable(time,idx);
             _graph.initGraph(smhidata, idx, par);
             document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
         }
