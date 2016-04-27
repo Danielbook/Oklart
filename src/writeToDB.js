@@ -158,7 +158,7 @@ function calcMinMax(data, k){
 	);
 }
 
-var oldinsertData = function (locations){
+var insertData = function (locations){
 	var urls = [];
 	var sampleurls = [];
 	var data = new Array();
@@ -199,4 +199,4 @@ var oldinsertData = function (locations){
 	);
 }
 
-module.exports = oldinsertData;
+module.exports = insertData;

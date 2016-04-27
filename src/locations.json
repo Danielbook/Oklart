@@ -49,7 +49,7 @@
   {"name": "Ljungby" , "lat":56.84  , "lon":13.92, "zoomlevel": 8 },
   {"name": "Ludvika" , "lat":60.15  , "lon":15.18, "zoomlevel": 8 },
   {"name": "Luleå" , "lat":65.59  , "lon":22.15, "zoomlevel": 0 },
-  {"name": "Lund" , "lat": 55.72 , "lon":13.23, "zoomlevel": 9},
+  {"name": "Lund" , "lat": 55.72 , "lon":13.23, "zoomlevel": 8},
   {"name": "Malmberget" , "lat":67.18  , "lon": 20.67, "zoomlevel": 8},
   {"name": "Malmö" , "lat":55.61  , "lon":12.97, "zoomlevel": 0 },
   {"name": "Mariestad" , "lat":58.71  , "lon":13.82 , "zoomlevel": 8},

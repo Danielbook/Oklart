@@ -1,29 +1,34 @@
-"use strict";
-
 define([
-  'map',
-  'table',
-  'graph'
+  'map'
 ], function (
-  map,
-  table,
-  graph
+  map
 ){
+  "use strict";
+
   /**
    * Constructor for the map
-   * @param smhidata
-   * @constructor
+   * @constructor Map
+   * @param smhidata {data} Data from smhi
    */
-  var Map = function(smhidata, user) {
-    this._extent = ol.proj.transformExtent([2.25, 52.5, 38.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+  var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
+    this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
+
     this._data = smhidata;
-    this._map = new ol.Map({target: 'map'});
+    this._map = new ol.Map({
+      target: 'map',
+      controls: ol.control.defaults({
+        attributionOptions: ({
+          collapsible: false
+        })
+      })
+    });
+
     this._view = new ol.View({
       center: ol.proj.fromLonLat([16.1924, 58.5877]), // Norrköping
       zoom: 4,
       maxZoom: 10,
       minZoom: 4,
-      extent: this._extent,
+      extent: this._extent
     });
     this._myPosLatLon = "";
     this._geolocation = "";
@@ -41,6 +46,7 @@ define([
 
     this._markerSource = "";
     this._markerVecLayer = "";
+    this._time = 0;
 
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
@@ -49,6 +55,9 @@ define([
 
   /**
    * Inits the map
+   * @memberof Map
+   * @method initMap
+   * @param user
    */
   Map.prototype.initMap = function(user) {
     this.mapLayers();
@@ -59,10 +68,22 @@ define([
   };
 
   /**
+   * Updates the maps time
+   * @memberof Map
+   * @method updateTime
+   * @param time
+   */
+  Map.prototype.updateTime = function(time){
+    this._time = time;
+    this.updateLayers(this);
+  };
+
+  /**
    * Setup the map layers
+   * @memberof Map
+   * @method mapLayers
    */
   Map.prototype.mapLayers = function() {
-
     //Base map layer
     this._cartoDBLight = new ol.layer.Tile({
       source: new ol.source.OSM({
@@ -122,6 +143,13 @@ define([
     });
   };
 
+  /**
+   * Function to check for weather type
+   * @memberof Map
+   * @method weatherType
+   * @param wdp - string, Weather data point
+   * @returns {string} - weather type, ties to the correct image
+   */
   Map.prototype.weatherType = function(wdp) { //Snow and rain
     if(wdp.pcat == 0) { // No precipatopm
       if(wdp.tcc < 1) { // Sunny
@@ -160,14 +188,20 @@ define([
 
   /**
    * Setup controls for map
+   * @memberof Map
+   * @method setupMapControls
    */
   Map.prototype.setupMapControls = function() {
     ol.inherits(this.LayerControl, ol.control.Control);
 
     this._map.addLayer(this._cartoDBLight);
     this._map.getControls().extend([
+      new ol.control.FullScreen()
+    ]);
+    this._map.getControls().extend([
       new this.LayerControl(this)
     ]);
+
     this._map.setView(this._view);
 
     var that = this;
@@ -177,6 +211,13 @@ define([
     });
   };
 
+
+  /**
+   * Updates the maps layers
+   * @memberof Map
+   * @method updateLayers
+   * @param this
+   */
   Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
@@ -195,8 +236,7 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
-        //var weatherIcon = './images/icons/midsummer.png';
-        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[0]) + ".png";
+        var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[that._time]) + ".png";
 
         // Style for each temperature point
         pointFeatureTemp.setStyle(new ol.style.Style({
@@ -208,20 +248,94 @@ define([
             })
           }),
           image: new ol.style.Icon({
-            anchor: [0.5, -0.2],
+            anchor: [0.5, -0.22],
             scale: 0.08,
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: weatherIcon
-          })
+          }),
+          data: that._data[idx]
         }));
-
         //Finally add style to icon
         that._cloudSource.addFeatures([pointFeatureTemp]); //Fill the this._cloudSource with point features
       }
     }
+
+    var element = document.getElementById('popup');
+
+    var popup = new ol.Overlay({
+      element: element,
+      positioning: 'bottom-center',
+      stopEvent: false
+    });
+    that._map.addOverlay(popup);
+
+
+    // display popup on click
+    that._map.on('click', function(evt) {
+      var feature = that._map.forEachFeatureAtPixel(evt.pixel,
+        function (feature) {
+          return feature;
+        });
+
+      //if hit on icon
+      if (feature) {
+        popup.setPosition(evt.coordinate);
+
+        var dataObject;
+        for (var idx = 0; idx < that._data.length; idx++) {
+          if (String(that._data[idx].name) == String(feature.getStyle().getText().getText())) {
+            updateLocation(idx, 't', 0);
+            updateTable(user.time, idx);
+            dataObject = that._data[idx];
+          }
+        }
+
+
+        console.log(dataObject.name);
+
+        $(element).popover({
+          placement: 'bottom',
+          html:      true,
+        });
+
+        //Set content in popover
+        $(element).data('bs.popover').options.content = function () {
+          return "<b>" + dataObject.name + "</b><br>" +
+            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit + " mm<br>" +
+            "Temperatur: " + dataObject.mintimeseries[that._time].t + "-" + dataObject.maxtimeseries[that._time].t + " °C<br>" +
+            "Vind: " + dataObject.mintimeseries[that._time].ws + "-" + dataObject.maxtimeseries[that._time].ws + " m/s<br>";
+
+        };
+
+        $(element).popover('show');
+      }
+      else {
+        $(element).popover('destroy');
+      }
+    });
+
+    // change mouse cursor when over marker
+    that._map.on('pointermove', function(e) {
+      if (e.dragging) {
+        $(element).popover('destroy');
+        return;
+      }
+      var pixel = that._map.getEventPixel(e.originalEvent);
+      var hit = that._map.hasFeatureAtPixel(pixel);
+      //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
+      document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
+    });
   };
 
+
+  /**
+   * Setups the layer controls on the map
+   * @memberof Map
+   * @method LayerControl
+   * @param that - this
+   * @param opt_options
+   */
   Map.prototype.LayerControl = function(that, opt_options) {
     var options = opt_options || {};
 
@@ -245,10 +359,12 @@ define([
 
     //Function to handle temperature button
     var handletemperatureBtn = function() {
+
       that._map.addLayer(that._OWMtempLayer);
       that._map.removeLayer(that._OWMsnowLayer);
       that._map.removeLayer(that._cloudVecLayer);
       that._map.removeLayer(that._OWMrainLayer);
+
 
       temperatureBtn.disabled = true;
       temperatureBtn.style.backgroundColor = 'gray';
@@ -258,6 +374,7 @@ define([
       cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+
     };
 
     //Function to handle rain button
@@ -343,6 +460,9 @@ define([
 
   /**
    * Adds a marker on the users location
+   * @memberof Map
+   * @method addMarker
+   * @param that - this
    */
   Map.prototype.addMarker = function(that){
     that._markerSource = new ol.source.Vector({
@@ -376,6 +496,9 @@ define([
 
   /**
    * Set current location to the map
+   * @memberof Map
+   * @method goToMyLocation
+   * @param gpsLocation {ol.Geolocation} - users location
    */
   Map.prototype.goToMyLocation = function(gpsLocation) {
     var loc = gpsLocation, map = this._map;
@@ -383,7 +506,7 @@ define([
       loc.once('change', function() {
         // Save position and set map center
         map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
-       });
+      });
     }
     else {
       alert("Couldn't find location");
@@ -392,6 +515,9 @@ define([
 
   /**
    * Get current location from geolocation
+   * @memberof Map
+   * @method getCurrentLocation
+   * @return {ol.Geolocation} - Users location
    */
   Map.prototype.getCurrentLocation = function() {
     return new ol.Geolocation({
@@ -400,8 +526,10 @@ define([
   };
 
   /**
-   * Updates the map to current location
-   * @param data
+   * Updates the map to chosen location.
+   * @memberof Map
+   * @method updateMap
+   * @param data - Data sent from navbar
    */
   Map.prototype.updateMap = function(data) {
     var loc = this.gpsLocation;

@@ -1,29 +1,25 @@
-"use strict";
-
 define([
-  'table',
-  'graph',
-  'map'
+  'table'
 ], function (
-  table,
-  graph,
-  map
-){
+  table
+) {
+  "use strict";
 
   /**
-   * CONSTRUCTOR
+   * Constructor for Table
+   * @constructor Table
+   * @param smhidata - Data from SMHI
    */
   var Table = function(smhidata) {
     this._data = smhidata;
-    this._currentLocation = "";
-    this._chosenWeather = "";
   };
-
 
   /**
    * Resolving precipation type
+   * @memberof Table
+   * @function precipitationType
    * @param type precipation category
-   * @returns {string} category
+   * @returns {string} - Precipaton type
    */
   Table.prototype.precipitationType = function(type) {
     switch (type) {
@@ -52,19 +48,12 @@ define([
     return "";
   };
 
-  Table.prototype.updateLocation = function(currentLocation) {
-    this._currentLocation = currentLocation
-  };
-
-  Table.prototype.updateChosenWeather = function(chosenWeather) {
-    this._chosenWeather = chosenWeather;
-  };
-
   /**
    * Function to show correct icon in the table
-   *
-   * @param weatherDataPoint Data point to check weather
+   * @memberof Table
+   * @function weatherType
    * @returns {string} what kind of weather on the specified place
+   * @param wdp {number} - Weather type from SMHI API
    */
   Table.prototype.weatherType = function(wdp) { //Snow and rain
     if(wdp.pcat == 0) { // No precipatopm
@@ -105,6 +94,8 @@ define([
 
   /**
    * Determines if the percipation is snow or rain
+   * @memberof Table
+   * @function snowOrRain
    * @param wdp data provided
    * @returns {int} returns percipation in mm/h
    */
@@ -117,35 +108,53 @@ define([
     }
   };
 
+  /**
+   * Changes the current location in the Table
+   * @memberof Table
+   * @function changeCurrentLocation
+   * @param newLocation {id} - Cell
+   */
   Table.prototype.changeCurrentLocation = function(newLocation){
-    console.log(newLocation.context.innerText);
+    console.log(newLocation);
     this._currentLocation = newLocation.context.innerText;
+    
+    var id = newLocation.context.id;
+    updateLocation(id, 't', 0);
 
-    for(var idx = 0; idx < this._data.length; idx++)
-      $("td").removeClass( "currentLocation" )
-
+    $(".toggleable").removeClass( "activeCell" );
+    $("#"+id+"t").addClass( "activeCell" );
+    
+    $("td").removeClass( "currentLocation" );
     newLocation.addClass("currentLocation");
-
   };
 
   /**
    * Function to draw the table
+   * @memberof Table
+   * @function drawTable
    */
-  Table.prototype.drawTable = function() {
-    var closestCities = 5;
-    for(var idx = 0; idx < closestCities; idx++) {
+  Table.prototype.drawTable = function(time, l) {
+    console.log("Draw table with indicies: " + l);
+
+    for(var idx = 0; idx < l.length; idx++) {
       $('#tableBody').append("<tr>" +
-        "<td class='location'>"+this._data[idx].name+"</td>" + // Ort
-        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[0])+".png'</td>" + // Väder
-        "<td class='toggleable'>"+this._data[idx].timeseries[0].t+"°</td>" + // Temperatur
-        "<td class='toggleable'>"+this.snowOrRain(this._data[idx].timeseries[0])+" mm</td>" + // Nederbörd
-        "<td class='toggleable'>"+this._data[idx].timeseries[0].gust+" m/s " +
-        "<span style='-ms-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); -webkit-transform:rotate("+this._data[idx].timeseries[0].wd+"deg); transform:rotate("+this._data[idx].timeseries[0].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
+        "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
+        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
+        "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
+        "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
+        "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
+        "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
         "</tr>");
-      if(this._data[idx].name === this._currentLocation){
+      if(this._data[l[idx]].name === this._currentLocation){
         $(".location").addClass("currentLocation");
       }
     }
   };
+
+  Table.prototype.updateTable = function(time, l) {
+    $('#tableBody').html("");
+    this.drawTable(time, l);
+  };
+
   return Table;
 });
