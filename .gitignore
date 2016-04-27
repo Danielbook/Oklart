@@ -5,11 +5,9 @@
 .AppleDouble
 .LSOverride
 
-# Docs
-docs
-
 # Icon must end with two \r
 Icon
+
 
 # Thumbnails
 ._*
@@ -50,8 +48,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### Bower ###
-bower_components
 
 ### Node ###
 # Logs
