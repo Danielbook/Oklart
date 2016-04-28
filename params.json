@@ -1,6 +1,6 @@
 {
   "name": "Oklart",
   "tagline": "TNM094 Kandidatprojekt 2016",
-  "body": "### Oklart\r\nA weather application with a visualization of calculated uncertainty data.  ",
+  "body": "### Oklart\r\nFör att testa applikationen måste du ha [npm](https://nodejs.org/ \"Nodejs\") och [bower](http://bower.io/ \"Bower\") installerat.\r\n\r\nDärefter ladda ner .zip-filen, gå in i terminalen och ställ dig i mappen SMHIApp. Kör därefter kommandona:\r\n```\r\nnpm install\r\n```\r\n```\r\nnpm start\r\n```\r\nEn lokal server startar på datorn, öppna webläsare och skriv url:en [http://localhost:3000](http://localhost:3000 \"Localhost\") ",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
