@@ -8,7 +8,7 @@ define([
   /**
    * Constructor for the map
    * @constructor Map
-   * @param smhidata {data} Data from smhi
+   * @param smhidata Data from smhi
    */
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -216,7 +216,7 @@ define([
 
   /**
    * Shows popup at clicked city
-   * @param  {that, Map object}
+   * @param that
    */
   Map.prototype.handleMouse = function(that) {
 
