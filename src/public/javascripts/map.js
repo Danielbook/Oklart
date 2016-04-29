@@ -8,7 +8,7 @@ define([
   /**
    * Constructor for the map
    * @constructor Map
-   * @param smhidata {data} Data from smhi
+   * @param smhidata Data from smhi
    */
   var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
@@ -152,11 +152,8 @@ define([
    * @returns {string} - weather type, ties to the correct image
    */
   Map.prototype.weatherType = function(wdp) { //Snow and rain
-    if(wdp.pcat == 0) { // No precipatopm
-      if(wdp.tcc < 1) { // Sunny
-        return "sun";
-      }
-      else if(wdp.tcc > 1 && wdp.tcc < 4) { // Sunny with a chance of clouds
+    if(wdp.pcat == 0) { // No precipaton
+      if(wdp.tcc > 1 && wdp.tcc <= 4) { // Sunny with a chance of clouds
         return "sun cloud";
       }
       else if(wdp.tcc <= 6 && wdp.tcc > 4) { // Cloudy
@@ -164,6 +161,9 @@ define([
       }
       else if(wdp.tcc <= 8 && wdp.tcc > 6) { // Heavy clouds
         return "heavy clouds";
+      }
+      else{ // Sunny
+        return "sun";
       }
     }
     else if(wdp.pcat == 1) {
@@ -216,7 +216,7 @@ define([
 
   /**
    * Shows popup at clicked city
-   * @param  {that, Map object}
+   * @param that
    */
   Map.prototype.handleMouse = function(that) {
 

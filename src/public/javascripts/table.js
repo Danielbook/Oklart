@@ -56,11 +56,8 @@ define([
    * @param wdp {number} - Weather type from SMHI API
    */
   Table.prototype.weatherType = function(wdp) { //Snow and rain
-    if(wdp.pcat == 0) { // No precipatopm
-      if(wdp.tcc < 1) { // Sunny
-        return "sun";
-      }
-      else if(wdp.tcc > 1 && wdp.tcc < 4) { // Sunny with a chance of clouds
+    if(wdp.pcat == 0) { // No precipaton
+      if(wdp.tcc > 1 && wdp.tcc <= 4) { // Sunny with a chance of clouds
         return "sun cloud";
       }
       else if(wdp.tcc <= 6 && wdp.tcc > 4) { // Cloudy
@@ -68,6 +65,9 @@ define([
       }
       else if(wdp.tcc <= 8 && wdp.tcc > 6) { // Heavy clouds
         return "heavy clouds";
+      }
+      else{ // Sunny
+        return "sun";
       }
     }
     else if(wdp.pcat == 1) {
@@ -89,7 +89,6 @@ define([
         return "rain";
       }
     }
-    return "midsummer";
   };
 
   /**
