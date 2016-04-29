@@ -1,174 +1,7 @@
-define([
-  'graph'
-], function (
-  graph
-) {
-  "use strict";
+define(['graph'], function (graph) {
 
-  /**
-   * Constructor for Graph
-   * @constructor Graph
-   * @param smhidata {data} - Data from SMHI
-   */
-  var Graph = function(smhidata) {
-    this._data = smhidata;
-    this._Cpar = "";
-    this._Suff = "";
-  };
+  transpose = function(a) {
 
-  /**
-   * Initialize a graph and create the DataTable
-   * @memberof Graph
-   * @function initGraph
-   * @param locationindex {int} - Location index
-   * @param par {string} - Weather parameter from SMHI API
-   */
-  Graph.prototype.initGraph = function(smhidata, locationindex, par) {
-    this.checkParameter(par);
-
-    var TimeArr = [];
-    var TempArr = [];
-    var MinTempArr = [];
-    var MaxTempArr = [];
-    //var locationindex  = 100;
-    //var par = 'gust';
-
-  for(var i = 0; i < 24; i++) {
-    var data = smhidata[locationindex].timeseries[i];
-    var min = smhidata[locationindex].mintimeseries[i];
-    var max = smhidata[locationindex].maxtimeseries[i];
-
-    var currhour = smhidata[locationindex].timeseries[i].validTime;
-    currhour = currhour.substring(11,16);
-    currhour = currhour.toString();
-    TimeArr.push(smhidata[locationindex].timeseries[i].validTime.slice(11,16));
-    TempArr.push(data[par]);
-    MinTempArr.push(min[par]);
-    MaxTempArr.push(max[par]);
-  }
-
-    // The MIN/MAX needs to be in a Matrix
-    var Temps = [MinTempArr,MaxTempArr];
-    var seriesArr = [];
-
-    // Transpose if matrix due to how HS reads data
-    var MinMaxArr = this.transpose(Temps);
-
-    // Push values to series
-    seriesArr.push({
-        name: this._Cpar,
-        data: TempArr,
-        zIndex: 1,
-        marker: {
-          enabled: false,
-          fillColor: 'white',
-          lineWidth: 1,
-          lineColor: Highcharts.getOptions().colors[0]
-        }
-      }, {
-        name: 'Min/Max',
-        data: MinMaxArr,
-        type: 'arearange',
-        lineWidth: 0,
-        linkedTo: ':previous',
-        color: Highcharts.getOptions().colors[0],
-        fillOpacity: 0.3,
-        zIndex: 0
-      }
-    );
-
-    // Options for Highgraph
-    var options = {
-      chart: {
-        renderTo: 'graph_div',
-        defaultSeriesType: 'line'
-      },
-      colors: ['#4798DC'],
-      title: {
-        text: this._Cpar
-      },
-      xAxis: {
-        //type: 'datetime'
-        categories: TimeArr
-      },
-      yAxis: {
-        title: {
-          text: null
-        }
-      },
-      tooltip: {
-        crosshairs: true,
-        shared: true,
-        valueSuffix: this._Suff
-      },
-      legend: {
-      },
-      series: seriesArr
-    };
-
-    // Draw graph
-    var chart = new Highcharts.Chart(options);
-  };
-
-  /**
-   * Checks which parameter the user have selected to be displayed in graph
-   * @memberof Graph
-   * @function checkParameter
-   * @param par {string} - parameter from SMHI API
-   */
-  Graph.prototype.checkParameter = function(par){
-    //console.log(par);
-
-    if(par == 't'){
-      this._Cpar = 'Temperatur';
-      this._Suff = '°C';
-    }
-    else if(par == 'gust'){
-      this._Cpar = 'Byvind';
-      this._Suff = 'm/s';
-    }
-    else if(par == 'ws'){
-      this._Cpar = 'Vindhastighet';
-      this._Suff = 'm/s';
-    }
-    else if(par == 'r'){
-      this._Cpar = 'Luftfuktighet';
-      this._Suff = '%';
-    }
-    else if(par == 'tcc'){
-      this._Cpar = 'Molnmängd';
-      this._Suff = 'Molnmängd';
-    }
-    else if(par == 'msl'){
-      this._Cpar = 'Lufttryck';
-      this._Suff = 'hPa';
-    }
-    else if(par == 'pis'){
-      this._Cpar = 'Nederbördsintensitet, snö';
-      this._Suff = 'mm/h';
-    }
-    else if(par == 'pit'){
-      this._Cpar = 'Nederbördsintensitet';
-      this._Suff = 'mm/h';
-    }
-    else if(par == 'tstm'){
-      this._Cpar = 'Sannolikhet för åska';
-      this._Suff = '%';
-    }
-    else if(par == 'vis'){
-      this._Cpar = 'Sikt';
-      this._Suff = 'km';
-    }
-  };
-
-  /**
-   * Transposes the matrix
-   * @memberof Graph
-   * @function transpose
-   * @param a {Array} - Matrix in array form
-   * @returns {Array} - Transposed matrix
-   */
-  Graph.prototype.transpose = function(a) {
     // Calculate the width and height of the Array
     var w = a.length ? a.length : 0,
         h = a[0] instanceof Array ? a[0].length : 0;
@@ -176,18 +9,21 @@ define([
     // In case it is a zero matrix, no transpose routine needed.
     if(h === 0 || w === 0) { return []; }
 
-
-    // Transposed data is stored in this array.
+    /**
+     * @var {Number} i Counter
+     * @var {Number} j Counter
+     * @var {Array} t Transposed data is stored in this array.
+     */
     var t = [];
 
     // Loop through every item in the outer array (height)
-    for(var i = 0; i < h; i++) {
+    for(i=0; i<h; i++) {
 
       // Insert a new row (array)
       t[i] = [];
 
       // Loop through every item per item in outer array (width)
-      for(var j = 0; j < w; j++) {
+      for(j=0; j<w; j++) {
 
         // Save transposed data.
         t[i][j] = a[j][i];
@@ -195,6 +31,231 @@ define([
     }
 
     return t;
+  };
+  /**
+   *
+   * @param smhidata  data from SMHI
+   * @constructor
+   */
+  var Graph = function() {
+  };
+
+  /**
+   * Check what parameter is chosen and create arrays and matrix to be displayed in graph
+   */
+  Graph.prototype.initGraph = function(smhidata, locationindex, par ) {
+
+    var Cpar; //Chosen Parameter
+    var Suff; //Chosen parameter suffix
+    var Graphtype = '';
+    console.log(par);
+    if(par == 't'){
+      Cpar = 'Temperatur';
+      Suff = '°C';
+    }
+    else if(par == 'gust'){
+      Cpar = 'Byvind';
+      Suff = 'm/s';
+    }
+    else if(par == 'pit'){
+      Cpar = 'Nederbördsintensitet';
+      Suff = 'mm/h';
+      Graphtype = 'column';
+    }
+    else if(par == 'ws'){
+      Cpar = 'Vindhastighet';
+      Suff = 'm/s';
+    }
+    else if(par == 'r'){
+      Cpar = 'Luftfuktighet';
+      Suff = '%';
+    }
+    else if(par == 'tcc'){
+      Cpar = 'Molnmängd';
+      Suff = 'Molnmängd';
+    }
+    else if(par == 'msl'){
+      Cpar = 'Lufttryck';
+      Suff = 'hPa';
+    }
+    else if(par == 'pis'){
+      Cpar = 'Nederbördsintensitet, snö';
+      Suff = 'mm/h';
+    }
+    else if(par == 'tstm'){
+      Cpar = 'Sannolikhet för åska';
+      Suff = '%';
+    }
+    else if(par == 'vis'){
+      Cpar = 'Sikt';
+      Suff = 'km';
+    }
+    var TimeArr = [];
+    var TempArr = [];
+    var MinTempArr = [];
+    var MaxTempArr = [];
+    //var locationindex  = 100;
+    //var par = 'gust';
+
+    for(var i = 0; i < 24; i++){
+      var data = smhidata[locationindex].timeseries[i];
+      var min = smhidata[locationindex].mintimeseries[i];
+      var max = smhidata[locationindex].maxtimeseries[i];
+
+      var currhour = smhidata[locationindex].timeseries[i].validTime;
+      currhour = currhour.substring(11,16);
+      currhour = currhour.toString();
+      TimeArr.push(smhidata[locationindex].timeseries[i].validTime.slice(11,16));
+      TempArr.push(data[par]);
+      MinTempArr.push(min[par]);
+      MaxTempArr.push(max[par]);
+    }
+
+    //The MIN/MAX needs to be in a Matrix
+    var Temps = [MinTempArr,MaxTempArr];
+    var seriesArr = [];
+
+    //transpose if matrix due to how HS reads data
+    MinMaxArr = transpose(Temps);
+
+    //push values to series
+    seriesArr.push(
+        {
+          name: Cpar,
+          data: TempArr,
+          zIndex: 1,
+          marker: {
+            enabled: false,
+            fillColor: 'white',
+            lineWidth: 1,
+            lineColor: Highcharts.getOptions().colors[0],
+
+          },
+          pointWidth: 20,
+          pointPadding: 0.4,
+          pointPlacement: -0.2
+        }
+    );
+    if(par == 'pit')
+    {
+      seriesArr.push(
+          {
+            name: 'Max',
+            data: MaxTempArr,
+            type: 'column',
+            lineWidth: 10,
+            linkedTo: ':previous',
+            color: Highcharts.getOptions().colors[0],
+            zIndex: 0,
+            pointPadding: 0.3,
+            pointPlacement: -0.2,
+            pointWidth: 20,
+          }
+      );
+    }
+    else
+    {
+      seriesArr.push(
+          {
+            name: 'Min - Max',
+
+            data: MinMaxArr,
+            type: 'arearange',
+            lineWidth: 0,
+            linkedTo: ':previous',
+            color: Highcharts.getOptions().colors[0],
+            fillOpacity: 0.3,
+            zIndex: 0
+          }
+      );
+    }
+
+    //options for Highgraph
+    console.log(Graphtype);
+    var options = {
+      chart: {
+        type: Graphtype,
+        renderTo: 'graph_div',
+      },
+      colors: ['#4798DC'],
+      title: {
+        text: Cpar
+      },
+
+      xAxis: {
+        categories: TimeArr
+      },
+
+      yAxis: {
+        title: {
+          text: null
+        }
+      },
+
+      tooltip: {
+        crosshairs: true,
+        shared: true,
+        valueSuffix: Suff
+      },
+
+      legend: {
+        enabled: true
+      },
+      series: seriesArr,
+      credits: {
+        enabled: false
+      },
+      plotOptions: {
+        column: {
+          grouping: false,
+          shadow: false,
+          borderWidth: 0
+        }
+      },
+      navigation: {
+        buttonOptions: {
+          enabled: false
+        }
+      },
+
+
+
+    };
+
+    var chart = $('#graph_div').highcharts(),
+        i = 0;
+    $('#button').click(function () {
+
+      if (i === chart.series[0].data.length) {
+        i = 0;
+      }
+      chart.series[0].data[i].select();
+      i += 1;
+    });
+
+
+    //draw graph
+    var chart = new Highcharts.Chart(options);
+    
+  };
+
+  /**
+   * Draws graph
+   */
+  Graph.prototype.drawGraph = function() {
+    //google.charts.setOnLoadCallback( function() {
+    //   _lineChart.draw(_tableData, _options);
+    // });
+  };
+
+  /**
+   * Updates the hAxis in graph
+   * @param timeIndex - Time from slider
+   */
+  Graph.prototype.updateTime = function(timeIndex) {
+    //_options.hAxis.viewWindow.min = timeIndex[0];
+    //_options.hAxis.viewWindow.max = timeIndex[1];
+    this.drawGraph();
   };
 
   return Graph;
