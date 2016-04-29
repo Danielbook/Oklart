@@ -97,6 +97,7 @@ define(['graph'], function (graph) {
     //var locationindex  = 100;
     //var par = 'gust';
 
+    //i up to how many hours we want to display. ~48 is max then it looks bad.
     for(var i = 0; i < 24; i++){
       var data = smhidata[locationindex].timeseries[i];
       var min = smhidata[locationindex].mintimeseries[i];
@@ -179,7 +180,7 @@ define(['graph'], function (graph) {
       },
       colors: ['#4798DC'],
       title: {
-        text: Cpar
+        text: Cpar + ' i ' + smhidata[locationindex].name
       },
 
       xAxis: {
@@ -236,7 +237,7 @@ define(['graph'], function (graph) {
 
     //draw graph
     var chart = new Highcharts.Chart(options);
-    
+
   };
 
   /**
