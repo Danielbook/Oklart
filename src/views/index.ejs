@@ -21,7 +21,7 @@
 		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
 			//Stores data sent from Node.js into smhidata
 			smhidata = <%-JSON.stringify(dataobject)%>;
-
+            console.log(smhidata);
 			//Creates objects for the components
 			_table = new Table(smhidata);
 			_graph = new Graph(smhidata);
@@ -108,10 +108,16 @@
         function updateTable(time, idx){
             //locations = calculeateNear(index);
 
+            console.log("INDEXET : " + idx);
             var nearest = calculateNear(smhidata[idx].lat, smhidata[idx].lon);
             var locations = [idx,nearest[0].idx, nearest[1].idx, nearest[2].idx, nearest[3].idx];
 
-            console.log(locations);
+            for(var i = 0; i < 4; i++){
+                console.log("Array["+i+"]: "+smhidata[nearest[i].idx].name);
+                console.log("ASDASD: " + nearest[i].idx);
+
+            }
+
 
             _table.updateTable(time, locations);
             $("#"+idx).addClass("currentLocation");
@@ -133,7 +139,7 @@
             var arraySize = 4;
             var firstlat = smhidata[0].lat;
             var firstlon = smhidata[0].lon;
-            var arrMaxVal;
+            var arrMaxVal = 0;
             var arrIndex;
             var result = haversine(userLat,firstlat,userLong,firstlon);
 
@@ -144,19 +150,20 @@
                 //If nearest-position-array is empty. Push the four first results and its index in smhidata
                 if(nearestPos.length < arraySize && ans != 0){
                     nearestPos.push({res: ans, idx: i});
+                    arrMaxVal = ans;
+                    if(ans > arrMaxVal){
+                        arrMaxVal = ans;
+                    }
                 }
-                else if(ans < result && ans != 0){      //If the new value is close to current position than the last.
+                else if(ans < arrMaxVal && ans != 0){      //If the new value is close to current position than the last.
 
                     arrMaxVal = nearestPos[0].res;
-
+                    arrIndex = 0;
                     //Check where the largest value is in the array and insert the new closer position in that slot.
                     for (var j = 0; j < arraySize; j++){
                         if (arrMaxVal < nearestPos[j].res){
                             arrMaxVal = nearestPos[j].res;
                             arrIndex = j;
-                        }
-                        else{
-                            arrIndex = 0;
                         }
                     }
                     nearestPos[arrIndex] = {res: ans, idx: i};
