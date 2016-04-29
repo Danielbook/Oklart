@@ -62,8 +62,7 @@ define([
   Map.prototype.initMap = function(user) {
     this.mapLayers();
     this.setupMapControls();
-    this.goToMyLocation(user.gpsLocation);
-    this.addMarker(this);
+    this.goToMyLocation();
     this.updateLayers(this);
     this.handleMouse(this);
   };
@@ -213,7 +212,6 @@ define([
 
   };
 
-
   /**
    * Shows popup at clicked city
    * @param that
@@ -244,34 +242,33 @@ define([
         var dataObject;
         for(var idx=0; idx < that._data.length; idx++){
             if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-              updateLocation(idx,'t',0);
               updateTable(0, idx);
+              updateLocation(idx,'t',0);
               dataObject=that._data[idx];
             }
         }
-        
+
         $(element).popover({
           placement: 'bottom',
-          html: true,
+          html: true
         });
 
         //Set content in popover
         $(element).data('bs.popover').options.content = function(){
           return "<b>"  + dataObject.name + "</b><br>" + 
-          "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
-          "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
-          "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
-
-        }
+          "Nederbörd: " + dataObject.mintimeseries[that._time].pit + " – " + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
+          "Temperatur: "+ dataObject.mintimeseries[that._time].t   + " – " + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
+          "Vind: "      + dataObject.mintimeseries[that._time].ws  + " – " + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
+        };
 
         $(element).popover('show');
-      } 
+      }
       else {
         $(element).popover('destroy');
-      } 
+      }
 
     });
-     
+
 
 
     // change mouse cursor when over marker
@@ -285,14 +282,14 @@ define([
       //that._map.getTarget().style.cursor = hit ? 'pointer' : '';
       document.getElementById(that._map.getTarget()).style.cursor = hit ? 'pointer' : '';
     });
-  }
+  };
 
   Map.prototype.updateLayers = function(that) {
     var currZoom = that._map.getView().getZoom();
     console.log("Currzoom lvl = " + currZoom);
 
     //Clear the source for the temp layer
-        that._cloudSource.clear();
+    that._cloudSource.clear();
 
     for(var idx=0; idx < that._data.length; idx++){
       var dataZoom = that._data[idx].zoomlevel; // get curr zoom level on map
@@ -329,7 +326,7 @@ define([
         that._cloudSource.addFeatures([pointFeatureTemp]); //Fill the this._cloudSource with point features
       }
     }
-    };
+  };
 
   /**
    * Setups the layer controls on the map
@@ -359,17 +356,18 @@ define([
       that.updateMap();
     };
 
-    //Function to handle temperature button
-    var handletemperatureBtn = function() {
-
-      that._map.addLayer(that._OWMtempLayer);
+    var handleButton = function(button, layer){
+      //remove all layers
+      that._map.removeLayer(that._OWMtempLayer);
       that._map.removeLayer(that._OWMsnowLayer);
       that._map.removeLayer(that._cloudVecLayer);
       that._map.removeLayer(that._OWMrainLayer);
+      //add layer
+      that._map.addLayer(layer);
 
-
-      temperatureBtn.disabled = true;
-      temperatureBtn.style.backgroundColor = 'gray';
+      //disable all buttons
+      temperatureBtn.disabled = false;
+      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       rainBtn.disabled = false;
       rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       cloudBtn.disabled = false;
@@ -377,55 +375,28 @@ define([
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
 
+      //enable button
+      button.disabled = true;
+      button.style.backgroundColor = 'gray';
+
+    }
+
+    //Function to handle temperature button
+    var handletemperatureBtn = function() {
+      handleButton(temperatureBtn, that._OWMtempLayer);
     };
 
     //Function to handle rain button
     var handleRainBtn = function() {
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.removeLayer(that._OWMsnowLayer);
-      that._map.removeLayer(that._cloudVecLayer);
-      that._map.addLayer(that._OWMrainLayer);
-
-      rainBtn.disabled = true;
-      rainBtn.style.backgroundColor = 'gray';
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      temperatureBtn.disabled = false;
-      cloudBtn.disabled = false;
-      cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      snowBtn.disabled = false;
-      snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      handleButton(rainBtn, that._OWMrainLayer);
     };
 
     var handleCloudBtn = function() {
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.removeLayer(that._OWMsnowLayer);
-      that._map.addLayer(that._cloudVecLayer);
-      that._map.removeLayer(that._OWMrainLayer);
-
-      cloudBtn.disabled = true;
-      cloudBtn.style.backgroundColor = 'gray';
-      rainBtn.disabled = false;
-      rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      temperatureBtn.disabled = false;
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      snowBtn.disabled = false;
-      snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      handleButton(cloudBtn, that._cloudVecLayer);
     };
 
     var handleSnowBtn = function() {
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.addLayer(that._OWMsnowLayer);
-      that._map.removeLayer(that._cloudVecLayer);
-      that._map.removeLayer(that._OWMrainLayer);
-
-      snowBtn.disabled = true;
-      snowBtn.style.backgroundColor = 'gray';
-      cloudBtn.disabled = false;
-      cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      rainBtn.disabled = false;
-      rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      temperatureBtn.disabled = false;
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      handleButton(snowBtn, that._OWMsnowLayer);
     };
 
     goToMyLocationBtn.addEventListener('click', handleGoToMyLocationBtn, false);
@@ -461,53 +432,49 @@ define([
   };
 
   /**
-   * Adds a marker on the users location
-   * @memberof Map
-   * @method addMarker
-   * @param that - this
-   */
-  Map.prototype.addMarker = function(that){
-    that._markerSource = new ol.source.Vector({
-      projection: 'EPSG:4326'
-    });
-
-    var markerFeature = new ol.Feature({
-      geometry: new ol.geom.Point([16.1924, 58.5877]),
-      name: 'Current position'
-    });
-
-    var markerStyle = new ol.style.Style({
-      image: new ol.style.Icon({
-        anchor:       [0.5, 46],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'pixels',
-        src:          './images/marker.png'
-      })
-    });
-
-    markerFeature.setStyle(markerStyle);
-
-    that._markerSource.addFeatures(markerFeature);
-
-    that._markerVecLayer = new ol.layer.Vector({
-      source: that._markerSource
-    });
-
-    that._map.addLayer(that._markerVecLayer);
-  };
-
-  /**
-   * Set current location to the map
+   * Set current location to the map and adds a marker on the users location
    * @memberof Map
    * @method goToMyLocation
    * @param gpsLocation {ol.Geolocation} - users location
    */
-  Map.prototype.goToMyLocation = function(gpsLocation) {
-    var loc = gpsLocation, map = this._map;
-    if(loc) {
-      loc.once('change', function() {
+  Map.prototype.goToMyLocation = function() {
+    var that = this;
+    if(user.gpsLocation) {
+      user.gpsLocation.once('change', function() {
         // Save position and set map center
-        map.getView().setCenter(ol.proj.fromLonLat(loc.getPosition()));
+        that._map.getView().setCenter(ol.proj.fromLonLat(user.gpsLocation.getPosition()));
+
+        var iconFeatures=[];
+
+        // create Feature... with coordinates
+        var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.transform(user.gpsLocation.getPosition(), 'EPSG:4326',
+            'EPSG:3857'))
+        });
+
+        iconFeatures.push(iconFeature);
+
+        var vectorSource = new ol.source.Vector({
+          features: iconFeatures     //add an array of features
+        });
+
+        //create style for your feature...
+        var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon( ({
+            anchor: [0.5, 0.5],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'images/gps.png',
+            scale: 0.15
+          }))
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+          source: vectorSource,
+          style: iconStyle
+        });
+
+        that._map.addLayer(vectorLayer);
       });
     }
     else {
