@@ -38,7 +38,7 @@ body{
 
 /** popup in map */
 .popover{
-  min-width: 180px;
+  min-width: 200px;
 }
 
 .ol-full-screen{
