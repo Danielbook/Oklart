@@ -255,11 +255,10 @@ define([
 
         //Set content in popover
         $(element).data('bs.popover').options.content = function(){
-          return "<b>"  + dataObject.name + "</b><br>" +
-            "Nederbörd: " + dataObject.mintimeseries[that._time].pit + "-" + dataObject.maxtimeseries[that._time].pit +" mm<br>" +
-            "Temperatur: "+ dataObject.mintimeseries[that._time].t   + "-" + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
-            "Vind: "      + dataObject.mintimeseries[that._time].ws  + "-" + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
-
+          return "<b>"  + dataObject.name + "</b><br>" + 
+          "Nederbörd: " + dataObject.mintimeseries[that._time].pit + " – " + dataObject.maxtimeseries[that._time].pit +" mm<br>" + 
+          "Temperatur: "+ dataObject.mintimeseries[that._time].t   + " – " + dataObject.maxtimeseries[that._time].t   +" °C<br>" +
+          "Vind: "      + dataObject.mintimeseries[that._time].ws  + " – " + dataObject.maxtimeseries[that._time].ws  +" m/s<br>";
         };
 
         $(element).popover('show');
@@ -357,17 +356,18 @@ define([
       that.updateMap();
     };
 
-    //Function to handle temperature button
-    var handletemperatureBtn = function() {
-
-      that._map.addLayer(that._OWMtempLayer);
+    var handleButton = function(button, layer){
+      //remove all layers
+      that._map.removeLayer(that._OWMtempLayer);
       that._map.removeLayer(that._OWMsnowLayer);
       that._map.removeLayer(that._cloudVecLayer);
       that._map.removeLayer(that._OWMrainLayer);
+      //add layer
+      that._map.addLayer(layer);
 
-
-      temperatureBtn.disabled = true;
-      temperatureBtn.style.backgroundColor = 'gray';
+      //disable all buttons
+      temperatureBtn.disabled = false;
+      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       rainBtn.disabled = false;
       rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
       cloudBtn.disabled = false;
@@ -375,55 +375,28 @@ define([
       snowBtn.disabled = false;
       snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
 
+      //enable button
+      button.disabled = true;
+      button.style.backgroundColor = 'gray';
+
+    }
+
+    //Function to handle temperature button
+    var handletemperatureBtn = function() {
+      handleButton(temperatureBtn, that._OWMtempLayer);
     };
 
     //Function to handle rain button
     var handleRainBtn = function() {
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.removeLayer(that._OWMsnowLayer);
-      that._map.removeLayer(that._cloudVecLayer);
-      that._map.addLayer(that._OWMrainLayer);
-
-      rainBtn.disabled = true;
-      rainBtn.style.backgroundColor = 'gray';
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      temperatureBtn.disabled = false;
-      cloudBtn.disabled = false;
-      cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      snowBtn.disabled = false;
-      snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      handleButton(rainBtn, that._OWMrainLayer);
     };
 
     var handleCloudBtn = function() {
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.removeLayer(that._OWMsnowLayer);
-      that._map.addLayer(that._cloudVecLayer);
-      that._map.removeLayer(that._OWMrainLayer);
-
-      cloudBtn.disabled = true;
-      cloudBtn.style.backgroundColor = 'gray';
-      rainBtn.disabled = false;
-      rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      temperatureBtn.disabled = false;
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      snowBtn.disabled = false;
-      snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      handleButton(cloudBtn, that._cloudVecLayer);
     };
 
     var handleSnowBtn = function() {
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.addLayer(that._OWMsnowLayer);
-      that._map.removeLayer(that._cloudVecLayer);
-      that._map.removeLayer(that._OWMrainLayer);
-
-      snowBtn.disabled = true;
-      snowBtn.style.backgroundColor = 'gray';
-      cloudBtn.disabled = false;
-      cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      rainBtn.disabled = false;
-      rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      temperatureBtn.disabled = false;
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
+      handleButton(snowBtn, that._OWMsnowLayer);
     };
 
     goToMyLocationBtn.addEventListener('click', handleGoToMyLocationBtn, false);
