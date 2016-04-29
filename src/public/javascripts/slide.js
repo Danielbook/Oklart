@@ -20,7 +20,7 @@ define([
 
         //This is a time handler. It prints current day and hour for the slider
         this.dateHandler = new Date();
-        this.weekday = new Array();
+        this.weekday = [];
         this.weekday[0] = "Söndag";
         this.weekday[1] = "Måndag";
         this.weekday[2] = "Tisdag";
