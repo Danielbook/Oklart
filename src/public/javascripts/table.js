@@ -115,7 +115,7 @@ define([
    * @param newLocation {id} - Cell
    */
   Table.prototype.changeCurrentLocation = function(newLocation){
-    console.log(newLocation);
+    console.log("Changing location!");
     this._currentLocation = newLocation.context.innerText;
     
     var id = newLocation.context.id;
@@ -154,6 +154,12 @@ define([
   Table.prototype.updateTable = function(time, l) {
     $('#tableBody').html("");
     this.drawTable(time, l);
+
+    $(".toggleable").removeClass( "activeCell" );
+    $("#"+l[0]+"t").addClass( "activeCell" );
+    
+    $(".location").removeClass( "currentLocation" );
+    $("#"+l[0]).addClass( "currentLocation" );
   };
 
   return Table;
