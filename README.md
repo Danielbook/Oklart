@@ -1,7 +1,7 @@
 # Oklart - En väderapplikation med osäkerhetsvisualisering
 TNM094 Kandidatprojekt 2016
 
-<div style="text-align: center;"><img src="http://i.imgur.com/vUjHypg.png" width="250"></div>
+<div style="text-align: center;"><img src="http://i.imgur.com/D6gGoUV.png" width="250"></div>
 
 ## Projekt E (Väder-app med osäkerhetsvisualisering)
 Målet med projektet är att skapa en webbaserad väder-applikation som använder sig av SMHIs API för väderdata för att visa, utoöver traditionella data, även spatiella och temporala osäkerheter. 
@@ -38,3 +38,4 @@ En lokal server startar på datorn, öppna webläsare och skriv url:en [http://l
 - Adam Söderström
 - Emil Juopperi
 - Jens Kaske
+git 
