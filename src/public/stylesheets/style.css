@@ -38,7 +38,7 @@ body{
 
 /** popup in map */
 .popover{
-  min-width: 180px;
+  min-width: 200px;
 }
 
 .ol-full-screen{
@@ -119,7 +119,7 @@ body{
 
 /* navbar */
 .navbar-custom {
-  background-color: rgba(83,127,163,1);
+  background-color: #4C97D2;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;

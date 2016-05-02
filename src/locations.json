@@ -67,7 +67,7 @@
   {"name": "Nynäshamn" , "lat":58.91  , "lon":17.93, "zoomlevel": 8 },
   {"name": "Nässjö" , "lat":57.65  , "lon":14.68, "zoomlevel": 8 },
   {"name": "Oskarshamn" , "lat":57.27  , "lon":16.48, "zoomlevel": 8 },
-  {"name": "Oxelösund" , "lat": 58.68 , "lon":17.05, "zoomlevel": 8 },
+  {"name": "Oxelösund" , "lat": 58.68 , "lon":17.05, "zoomlevel": 10 },
   {"name": "Piteå" , "lat": 65.32 , "lon": 21.49, "zoomlevel": 8},
   {"name": "Ronneby" , "lat":56.21  , "lon":15.28 , "zoomlevel": 8},
   {"name": "Sala" , "lat":59.93 , "lon":16.61 , "zoomlevel": 8},
