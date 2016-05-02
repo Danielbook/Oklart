@@ -20,7 +20,7 @@ body{
 }
 
 .map-buttonDiv{
-  height:97.4%;
+  height: 97.0%;
   position: absolute;
   top: 0em;
   right: 0em;
@@ -34,6 +34,16 @@ body{
     border-radius: 4px;
     padding: 2px;
 
+}
+
+/** popup in map */
+.popover{
+  min-width: 200px;
+}
+
+.ol-full-screen{
+    top: 93%;
+    right: 94%;
 }
 
 .card{
@@ -109,7 +119,7 @@ body{
 
 /* navbar */
 .navbar-custom {
-  background-color: rgba(83,127,163,1);
+  background-color: #4C97D2;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;

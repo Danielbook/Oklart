@@ -1,10 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var http = require('http');
-var request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var async = require("async");
-var request = require("request");
 
 function createurls (l, k){
 
@@ -158,7 +156,7 @@ function calcMinMax(data, k){
 	);
 }
 
-var oldinsertData = function (locations){
+var insertData = function (locations){
 	var urls = [];
 	var sampleurls = [];
 	var data = new Array();
@@ -199,4 +197,4 @@ var oldinsertData = function (locations){
 	);
 }
 
-module.exports = oldinsertData;
+module.exports = insertData;

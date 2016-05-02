@@ -19,7 +19,8 @@
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-    background: rgba(83,127,163,0.8);
+    background: rgba(76, 151, 210, 0.8);
+
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;

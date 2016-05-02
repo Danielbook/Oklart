@@ -14,7 +14,7 @@ define(['graph'], function (graph) {
      * @var {Number} j Counter
      * @var {Array} t Transposed data is stored in this array.
      */
-    var i, j, t = [];
+    var t = [];
 
     // Loop through every item in the outer array (height)
     for(i=0; i<h; i++) {
@@ -32,24 +32,65 @@ define(['graph'], function (graph) {
 
     return t;
   };
-  var _data,
-      _options,
-      _lineChart,
-      _tableData;
-
   /**
    *
    * @param smhidata  data from SMHI
    * @constructor
    */
   var Graph = function() {
+    this.chart;
   };
 
   /**
-   * Initialize a graph and create the DataTable
+   * Check what parameter is chosen and create arrays and matrix to be displayed in graph
    */
   Graph.prototype.initGraph = function(smhidata, locationindex, par ) {
 
+    var Cpar; //Chosen Parameter
+    var Suff; //Chosen parameter suffix
+    var Graphtype = '';
+    console.log(par);
+    if(par == 't'){
+      Cpar = 'Temperatur';
+      Suff = '°C';
+    }
+    else if(par == 'gust'){
+      Cpar = 'Byvind';
+      Suff = 'm/s';
+    }
+    else if(par == 'pit'){
+      Cpar = 'Nederbördsintensitet';
+      Suff = 'mm/h';
+      Graphtype = 'column';
+    }
+    else if(par == 'ws'){
+      Cpar = 'Vindhastighet';
+      Suff = 'm/s';
+    }
+    else if(par == 'r'){
+      Cpar = 'Luftfuktighet';
+      Suff = '%';
+    }
+    else if(par == 'tcc'){
+      Cpar = 'Molnmängd';
+      Suff = 'Molnmängd';
+    }
+    else if(par == 'msl'){
+      Cpar = 'Lufttryck';
+      Suff = 'hPa';
+    }
+    else if(par == 'pis'){
+      Cpar = 'Nederbördsintensitet, snö';
+      Suff = 'mm/h';
+    }
+    else if(par == 'tstm'){
+      Cpar = 'Sannolikhet för åska';
+      Suff = '%';
+    }
+    else if(par == 'vis'){
+      Cpar = 'Sikt';
+      Suff = 'km';
+    }
     var TimeArr = [];
     var TempArr = [];
     var MinTempArr = [];
@@ -57,19 +98,20 @@ define(['graph'], function (graph) {
     //var locationindex  = 100;
     //var par = 'gust';
 
-  for(var i = 0; i < 24; i++){
-    var data = smhidata[locationindex].timeseries[i];
-    var min = smhidata[locationindex].mintimeseries[i];
-    var max = smhidata[locationindex].maxtimeseries[i];
+    //i up to how many hours we want to display. ~48 is max then it looks bad.
+    for(var i = 0; i < 24; i++){
+      var data = smhidata[locationindex].timeseries[i];
+      var min = smhidata[locationindex].mintimeseries[i];
+      var max = smhidata[locationindex].maxtimeseries[i];
 
-    var currhour = smhidata[locationindex].timeseries[i].validTime;
-    currhour = currhour.substring(11,16);
-    currhour = currhour.toString();
-    TimeArr.push(smhidata[locationindex].timeseries[i].validTime.slice(11,16));
-    TempArr.push(data[par]);
-    MinTempArr.push(min[par]);
-    MaxTempArr.push(max[par]);
-  }
+      var currhour = smhidata[locationindex].timeseries[i].validTime;
+      currhour = currhour.substring(11,16);
+      currhour = currhour.toString();
+      TimeArr.push(smhidata[locationindex].timeseries[i].validTime.slice(11,16));
+      TempArr.push(data[par]);
+      MinTempArr.push(min[par]);
+      MaxTempArr.push(max[par]);
+    }
 
     //The MIN/MAX needs to be in a Matrix
     var Temps = [MinTempArr,MaxTempArr];
@@ -78,43 +120,103 @@ define(['graph'], function (graph) {
     //transpose if matrix due to how HS reads data
     MinMaxArr = transpose(Temps);
 
-      //push values to series
+    var that = this;
+    //push values to series
     seriesArr.push(
         {
-          name: 'Temperatur',
+          name: Cpar,
           data: TempArr,
           zIndex: 1,
           marker: {
             enabled: false,
             fillColor: 'white',
             lineWidth: 1,
-            lineColor: Highcharts.getOptions().colors[0]
-          }
-        }, {
-          name: 'MinMax',
-          data: MinMaxArr,
-          type: 'arearange',
-          lineWidth: 0,
-          linkedTo: ':previous',
-          color: Highcharts.getOptions().colors[0],
-          fillOpacity: 0.3,
-          zIndex: 0
+            lineColor: Highcharts.getOptions().colors[0],
+
+          },
+          pointWidth: 20,
+          pointPadding: 0.4,
+          pointPlacement: -0.2,
+          point: {
+              events: {
+                click: function (e) {
+                  var index = e.point.index;
+                  that.updateTime(index);
+                }
+              }
+            }
         }
     );
-      //options for Highgraph
+    if(par == 'pit')
+    {
+      seriesArr.push(
+          {
+            name: 'Max',
+            data: MaxTempArr,
+            type: 'column',
+            lineWidth: 10,
+            linkedTo: ':previous',
+            color: Highcharts.getOptions().colors[0],
+            zIndex: 0,
+            pointPadding: 0.3,
+            pointPlacement: -0.2,
+            pointWidth: 20,
+            point: {
+              events: {
+                click: function (e) {
+                  var index = e.point.index;
+                  that.updateTime(index);
+                }
+              }
+            }
+          }
+      );
+    }
+    else
+    {
+      seriesArr.push(
+          {
+            name: 'Min - Max',
+
+            data: MinMaxArr,
+            type: 'arearange',
+            lineWidth: 0,
+            linkedTo: ':previous',
+            color: Highcharts.getOptions().colors[0],
+            fillOpacity: 0.3,
+            zIndex: 0,
+            point: {
+              events: {
+                click: function (e) {
+                  var index = e.point.index;
+                  that.updateTime(index);
+                }
+              }
+            }
+          }
+      );
+    }
+    //options for Highgraph
+    console.log(Graphtype);
     var options = {
       chart: {
-            renderTo: 'graph_div',
-          defaultSeriesType: 'line'
+        type: Graphtype,
+        renderTo: 'graph_div',
+        events: {
+          click: function (e) {
+            var index = Math.floor(e.xAxis[0].value + 0.5);
+            that.updateTime(index);
+          }
+        }
       },
+
       colors: ['#4798DC'],
       title: {
-        text: 'Temperatur'
+        text: Cpar + ' i ' + smhidata[locationindex].name
       },
 
       xAxis: {
-        //type: 'datetime'
-          categories: TimeArr
+        categories: TimeArr
       },
 
       yAxis: {
@@ -124,29 +226,37 @@ define(['graph'], function (graph) {
       },
 
       tooltip: {
-
         crosshairs: true,
         shared: true,
-        valueSuffix: '°C'
+        valueSuffix: Suff
       },
 
       legend: {
+        enabled: true
       },
-      series: seriesArr
+      series: seriesArr,
+      credits: {
+        enabled: false
+      },
+      plotOptions: {
+        column: {
+          grouping: false,
+          shadow: false,
+          borderWidth: 0
+        }
+      },
+      navigation: {
+        buttonOptions: {
+          enabled: false
+        }
+      },
+
+
+
     };
 
-      //draw graph
-    var chart = new Highcharts.Chart(options);
-
-  };
-
-  /**
-   * Draws graph
-   */
-  Graph.prototype.drawGraph = function() {
-    //google.charts.setOnLoadCallback( function() {
-   //   _lineChart.draw(_tableData, _options);
-   // });
+    //draw graph
+    this.chart = new Highcharts.Chart(options);
   };
 
   /**
@@ -154,9 +264,10 @@ define(['graph'], function (graph) {
    * @param timeIndex - Time from slider
    */
   Graph.prototype.updateTime = function(timeIndex) {
-    //_options.hAxis.viewWindow.min = timeIndex[0];
-    //_options.hAxis.viewWindow.max = timeIndex[1];
-    this.drawGraph();
+    updateTime(timeIndex);
+    //this.chart.plzHighligt(timeIndex);
+    console.log(this.chart.series[0]);
+
   };
 
   return Graph;
