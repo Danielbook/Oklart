@@ -38,6 +38,7 @@ define(['graph'], function (graph) {
    * @constructor
    */
   var Graph = function() {
+    this.chart;
   };
 
   /**
@@ -119,6 +120,7 @@ define(['graph'], function (graph) {
     //transpose if matrix due to how HS reads data
     MinMaxArr = transpose(Temps);
 
+    var that = this;
     //push values to series
     seriesArr.push(
         {
@@ -134,7 +136,15 @@ define(['graph'], function (graph) {
           },
           pointWidth: 20,
           pointPadding: 0.4,
-          pointPlacement: -0.2
+          pointPlacement: -0.2,
+          point: {
+              events: {
+                click: function (e) {
+                  var index = e.point.index;
+                  that.updateTime(index);
+                }
+              }
+            }
         }
     );
     if(par == 'pit')
@@ -151,6 +161,14 @@ define(['graph'], function (graph) {
             pointPadding: 0.3,
             pointPlacement: -0.2,
             pointWidth: 20,
+            point: {
+              events: {
+                click: function (e) {
+                  var index = e.point.index;
+                  that.updateTime(index);
+                }
+              }
+            }
           }
       );
     }
@@ -166,18 +184,32 @@ define(['graph'], function (graph) {
             linkedTo: ':previous',
             color: Highcharts.getOptions().colors[0],
             fillOpacity: 0.3,
-            zIndex: 0
+            zIndex: 0,
+            point: {
+              events: {
+                click: function (e) {
+                  var index = e.point.index;
+                  that.updateTime(index);
+                }
+              }
+            }
           }
       );
     }
-
     //options for Highgraph
     console.log(Graphtype);
     var options = {
       chart: {
         type: Graphtype,
         renderTo: 'graph_div',
+        events: {
+          click: function (e) {
+            var index = Math.floor(e.xAxis[0].value + 0.5);
+            that.updateTime(index);
+          }
+        }
       },
+
       colors: ['#4798DC'],
       title: {
         text: Cpar + ' i ' + smhidata[locationindex].name
@@ -223,30 +255,8 @@ define(['graph'], function (graph) {
 
     };
 
-    var chart = $('#graph_div').highcharts(),
-        i = 0;
-    $('#button').click(function () {
-
-      if (i === chart.series[0].data.length) {
-        i = 0;
-      }
-      chart.series[0].data[i].select();
-      i += 1;
-    });
-
-
     //draw graph
-    var chart = new Highcharts.Chart(options);
-
-  };
-
-  /**
-   * Draws graph
-   */
-  Graph.prototype.drawGraph = function() {
-    //google.charts.setOnLoadCallback( function() {
-    //   _lineChart.draw(_tableData, _options);
-    // });
+    this.chart = new Highcharts.Chart(options);
   };
 
   /**
@@ -254,9 +264,10 @@ define(['graph'], function (graph) {
    * @param timeIndex - Time from slider
    */
   Graph.prototype.updateTime = function(timeIndex) {
-    //_options.hAxis.viewWindow.min = timeIndex[0];
-    //_options.hAxis.viewWindow.max = timeIndex[1];
-    this.drawGraph();
+    updateTime(timeIndex);
+    //this.chart.plzHighligt(timeIndex);
+    console.log(this.chart.series[0]);
+
   };
 
   return Graph;
