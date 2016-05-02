@@ -36,13 +36,16 @@ define([
      * @memberof Slide
      * @function initSlider
      */
-    Slide.prototype.initSlider = function(){
+    Slide.prototype.initSlider = function(timeindex){
 
         this._slider = new Slider("#bootslide", {});
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("dag").innerHTML = this.weekday[this.dateHandler.getUTCDay()];
+
+        that.dateHandler = that.getDate("Gävle", timeindex );
+        that.setSliderDate(that.dateHandler);
 
         var that = this;
         //These functions display time and day chosen from slider value AND from position. "GÄVLE" is currently filler

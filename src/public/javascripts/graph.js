@@ -39,6 +39,7 @@ define(['graph'], function (graph) {
    */
   var Graph = function() {
     this.chart;
+    this.options;
   };
 
   /**
@@ -197,9 +198,8 @@ define(['graph'], function (graph) {
       );
     }
     //options for Highgraph
-    console.log(Graphtype);
 
-    var options = {
+    this.options = {
       chart: {
         type: Graphtype,
         renderTo: 'graph_div',
@@ -221,7 +221,7 @@ define(['graph'], function (graph) {
         plotLines: [{
           color: 'red', // Color value
           dashStyle: 'solid', // Style of the plot line. Default to solid
-          value: timeindex,
+          value: timeindex-0.2,
           width: 2 // Width of the line
         }]
       },
@@ -246,7 +246,14 @@ define(['graph'], function (graph) {
         enabled: false
       },
       plotOptions: {
+        series: {
+          animation:false
+        },
+        line: {
+          animation:false
+        },
         column: {
+          animation:false,
           grouping: false,
           shadow: false,
           borderWidth: 0
@@ -263,7 +270,7 @@ define(['graph'], function (graph) {
     };
 
     //draw graph
-    this.chart = new Highcharts.Chart(options);
+    this.chart = new Highcharts.Chart(this.options);
   };
 
   /**
@@ -272,8 +279,12 @@ define(['graph'], function (graph) {
    */
   Graph.prototype.updateTime = function(timeIndex) {
     updateTime(timeIndex);
-    //this.chart.plzHighligt(timeIndex);
-    console.log(this.chart.series[0]);
+
+    console.log(this.options);
+
+    this.options.xAxis.plotLines[0].value = timeIndex-0.2;
+    
+    this.chart = new Highcharts.Chart(this.options);
 
   };
 
