@@ -44,7 +44,7 @@ define(['graph'], function (graph) {
   /**
    * Check what parameter is chosen and create arrays and matrix to be displayed in graph
    */
-  Graph.prototype.initGraph = function(smhidata, locationindex, par ) {
+  Graph.prototype.initGraph = function(smhidata, locationindex, par, timeindex ) {
 
     var Cpar; //Chosen Parameter
     var Suff; //Chosen parameter suffix
@@ -59,7 +59,7 @@ define(['graph'], function (graph) {
       Suff = 'm/s';
     }
     else if(par == 'pit'){
-      Cpar = 'Nederbördsintensitet';
+      Cpar = 'Nederbörd';
       Suff = 'mm/h';
       Graphtype = 'column';
     }
@@ -80,7 +80,7 @@ define(['graph'], function (graph) {
       Suff = 'hPa';
     }
     else if(par == 'pis'){
-      Cpar = 'Nederbördsintensitet, snö';
+      Cpar = 'Nederbörd, snö';
       Suff = 'mm/h';
     }
     else if(par == 'tstm'){
@@ -198,6 +198,7 @@ define(['graph'], function (graph) {
     }
     //options for Highgraph
     console.log(Graphtype);
+
     var options = {
       chart: {
         type: Graphtype,
@@ -216,7 +217,13 @@ define(['graph'], function (graph) {
       },
 
       xAxis: {
-        categories: TimeArr
+        categories: TimeArr,
+        plotLines: [{
+          color: 'red', // Color value
+          dashStyle: 'solid', // Style of the plot line. Default to solid
+          value: timeindex,
+          width: 2 // Width of the line
+        }]
       },
 
       yAxis: {
