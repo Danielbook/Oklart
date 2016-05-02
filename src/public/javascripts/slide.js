@@ -52,25 +52,25 @@ define([
         this._slider.on("slideStop", function(slideEvt) {
             var value = that._slider.getValue();
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
         this._slider.on("slideStart", function(slideEvt){
             var value = that._slider.getValue();
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
 
         this._slider.on("slide", function(slideEvt){
             var value = that._slider.getValue();
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
 
         this._slider.on("change", function(slideEvt){
             var value = that._slider.getValue();
             updateTime(value);
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
     };
 
@@ -86,11 +86,11 @@ define([
         document.getElementById("dag").innerHTML = dateHandler[1];
     };
 
+    //Updates slider from clicked index in the graph
     Slide.prototype.setSliderValue = function (index){
-        console.log("FUNCFUN!!");
-
-        var idx = parseInt(index);
-        this._slider.setValue(idx);
+        this._slider.setValue(index);
+        this.dateHandler = this.getDate("Gävle", index);
+        this.setSliderDate(this.dateHandler);
     };
 
     /**

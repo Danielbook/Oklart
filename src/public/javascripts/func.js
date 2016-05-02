@@ -6,6 +6,7 @@ function initApp(idx,par,time){
 
 function updateTime(time){
     user.time = time;
+    _slider.setSliderValue(time);
     _map.updateTime(time);
 }
 
