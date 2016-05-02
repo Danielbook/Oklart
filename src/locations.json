@@ -80,6 +80,7 @@
   {"name": "Solna" , "lat":59.36  , "lon":18.02, "zoomlevel": 8 },
   {"name": "Staffanstorp" , "lat":55.64  , "lon":13.19, "zoomlevel": 9 },
   {"name": "Stockholm" , "lat":59.32  , "lon":18.06, "zoomlevel": 0 },
+  {"name": "Storuman" , "lat":65.0959  , "lon":17.1173, "zoomlevel": 6},
   {"name": "Strängnäs" , "lat":59.37 , "lon": 17.04, "zoomlevel": 8},
   {"name": "Sundsvall" , "lat":62.39  , "lon":17.32, "zoomlevel": 5 },
   {"name": "Säffle" , "lat": 59.13 , "lon":12.94, "zoomlevel": 8 },
@@ -107,6 +108,40 @@
   {"name": "Ystad" , "lat": 55.44 , "lon":13.84, "zoomlevel": 8 },
   {"name": "Åkersberga" , "lat":59.48  , "lon":18.30, "zoomlevel": 9 },
   {"name": "Ängelholm" , "lat":56.25  , "lon":12.85, "zoomlevel": 8 },
+  {"name": "Älmhult" , "lat":56.5515  , "lon":14.1383, "zoomlevel": 8 },
   {"name": "Örebro" , "lat":59.28  , "lon":15.18 , "zoomlevel": 7},
   {"name": "Örnsköldsvik" , "lat":63.29  , "lon":18.73, "zoomlevel": 8 },
   {"name": "Östersund" , "lat":63.18  , "lon":14.70 , "zoomlevel": 6}]
+  {"name": "Sälen" , "lat":61.15  , "lon":13.2667, "zoomlevel": 8 },
+  {"name": "Filipstad" , "lat":59.7124  , "lon":14.1683, "zoomlevel": 8 },
+  {"name": "Åre" , "lat":63.3984  , "lon":13.0802 , "zoomlevel": 6},
+  {"name": "Malung" , "lat":60.6833  , "lon":13.7154 , "zoomlevel": 6},
+  {"name": "Sveg" , "lat":62.0341  , "lon":14.3658 , "zoomlevel": 6},
+  {"name": "Ljusdal" , "lat":61.8288  , "lon":16.0913 , "zoomlevel": 6},
+  {"name": "Sollefteå" , "lat":63.1667  , "lon":17.2667 , "zoomlevel": 6},
+  {"name": "Dorotea" , "lat":64.7752  , "lon":15.3034 , "zoomlevel": 6},
+  {"name": "Rättvik" , "lat":60.8863  , "lon":15.1179 , "zoomlevel": 6},
+  {"name": "Valdemarsvik" , "lat":58.2031  , "lon":16.6023 , "zoomlevel": 6},
+  {"name": "Vimmerby" , "lat":57.6659  , "lon":15.8551 , "zoomlevel": 6},
+  {"name": "Vilhelmina" , "lat":64.6268  , "lon":16.6563 , "zoomlevel": 6},
+  {"name": "Ånge" , "lat":62.525  , "lon":15.659 , "zoomlevel": 6},
+  {"name": "Strömsund" , "lat":63.8521  , "lon":15.5558 , "zoomlevel": 6},
+  {"name": "Robertsfors" , "lat":64.1932  , "lon":20.8481 , "zoomlevel": 6},
+  {"name": "Arvidsjaur" , "lat":65.5903  , "lon":19.1668 , "zoomlevel": 6},
+  {"name": "Lycksele" , "lat":64.5954  , "lon":18.6735 , "zoomlevel": 6},
+  {"name": "Vansbro" , "lat":60.5089  , "lon":14.2246 , "zoomlevel": 6},
+  {"name": "Orsa" , "lat":61.1203  , "lon":14.6155 , "zoomlevel": 6},
+  {"name": "Ensamheten" , "lat":64.801  , "lon":19.456 , "zoomlevel": 6},
+  {"name": "Höör" , "lat":55.9344  , "lon":13.5385 , "zoomlevel": 6},
+
+
+
+
+
+
+
+
+
+ 
+
+    

@@ -74,26 +74,39 @@
 
             awesomplete.list = list;
 
-			//This function runs when the Sök button is clicked
+		    //This function runs when the Sök button is clicked
 			document.getElementById("SearchBtn").onclick = function(){
-				var AdresFalt = $("#CitySearch") ;
-				$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-					_map.updateMap(data, user);
-				})
-			};
+				var AdresFalt = $("#CitySearch");
+		
+                for(i=0; i<smhidata.length; i++){
+            
+                if(AdresFalt.val() == smhidata[i].name) {
+                
+                    console.log(smhidata[i]);
+                     _map.updateMap(smhidata[i]);
+                }
+                }	
+			}; 
+
+			});
 
 			//This function runs when the Stad textfield is highlighted and a key is pressed
 			$("#CitySearch").keypress(function(e){
 				//If the pressed button is enter
 				if(e.which == 13){
-					var AdresFalt = $("#CitySearch") ;
-					$.getJSON('http://nominatim.openstreetmap.org/search?format=json&q=' + AdresFalt.val(), function(data) {
-						_map.updateMap(data, user);
-					});
+
+				var AdresFalt = $("#CitySearch");
+                
+                for(i=0; i<smhidata.length; i++){
+            
+                if(AdresFalt.val() == smhidata[i].name) {
+
+                    _map.updateMap(smhidata);
+                }
+                }   
                     return false;
 				}
 			}); 
-		});
 
         $(window).resize(function() {
             if( $(window).width() < 767 ) {

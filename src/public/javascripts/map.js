@@ -494,6 +494,7 @@ define([
     });
   };
 
+
   /**
    * Updates the map to chosen location.
    * @memberof Map
@@ -509,8 +510,12 @@ define([
 
     if(data) {
       //var FoundExtent = data[0].boundingbox;
-      var placemark_lat = data[0].lat;
-      var placemark_lon = data[0].lon;
+      //var placemark_lat = data[0].lat;
+      //var placemark_lon = data[0].lon;
+
+      var placemark_lat = data.lat;
+      var placemark_lon = data.lon;
+
 
       this._map.beforeRender(pan);
       this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
