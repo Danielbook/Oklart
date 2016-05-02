@@ -6,7 +6,7 @@ function initApp(idx,par,time){
 
 function updateTime(time){
     user.time = time;
-    _slider.setSliderValue(time);
+    _slider.setSliderValue(time+1);
     _map.updateTime(time);
 }
 
@@ -27,7 +27,7 @@ function updateLocation(idx,par,time){
     _graph.initGraph(smhidata, idx, par, time);
     //document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
 
-    $(".l_header").html(smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime);
+    $(".l_header").html(smhidata[idx].name);
 }
 
 

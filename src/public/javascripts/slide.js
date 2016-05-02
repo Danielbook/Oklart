@@ -36,7 +36,7 @@ define([
      * @memberof Slide
      * @function initSlider
      */
-    Slide.prototype.initSlider = function(){
+    Slide.prototype.initSlider = function(timeindex){
 
         this._slider = new Slider("#bootslide", {});
 
@@ -44,6 +44,7 @@ define([
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("dag").innerHTML = this.weekday[this.dateHandler.getUTCDay()];
+
 
 
         var that = this;
@@ -68,6 +69,7 @@ define([
         this._slider.on("change", function(slideEvt){
             var value = that._slider.getValue();
             updateTime(value);
+            _graph.updateTime(value);
             that.dateHandler = that.getDate("Gävle", value );
             that.setSliderDate(that.dateHandler);
         });
