@@ -69,6 +69,7 @@ define([
         this._slider.on("change", function(slideEvt){
             var value = that._slider.getValue();
             updateTime(value);
+            _graph.updateTime(value);
             that.dateHandler = that.getDate("Gävle", value );
             that.setSliderDate(that.dateHandler);
         });
