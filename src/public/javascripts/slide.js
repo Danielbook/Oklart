@@ -39,10 +39,13 @@ define([
     Slide.prototype.initSlider = function(){
 
         this._slider = new Slider("#bootslide", {});
+      //  console.log("AAAAAA"+this._slider.setValue(2));
+
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("dag").innerHTML = this.weekday[this.dateHandler.getUTCDay()];
+
 
         var that = this;
         //These functions display time and day chosen from slider value AND from position. "GÄVLE" is currently filler
@@ -81,6 +84,13 @@ define([
         this._slider.tooltipInner.innerText = dateHandler[0];
         document.getElementById("tid").innerHTML = dateHandler[0];
         document.getElementById("dag").innerHTML = dateHandler[1];
+    };
+
+    Slide.prototype.setSliderValue = function (index){
+        console.log("FUNCFUN!!");
+
+        var idx = parseInt(index);
+        this._slider.setValue(idx);
     };
 
     /**

@@ -23,21 +23,20 @@
 			smhidata = <%-JSON.stringify(dataobject)%>;
 
 			//Creates objects for the components
-			_table = new Table(smhidata);
+            _table = new Table(smhidata);
 			_graph = new Graph(smhidata);
 			_map = new Map(smhidata, user);
             _slider = new Slide(smhidata);
 
             _graph.initGraph(smhidata, user.location, user.weather);
 			_map.initMap(user);
+            _slider.initSlider();
 
-            initApp(user.location, user.weather, user.time);
 
             $( document ).ready(function() {
                 /**
                  * Draws the table
                  */
-                _slider.initSlider();
 
                 $("td.toggleable").click(function(){
                     $("td").removeClass("activeCell");
@@ -53,6 +52,8 @@
                 $( "td.location" ).on("click", function() {
                     _table.changeCurrentLocation($(this));
                 });            });
+
+            initApp(user.location, user.weather, user.time);
 
 
 		    //Autocomplete for the Searchbar
@@ -103,12 +104,12 @@
         function updateTime(time){
             user.time = time;
             _map.updateTime(time);
+            _slider.setSliderValue(time);
         }
 
         function updateTable(time, idx){
             var nearest = calculateNear(smhidata[idx].lat, smhidata[idx].lon);
             var locations = [idx,nearest[0].idx, nearest[1].idx, nearest[2].idx, nearest[3].idx];
-
             _table.updateTable(time, locations);
         }
 
