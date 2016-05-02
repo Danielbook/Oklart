@@ -39,7 +39,6 @@ define([
     Slide.prototype.initSlider = function(){
 
         this._slider = new Slider("#bootslide", {});
-      //  console.log("AAAAAA"+this._slider.setValue(2));
 
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
@@ -72,6 +71,51 @@ define([
             that.dateHandler = that.getDate("Gävle", value );
             that.setSliderDate(that.dateHandler);
         });
+
+
+
+        var playBtn = document.getElementById("slidePlayBtn");
+        var pauseBtn = document.getElementById("slidePauseBtn");
+
+        playBtn.onclick = function(){
+            var currValue = that._slider.getValue();
+            var size = 68;//that._slider.getAttribute("max");  
+            pauseBtn.style.visibility = 'visible';
+            playBtn.style.visibility = 'hidden';
+
+
+            
+            var myVar = setInterval(myTimer, 500);
+
+            function myTimer() {
+                //break if end of slider
+                if (currValue >= size){ 
+                    pauseBtn.style.visibility = 'hidden';
+                    playBtn.style.visibility = 'visible';            
+                    clearInterval(myVar);
+                } 
+
+                that._slider.on("slideStart", function(slideEvt){
+                    pauseBtn.style.visibility = 'hidden';
+                    playBtn.style.visibility = 'visible';
+                    clearInterval(myVar); 
+                });
+
+                currValue++;
+                that._slider.setValue(currValue);
+                updateTime(currValue);
+
+                that.dateHandler = that.getDate("Gävle", currValue );
+                that.setSliderDate(that.dateHandler);
+
+                //break if pausebtn clicked
+                pauseBtn.onclick = function(){
+                    pauseBtn.style.visibility = 'hidden';
+                    playBtn.style.visibility = 'visible';
+                    clearInterval(myVar);
+                };
+            }
+        };
     };
 
     /**
