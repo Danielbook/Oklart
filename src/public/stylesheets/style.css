@@ -28,18 +28,33 @@ body{
 
 }
 
+#slideBtns{
+  padding: 20px;
+}
+
+
+.slideButton{
+  position:absolute;
+}
+
 .map-controls {
     margin-top: 3.5em;
     background-color: rgba(255,255,255,.4);
     border-radius: 4px;
     padding: 2px;
+}
 
+#dateDiv{
+  position: relative;
+  display: block;
 }
 
 /** popup in map */
 .popover{
   min-width: 200px;
 }
+
+.slide
 
 .ol-full-screen{
     top: 93%;

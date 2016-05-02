@@ -39,6 +39,8 @@ define([
     Slide.prototype.initSlider = function(){
 
         this._slider = new Slider("#bootslide", {});
+        console.log(this._slider.getValue());
+
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
@@ -49,26 +51,72 @@ define([
         this._slider.on("slideStop", function(slideEvt) {
             var value = that._slider.getValue();
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
         this._slider.on("slideStart", function(slideEvt){
             var value = that._slider.getValue();
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
+
         });
 
         this._slider.on("slide", function(slideEvt){
             var value = that._slider.getValue();
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
 
         this._slider.on("change", function(slideEvt){
             var value = that._slider.getValue();
             updateTime(value);
             that.dateHandler = that.getDate("Gävle", value );
-            that.setSliderDate(that.dateHandler)
+            that.setSliderDate(that.dateHandler);
         });
+
+
+
+        var playBtn = document.getElementById("slidePlayBtn");
+        var pauseBtn = document.getElementById("slidePauseBtn");
+
+        playBtn.onclick = function(){
+            var currValue = that._slider.getValue();
+            var size = 68;//that._slider.getAttribute("max");  
+            pauseBtn.style.visibility = 'visible';
+            playBtn.style.visibility = 'hidden';
+
+
+            
+            var myVar = setInterval(myTimer, 500);
+
+            function myTimer() {
+                //break if end of slider
+                if (currValue >= size){ 
+                    pauseBtn.style.visibility = 'hidden';
+                    playBtn.style.visibility = 'visible';            
+                    clearInterval(myVar);
+                } 
+
+                that._slider.on("slideStart", function(slideEvt){
+                    pauseBtn.style.visibility = 'hidden';
+                    playBtn.style.visibility = 'visible';
+                    clearInterval(myVar); 
+                });
+
+                currValue++;
+                that._slider.setValue(currValue);
+                updateTime(currValue);
+
+                that.dateHandler = that.getDate("Gävle", currValue );
+                that.setSliderDate(that.dateHandler);
+
+                //break if pausebtn clicked
+                pauseBtn.onclick = function(){
+                    pauseBtn.style.visibility = 'hidden';
+                    playBtn.style.visibility = 'visible';
+                    clearInterval(myVar);
+                };
+            }
+        };
     };
 
     /**
@@ -82,6 +130,10 @@ define([
         document.getElementById("tid").innerHTML = dateHandler[0];
         document.getElementById("dag").innerHTML = dateHandler[1];
     };
+
+    Slide.prototype.play = function(){
+        console.log("hej");
+    }
 
     /**
      * Returns time for a specified position
