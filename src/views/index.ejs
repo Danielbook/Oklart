@@ -23,21 +23,20 @@
 			smhidata = <%-JSON.stringify(dataobject)%>;
 
 			//Creates objects for the components
-			_table = new Table(smhidata);
+            _table = new Table(smhidata);
 			_graph = new Graph(smhidata);
 			_map = new Map(smhidata, user);
             _slider = new Slide(smhidata);
 
             _graph.initGraph(smhidata, user.location, user.weather, user.time);
 			_map.initMap(user);
+            _slider.initSlider(user.time);
 
-            initApp(user.location, user.weather, user.time);
 
             $( document ).ready(function() {
                 /**
                  * Draws the table
                  */
-                _slider.initSlider(user.time);
 
                 $("td.toggleable").click(function(){
                     $("td").removeClass("activeCell");
@@ -55,6 +54,7 @@
                 });            
             });
 
+            initApp(user.location, user.weather, user.time);
 
 		    //Autocomplete for the Searchbar
             var input = document.getElementById('CitySearch');
@@ -173,19 +173,29 @@
                     <div class="col-md-6">
                         <div class="pageElement">
                             <div id="map" class="map"><div id="popup"></div></div>
-                             <input id="bootslide" type="text" class="slider"
-                                     data-slider-min="1"
-                                     data-slider-max="73"
-                                     data-slider-step="1"
-                                     data-slider-value="2"
-                                     data-slider-handle="square"
-                                     data-slider-tooltip-position="bottom"
-                              />
+                           <div class="row">
+                                <div class="col-xs-1">
+                                    <button class="slideButton icon ion-play"  id="slidePlayBtn"></button>
+                                    <button class="slideButton icon ion-pause" id="slidePauseBtn" style="visibility:hidden"></button>
+                                </div>
+                                
+                                <div class = "col-xs-11">
+                                     <input id="bootslide" type="text" class="slider"
+                                             data-slider-min="1"
+                                             data-slider-max="73"
+                                             data-slider-step="1"
+                                             data-slider-value="2"
+                                             data-slider-handle="square"
+                                             data-slider-tooltip-position="bottom"
+                                      />
+                                </div>
+                            </div>
                             <div>
                                 <output id="tid"></output>
                                 <output id="dag"></output>
-                            </div>
-                            <b id="idag"></b>
+                                <b id="idag"></b>
+                             </div>
+
                         </div>
                     </div>
                     <div class="col-md-6"> <!-- GRAPH AND TABLE -->
