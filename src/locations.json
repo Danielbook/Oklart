@@ -111,7 +111,7 @@
   {"name": "Älmhult" , "lat":56.5515  , "lon":14.1383, "zoomlevel": 8 },
   {"name": "Örebro" , "lat":59.28  , "lon":15.18 , "zoomlevel": 7},
   {"name": "Örnsköldsvik" , "lat":63.29  , "lon":18.73, "zoomlevel": 8 },
-  {"name": "Östersund" , "lat":63.18  , "lon":14.70 , "zoomlevel": 6}]
+  {"name": "Östersund" , "lat":63.18  , "lon":14.70 , "zoomlevel": 6},
   {"name": "Sälen" , "lat":61.15  , "lon":13.2667, "zoomlevel": 8 },
   {"name": "Filipstad" , "lat":59.7124  , "lon":14.1683, "zoomlevel": 8 },
   {"name": "Åre" , "lat":63.3984  , "lon":13.0802 , "zoomlevel": 6},
@@ -132,7 +132,7 @@
   {"name": "Vansbro" , "lat":60.5089  , "lon":14.2246 , "zoomlevel": 6},
   {"name": "Orsa" , "lat":61.1203  , "lon":14.6155 , "zoomlevel": 6},
   {"name": "Ensamheten" , "lat":64.801  , "lon":19.456 , "zoomlevel": 6},
-  {"name": "Höör" , "lat":55.9344  , "lon":13.5385 , "zoomlevel": 6},
+  {"name": "Höör" , "lat":55.9344  , "lon":13.5385 , "zoomlevel": 6}]
 
 
 

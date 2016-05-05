@@ -1,6 +1,7 @@
 function initApp(idx,par,time){
     updateTime(time);
-    updateTable(time,idx);
+    //updateTable(time,idx);
+    _table.drawTimeTable(time, idx);
     updateLocation(idx,par,time);
 }
 
@@ -14,7 +15,7 @@ function updateTable(time, idx){
     var nearest = calculateNear(smhidata[idx].lat, smhidata[idx].lon);
     var locations = [idx,nearest[0].idx, nearest[1].idx, nearest[2].idx, nearest[3].idx];
 
-    _table.updateTable(time, locations);
+    _table.updateTimeTable(time, idx);
 }
 
 function updateLocation(idx,par,time){
@@ -26,7 +27,7 @@ function updateLocation(idx,par,time){
 
     _graph.initGraph(smhidata, idx, par, time);
     //document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
-
+    $("#tableLocation").html(smhidata[idx].name);
     $(".l_header").html(smhidata[idx].name);
 }
 
