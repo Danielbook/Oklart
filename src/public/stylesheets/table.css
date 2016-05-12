@@ -1,7 +1,7 @@
 .table {
   margin:auto;
   overflow-y:scroll;
-  height:350px;
+  height:40vh;
  }
 
 .currentLocation{
