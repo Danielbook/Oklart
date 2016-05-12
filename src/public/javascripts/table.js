@@ -168,6 +168,8 @@ define([
     $(".toggleable").removeClass( "activeRow" );
     $("." + par).addClass( "activeRow" );
     $(".row"+ idx + "par" + par).removeClass('activeRow');
+
+    $(".toggleable").removeClass( "activeCell" );
     $(".row"+ idx + "par" + par).addClass( "activeCell" );
   }
 
