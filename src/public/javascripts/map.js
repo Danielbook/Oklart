@@ -47,6 +47,7 @@ define([
     this._markerSource = "";
     this._markerVecLayer = "";
     this._time = 0;
+    this._par = 't';
 
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
@@ -76,6 +77,16 @@ define([
   Map.prototype.updateTime = function(time){
     this._time = time;
     this.updateLayers(this);
+  };
+
+  /**
+   * Updates the maps time
+   * @memberof Map
+   * @method updateTime
+   * @param time
+   */
+  Map.prototype.updatePar = function(par){
+    this._par = par;
   };
 
   /**
@@ -243,8 +254,7 @@ define([
         var dataObject;
         for(var idx=0; idx < that._data.length; idx++){
             if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-              console.log("Time is: " + that._time);
-              updateLocation(idx,'t',that._time);
+              updateLocation(idx,that._par,that._time);
               dataObject=that._data[idx];
             }
         }
