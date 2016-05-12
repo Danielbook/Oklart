@@ -7,7 +7,11 @@
 }
 
 .activeCell{
-  background-color: #cccccb;
+  background-color: red;
+}
+
+.activeRow{
+  background-color: blue;
 }
 
 #tableBody{

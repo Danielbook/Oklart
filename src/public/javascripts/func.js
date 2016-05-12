@@ -16,6 +16,7 @@ function updateTable(time, idx){
     var locations = [idx,nearest[0].idx, nearest[1].idx, nearest[2].idx, nearest[3].idx];
 
     _table.updateTimeTable(time, idx);
+    _table.highlightColumn(par, time);
 }
 
 function updateLocation(idx,par,time){
@@ -30,6 +31,7 @@ function updateLocation(idx,par,time){
     $("#tableLocation").html(smhidata[idx].name);
     $(".l_header").html(smhidata[idx].name);
     updateTime(time);
+    _table.highlightColumn(par, time);
 }
 
 
