@@ -32,6 +32,12 @@ function updateLocation(idx,par,time){
     _table.highlightColumn(par, time);
 }
 
+function formatGetTime(time){
+    console.log("Format " + time);
+
+    var string = time[11] + time[12] + time[13] + time[14] + time[15];
+    return string;
+}
 
  //Used to calculate the arraySize-nr of cities closest to a position.
 function calculateNear(userLat, userLong){
