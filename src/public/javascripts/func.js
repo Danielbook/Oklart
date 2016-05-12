@@ -1,12 +1,13 @@
 function initApp(idx,par,time){
     updateTime(time);
-    updateTable(time,idx);
+    //updateTable(time,idx);
+    _table.drawTimeTable(time, idx);
     updateLocation(idx,par,time);
 }
 
 function updateTime(time){
     user.time = time;
-    _slider.setSliderValue(time+1);
+    _slider.setSliderValue(time);
     _map.updateTime(time);
 }
 
@@ -14,20 +15,20 @@ function updateTable(time, idx){
     var nearest = calculateNear(smhidata[idx].lat, smhidata[idx].lon);
     var locations = [idx,nearest[0].idx, nearest[1].idx, nearest[2].idx, nearest[3].idx];
 
-    _table.updateTable(time, locations);
+    _table.updateTimeTable(time, idx);
+    _table.highlightColumn(par, time);
 }
 
 function updateLocation(idx,par,time){
-    $(".toggleable").removeClass( "activeCell" );
-    $("#"+idx+par).addClass( "activeCell" );
-    
-    $(".location").removeClass( "currentLocation" );
-    $("#"+idx).addClass( "currentLocation" );
-
-    _graph.initGraph(smhidata, idx, par, time);
-    //document.getElementById("header").innerHTML = smhidata[idx].name + " | " + smhidata[idx].timeseries[time].validTime;
-
+    //Update header
+    $("#tableLocation").html(smhidata[idx].name);
     $(".l_header").html(smhidata[idx].name);
+
+    //Update components
+    _graph.initGraph(smhidata, idx, par, time);
+    _slider.setSliderValue(time);
+    _map.updateTime(time);
+    _table.highlightColumn(par, time);
 }
 
 

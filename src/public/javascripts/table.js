@@ -150,6 +150,29 @@ define([
     }
   };
 
+  Table.prototype.drawTimeTable = function(time, idx) {
+    var timespan = 24;
+
+    for(var i = 0; i < timespan; i++){
+      $('#tableBody').append("<tr>" +
+      "<td>" + this._data[idx].timeseries[i].validTime + "</td>" +
+      "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'</td>" +
+      "<td class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); >" + this._data[idx].timeseries[i].t + "</td>" +
+      "<td class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
+      "<td class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >" + this._data[idx].timeseries[i].pit + "</td>" +
+      "<tr>");
+    }
+  }
+
+  Table.prototype.highlightColumn = function(par, idx){
+    $(".toggleable").removeClass( "activeRow" );
+    $("." + par).addClass( "activeRow" );
+    $(".row"+ idx + "par" + par).removeClass('activeRow');
+
+    $(".toggleable").removeClass( "activeCell" );
+    $(".row"+ idx + "par" + par).addClass( "activeCell" );
+  }
+
   Table.prototype.updateTable = function(time, l) {
     $('#tableBody').html("");
     this.drawTable(time, l);
@@ -159,6 +182,12 @@ define([
     
     $(".location").removeClass( "currentLocation" );
     $("#"+l[0]).addClass( "currentLocation" );
+  };
+
+  Table.prototype.updateTimeTable = function(time, idx) {
+    $('#tableBody').html("");
+    this.drawTimeTable(time, idx);
+
   };
 
   return Table;

@@ -129,8 +129,8 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-                <img src="images/oklart2.png" class="navbar-left" style="height: 50px; z-index: -1">
-
+<!--                 <img src="images/oklart2.png" class="navbar-left" style="height: 50px; z-index: -1">
+ -->
                 <div class="navbar navbar-nav navbar-center">
                     <h4 class='l_header'></h4>
                 </div>
@@ -170,10 +170,33 @@
             <div class="container-fluid">
                 <!-- /#sidebar-wrapper -->
                 <div class="row"> <!-- OUTER DIVS -->
-                    <div class="col-md-6">
+                    <div class="col-md-8"> <!-- GRAPH AND TABLE -->
+                        <div class ="row"> <!-- GRAPH -->
+                            <div id="graph_div" class="graph pageElement"></div>
+                        </div>
+                        <div class ="row"> <!-- TABLE -->
+                            <div id="table_div table-responsive" class="table pageElement">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th id="tableLocation">Ort</th>
+                                            <th>Väder</th>
+                                            <th>Temperatur</th>
+                                            <th>Nederbörd</th>
+                                            <th>Vindhastighet</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- GRAPH AND TABLE -->
+
+                    <div class="col-md-4">
                         <div class="pageElement">
                             <div id="map" class="map"><div id="popup"></div></div>
-                           <div class="row">
+                            <div class="row">
                                 <div class="col-xs-1">
                                     <button class="slideButton icon ion-play"  id="slidePlayBtn"></button>
                                     <button class="slideButton icon ion-pause" id="slidePauseBtn" style="visibility:hidden"></button>
@@ -195,31 +218,8 @@
                                 <output id="dag"></output>
                                 <b id="idag"></b>
                              </div>
-
                         </div>
                     </div>
-                    <div class="col-md-6"> <!-- GRAPH AND TABLE -->
-                        <div class ="row"> <!-- GRAPH -->
-                            <div id="graph_div" class="graph pageElement"></div>
-                        </div>
-                        <div class ="row"> <!-- TABLE -->
-                            <div id="table_div table-responsive" class="table pageElement">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Ort</th>
-                                            <th>Väder</th>
-                                            <th>Temperatur</th>
-                                            <th>Nederbörd</th>
-                                            <th>Vindhastighet</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div> <!-- GRAPH AND TABLE -->
                 </div>
             </div>
         </div>
