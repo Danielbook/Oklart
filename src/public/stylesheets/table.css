@@ -1,6 +1,8 @@
 .table {
   margin:auto;
-}
+  overflow-y:scroll;
+  height:350px;
+ }
 
 .currentLocation{
   background-color: #3DDF9E;
