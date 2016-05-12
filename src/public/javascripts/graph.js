@@ -40,6 +40,7 @@ define(['graph'], function (graph) {
   var Graph = function() {
     this.chart;
     this.options;
+    this.par;
   };
 
   /**
@@ -47,6 +48,7 @@ define(['graph'], function (graph) {
    */
   Graph.prototype.initGraph = function(smhidata, locationindex, par, timeindex ) {
 
+    this.par = par;
     var Cpar; //Chosen Parameter
     var Suff; //Chosen parameter suffix
     var Graphtype = '';
@@ -279,6 +281,8 @@ define(['graph'], function (graph) {
    */
   Graph.prototype.updateTime = function(timeIndex) {
     updateTime(timeIndex);
+    _table.highlightColumn(this.par, timeIndex);
+
 
     console.log(this.options);
 
