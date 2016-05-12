@@ -105,7 +105,10 @@ define([
 
                 currValue++;
                 that._slider.setValue(currValue);
+
+                console.log("Update time to " + currValue);
                 updateTime(currValue);
+                _graph.updateTime(currValue);
 
                 that.dateHandler = that.getDate("Gävle", currValue );
                 that.setSliderDate(that.dateHandler);
