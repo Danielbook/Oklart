@@ -28,6 +28,7 @@ function updateLocation(idx,par,time){
     _graph.initGraph(smhidata, idx, par, time);
     _slider.setSliderValue(time);
     _map.updateTime(time);
+    _table.updateTimeTable(time,idx);
     _table.highlightColumn(par, time);
 }
 
