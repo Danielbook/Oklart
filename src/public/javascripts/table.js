@@ -157,9 +157,9 @@ define([
       $('#tableBody').append("<tr>" +
       "<td>" + this._data[idx].timeseries[i].validTime + "</td>" +
       "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'</td>" +
-      "<td>" + this._data[idx].timeseries[i].t + "</td>" +
-      "<td>" + this._data[idx].timeseries[i].gust + "</td>" +
-      "<td>" + this._data[idx].timeseries[i].pit + "</td>" +
+      "<td class='toggleable' onclick=updateLocation("+idx+",'t',"+i+"); > " + this._data[idx].timeseries[i].t + "</td>" +
+      "<td class='toggleable' onclick=updateLocation("+idx+",'gust',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
+      "<td class='toggleable' onclick=updateLocation("+idx+",'pit',"+i+"); >" + this._data[idx].timeseries[i].pit + "</td>" +
       "<tr>");
     }
   }
