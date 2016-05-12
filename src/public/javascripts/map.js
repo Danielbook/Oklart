@@ -243,7 +243,8 @@ define([
         var dataObject;
         for(var idx=0; idx < that._data.length; idx++){
             if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-              updateLocation(idx,'t',0);
+              console.log("Time is: " + that._time);
+              updateLocation(idx,'t',that._time);
               dataObject=that._data[idx];
             }
         }
