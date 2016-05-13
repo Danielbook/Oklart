@@ -187,13 +187,16 @@ define([
     else if(wdp.pcat == 2) { // Snow and rain
       return "snow and rain";
     }
-    else if(wdp.pcat == 3) {
+    else if(wdp.pcat >= 3) {
       if(wdp.pit > 5) { // Heavy rain
         return "heavy rain";
       }
       else { // Rain
         return "rain";
       }
+    }
+    else{
+      return "midsummer";
     }
   };
 
