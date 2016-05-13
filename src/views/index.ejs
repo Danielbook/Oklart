@@ -30,6 +30,7 @@
 		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
 			//Stores data sent from Node.js into smhidata
 			smhidata = <%-JSON.stringify(dataobject)%>;
+            console.log(smhidata);
 
 			//Creates objects for the components
             _table = new Table(smhidata);
@@ -64,62 +65,22 @@
             });
 
             initApp(user.location, user.weather, user.time);
-
-		    //Autocomplete for the Searchbar
-            var input = document.getElementById('CitySearch');
-            var awesomplete = new Awesomplete(input, {
-                minChars: 1,
-                maxItems: 5,
-                autoFirst: true,
-                filter: Awesomplete.FILTER_STARTSWITH
-            });
-
-            //Saving the name of the cities in an array
-            var list = [];
-                for(i=0; i<smhidata.length; i++) {
-
-                list[i] = smhidata[i].name;
-            }
-
-            awesomplete.list = list;
-
-		    //This function runs when the Sök button is clicked
-			document.getElementById("SearchBtn").onclick = function(){
-				var AdresFalt = $("#CitySearch");
-		
-                for(i=0; i<smhidata.length; i++){
-            
-                if(AdresFalt.val() == smhidata[i].name) {
-                
-                    console.log(smhidata[i]);
-                  
-                    updateLocation(i,'t',0);
-                  
-                }
-                }	
-			}; 
-
 			});
 
 
         function runScript(e) {
-    if (e.keyCode == 13) {
-        var tb = document.getElementById("searchText");
-
-            var AdresFalt = $("#CitySearch");
-                   
+            if (e.keyCode == 13) {
+                var tb = document.getElementById("searchText");
+                var AdresFalt = $("#CitySearch");
                 for(i=0; i<smhidata.length; i++){
-             
-                if(AdresFalt.val() == smhidata[i].name) {
-                    
-                    updateLocation(i,'t',0);
-                }
-                }       
-                
-        return false;
+                    if(AdresFalt.val() == smhidata[i].name) {
+                            
+                        updateLocation(i,'t',0);
+                    }
+                }                               
+            return false;
+            }
         }
-    }
-
 
         $(window).resize(function() {
             if( $(window).width() < 767 ) {

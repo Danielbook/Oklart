@@ -29,6 +29,13 @@ function updateLocation(idx,par,time){
     _slider.setSliderValue(time);
     _map.updateTime(time);
     _map.updatePar(par);
+
+    var data = {
+        lon: smhidata[idx].lon,
+        lat: smhidata[idx].lat
+    };
+    _map.updateMap(data);
+
     _table.updateTimeTable(time,idx);
     _table.highlightColumn(par, time);
 }
@@ -78,6 +85,51 @@ function calculateNear(userLat, userLong){
 
     return nearestPos;
 };
+
+//Autocomplete for the Searchbar
+var input = document.getElementById('CitySearch');
+var awesomplete = new Awesomplete(input, {
+    minChars: 1,
+    maxItems: 5,
+    autoFirst: true,
+    filter: Awesomplete.FILTER_STARTSWITH
+});
+
+//Saving the name of the cities in an array
+var list = [];
+    for(i=0; i<smhidata.length; i++) {
+
+    list[i] = smhidata[i].name;
+}
+
+awesomplete.list = list;
+
+//This function runs when the Sök button is clicked
+document.getElementById("SearchBtn").onclick = function(){
+    var AdresFalt = $("#CitySearch");
+
+    for(var i=0; i<smhidata.length; i++){
+        if(AdresFalt.val() == smhidata[i].name) {
+            updateLocation(i,'t',0);
+        }
+    }   
+}; 
+
+function runScript(e) {
+    if (e.keyCode == 13) {
+        var tb = document.getElementById("searchText");
+        var AdresFalt = $("#CitySearch");
+        
+        for(i=0; i<smhidata.length; i++){
+            if(AdresFalt.val() == smhidata[i].name) {
+                    
+                updateLocation(i,'t',0);
+            }
+        }
+
+        return false;
+    }
+}
 
 function haversine(lat1, lat2, lng1, lng2){
     rad = 3961; // for km use 3961, for miles use 6372.8
