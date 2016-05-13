@@ -9,11 +9,11 @@
 }
 
 .activeCell{
-  background-color: #E3E3E3;
+  background-color: #bdbdbd;
 }
 
 .activeRow{
-  background-color: rgb(124, 181, 236);
+  background-color: #eeeeee;
 }
 
 #tableBody{
@@ -33,7 +33,7 @@ td.toggleable{
 }
 
 td.toggleable:hover {
-  background-color: #d3d3d2;
+  background-color: #7eb6e6;
   cursor: pointer;
 
 }
