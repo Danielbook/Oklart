@@ -81,13 +81,13 @@ define([
 
         playBtn.onclick = function(){
             var currValue = that._slider.getValue();
-            var size = that._slider.getAttribute("max")-2;  
+            var size = that._slider.getAttribute("max");  
             pauseBtn.style.visibility = 'visible';
             playBtn.style.visibility = 'hidden';
 
 
             
-            var myVar = setInterval(myTimer, 500);
+            var myVar = setInterval(myTimer, 700);
 
             function myTimer() {
                 //break if end of slider

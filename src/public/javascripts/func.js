@@ -29,6 +29,13 @@ function updateLocation(idx,par,time){
     _slider.setSliderValue(time);
     _map.updateTime(time);
     _map.updatePar(par);
+
+    var data = {
+        lon: smhidata[idx].lon,
+        lat: smhidata[idx].lat
+    };
+    _map.updateMap(data);
+
     _table.updateTimeTable(time,idx);
     _table.highlightColumn(par, time);
 }
