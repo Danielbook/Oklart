@@ -92,30 +92,34 @@
                 if(AdresFalt.val() == smhidata[i].name) {
                 
                     console.log(smhidata[i]);
-                     _map.updateMap(smhidata[i]);
+                  
+                    updateLocation(i,'t',0);
+                  
                 }
                 }	
 			}; 
 
 			});
 
-			//This function runs when the Stad textfield is highlighted and a key is pressed
-			$("#CitySearch").keypress(function(e){
-				//If the pressed button is enter
-				if(e.which == 13){
 
-				var AdresFalt = $("#CitySearch");
-                
+        function runScript(e) {
+    if (e.keyCode == 13) {
+        var tb = document.getElementById("searchText");
+
+            var AdresFalt = $("#CitySearch");
+                   
                 for(i=0; i<smhidata.length; i++){
-            
+             
                 if(AdresFalt.val() == smhidata[i].name) {
-
-                    _map.updateMap(smhidata);
+                    
+                    updateLocation(i,'t',0);
                 }
-                }   
-                    return false;
-				}
-			}); 
+                }       
+                
+        return false;
+        }
+    }
+
 
         $(window).resize(function() {
             if( $(window).width() < 767 ) {
@@ -149,14 +153,15 @@
                     <h4 class='l_header'></h4>
                 </div>
 
-                <form class="navbar-form navbar-right" id="topBar" role="search">
-                    <div class="form-group" id="searchForm">
-                        <input type="text" class="form-control" placeholder="Sök efter stad" id="CitySearch">
+                       <form class="navbar-form navbar-right" id="topBar" role="search">  
+                        <div class="form-group" id="searchForm">  
+                        <input type="text" class="form-control" placeholder="Sök efter stad" id="CitySearch" onkeypress="return runScript(event)">
                         <button id="SearchBtn" type="button" class="btn btn-success">
-                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-                    </div>
-                </form>
+
+                    </div>    
+               </form>  
             </div>
         </div>
     </nav>
@@ -168,14 +173,14 @@
                     <h3 class='l_header'></h3>
                 </li>
                 <li>
-                    <form class="navbar-form navbar-side" id="sideBar" role="search">
+                <!--    <form class="navbar-form navbar-side" id="sideBar" role="search">-->
                         <!--<div class="form-group">-->
                             <!--<input type="text" class="form-control" placeholder="Stad" id="CitySearch">-->
                             <!--<button id="SearchBtn" type="button" class="btn btn-success">-->
                                 <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span>-->
                             <!--</button>-->
                         <!--</div>-->
-                    </form>
+                  <!--    </form>-->
                 </li>
             </ul>
         </div>
