@@ -47,6 +47,7 @@ define([
     this._markerSource = "";
     this._markerVecLayer = "";
     this._time = 0;
+    this._par = 't';
 
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
@@ -76,6 +77,16 @@ define([
   Map.prototype.updateTime = function(time){
     this._time = time;
     this.updateLayers(this);
+  };
+
+  /**
+   * Updates the maps time
+   * @memberof Map
+   * @method updateTime
+   * @param time
+   */
+  Map.prototype.updatePar = function(par){
+    this._par = par;
   };
 
   /**
@@ -176,13 +187,16 @@ define([
     else if(wdp.pcat == 2) { // Snow and rain
       return "snow and rain";
     }
-    else if(wdp.pcat == 3) {
+    else if(wdp.pcat >= 3) {
       if(wdp.pit > 5) { // Heavy rain
         return "heavy rain";
       }
       else { // Rain
         return "rain";
       }
+    }
+    else{
+      return "midsummer";
     }
   };
 
@@ -195,6 +209,7 @@ define([
     ol.inherits(this.LayerControl, ol.control.Control);
 
     this._map.addLayer(this._cartoDBLight);
+    this._map.addLayer(this._cloudVecLayer);
     this._map.getControls().extend([
       new ol.control.FullScreen()
     ]);
@@ -242,8 +257,7 @@ define([
         var dataObject;
         for(var idx=0; idx < that._data.length; idx++){
             if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-              updateTable(0, idx);
-              updateLocation(idx,'t',0);
+              updateLocation(idx,that._par,that._time);
               dataObject=that._data[idx];
             }
         }
@@ -335,100 +349,28 @@ define([
    * @param that - this
    * @param opt_options
    */
-  Map.prototype.LayerControl = function(that, opt_options) {
+    Map.prototype.LayerControl = function(that, opt_options) {
     var options = opt_options || {};
 
-    // Buttons
     var goToMyLocationBtn = document.createElement('button');
-    var temperatureBtn = document.createElement('button');
-    var rainBtn = document.createElement('button');
-    var cloudBtn = document.createElement('button');
-    var snowBtn = document.createElement('button');
-
-    // http://ionicons.com/
     goToMyLocationBtn.className = 'icon ion-pinpoint';
-    temperatureBtn.className = 'icon ion-thermometer';
-    rainBtn.className = 'icon ion-umbrella';
-    cloudBtn.className = 'icon ion-cloud';
-    snowBtn.className = 'icon ion-ios-snowy';
+
+    // Div containing myLocationBtn
+    var myLocationDiv = document.createElement('div');
+    myLocationDiv.className = 'myLocationDiv ol-unselectable ol-control'
+    myLocationDiv.appendChild(goToMyLocationBtn);
 
     var handleGoToMyLocationBtn = function() {
+      console.log("hej");
       that.updateMap();
     };
 
-    var handleButton = function(button, layer){
-      //remove all layers
-      that._map.removeLayer(that._OWMtempLayer);
-      that._map.removeLayer(that._OWMsnowLayer);
-      that._map.removeLayer(that._cloudVecLayer);
-      that._map.removeLayer(that._OWMrainLayer);
-      //add layer
-      that._map.addLayer(layer);
-
-      //disable all buttons
-      temperatureBtn.disabled = false;
-      temperatureBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      rainBtn.disabled = false;
-      rainBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      cloudBtn.disabled = false;
-      cloudBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-      snowBtn.disabled = false;
-      snowBtn.style.backgroundColor = 'rgba(0,60,136,.5)';
-
-      //enable button
-      button.disabled = true;
-      button.style.backgroundColor = 'gray';
-
-    }
-
-    //Function to handle temperature button
-    var handletemperatureBtn = function() {
-      handleButton(temperatureBtn, that._OWMtempLayer);
-    };
-
-    //Function to handle rain button
-    var handleRainBtn = function() {
-      handleButton(rainBtn, that._OWMrainLayer);
-    };
-
-    var handleCloudBtn = function() {
-      handleButton(cloudBtn, that._cloudVecLayer);
-    };
-
-    var handleSnowBtn = function() {
-      handleButton(snowBtn, that._OWMsnowLayer);
-    };
-
     goToMyLocationBtn.addEventListener('click', handleGoToMyLocationBtn, false);
-    goToMyLocationBtn.addEventListener('click', handleGoToMyLocationBtn, false);
-    temperatureBtn.addEventListener('click', handletemperatureBtn, false);
-    temperatureBtn.addEventListener('touchstart', handletemperatureBtn, false);
-    rainBtn.addEventListener('click', handleRainBtn, false);
-    rainBtn.addEventListener('touchstart', handleRainBtn, false);
-    cloudBtn.addEventListener('click', handleCloudBtn, false);
-    cloudBtn.addEventListener('touchstart', handleCloudBtn, false);
-    snowBtn.addEventListener('click', handleSnowBtn, false);
-    snowBtn.addEventListener('touchstart', handleSnowBtn, false);
-
-    /* Button div */
-    var buttonDiv = document.createElement('div'); //Background div
-    buttonDiv.className = 'map-buttonDiv';
-
-    var buttonContainer = document.createElement('div'); //div containing buttons
-    buttonDiv.appendChild(buttonContainer);
-    buttonContainer.className = 'map-controls';
-    buttonContainer.appendChild(goToMyLocationBtn);
-    buttonContainer.appendChild(temperatureBtn);
-    buttonContainer.appendChild(rainBtn);
-    buttonContainer.appendChild(cloudBtn);
-    buttonContainer.appendChild(snowBtn);
 
     ol.control.Control.call(this, {
-      element: buttonDiv,
+      element: myLocationDiv,
       target: options.target
     });
-
-    handleCloudBtn(); //Set active layer to cloud layer on page load
   };
 
   /**

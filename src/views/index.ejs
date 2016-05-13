@@ -2,7 +2,16 @@
 <html>
 <% include templates/header.ejs %>
 <body>
+    <!-- Loading script -->
+    <script type="text/javascript">
+    $(window).load(function() {
+        setTimeout(function(){
+            $(".loader").fadeOut("slow");
+        }, 1500);
+    })
+    </script>
 	<script>
+
 		//Requirejs is setup
 		requirejs.config({ baseUrl: './javascripts/' });
 
@@ -124,6 +133,11 @@
 
 
 	</script>
+    <div class="loader">
+        <h1>Laddarå</h1>
+    </div>
+
+
     <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -187,8 +201,8 @@
                                             <th id="tableLocation">Ort</th>
                                             <th>Väder</th>
                                             <th>Temperatur</th>
-                                            <th>Nederbörd</th>
                                             <th>Vindhastighet</th>
+                                            <th>Nederbörd</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">

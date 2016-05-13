@@ -81,7 +81,7 @@ define([
 
         playBtn.onclick = function(){
             var currValue = that._slider.getValue();
-            var size = 68;//that._slider.getAttribute("max");  
+            var size = that._slider.getAttribute("max")-2;  
             pauseBtn.style.visibility = 'visible';
             playBtn.style.visibility = 'hidden';
 
@@ -105,7 +105,10 @@ define([
 
                 currValue++;
                 that._slider.setValue(currValue);
+
+                console.log("Update time to " + currValue);
                 updateTime(currValue);
+                _graph.updateTime(currValue);
 
                 that.dateHandler = that.getDate("Gävle", currValue );
                 that.setSliderDate(that.dateHandler);
