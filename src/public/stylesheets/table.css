@@ -33,7 +33,7 @@ td.toggleable{
 }
 
 td.toggleable:hover {
-  background-color: #7eb6e6;
+  background-color: rgba(124,181, 236,0.3);
   cursor: pointer;
 
 }
