@@ -1,6 +1,8 @@
 .table {
   margin:auto;
-}
+  overflow-y:scroll;
+  height:40vh;
+ }
 
 .currentLocation{
   background-color: #3DDF9E;
@@ -11,7 +13,7 @@
 }
 
 .activeRow{
-  background-color: blue;
+  background-color: rgb(124, 181, 236);
 }
 
 #tableBody{

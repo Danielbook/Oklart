@@ -28,9 +28,15 @@ function updateLocation(idx,par,time){
     _graph.initGraph(smhidata, idx, par, time);
     _slider.setSliderValue(time);
     _map.updateTime(time);
+    _map.updatePar(par);
+    _table.updateTimeTable(time,idx);
     _table.highlightColumn(par, time);
 }
 
+function formatGetTime(time){
+    var string = time[11] + time[12] + time[13] + time[14] + time[15];
+    return string;
+}
 
  //Used to calculate the arraySize-nr of cities closest to a position.
 function calculateNear(userLat, userLong){
