@@ -100,7 +100,7 @@
             if (e.keyCode == 13) {
                 var tb = document.getElementById("searchText");
                 var AdresFalt = $("#CitySearch");
-                for(i=0; i<smhidata.length; i++){
+                for(var i=0; i<smhidata.length; i++){
                     if(AdresFalt.val() == smhidata[i].name) {
                             
                         updateLocation(i,'t',0);
