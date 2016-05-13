@@ -50,6 +50,7 @@ body{
 
 #slideBtns{
   padding: 20px;
+
 }
 
 
@@ -146,7 +147,11 @@ body{
 
 .slider{
   width:40vw;
-  margin:auto;
+  margin-left:20px;
+}
+
+#timeOutput{
+  margin-top:15px;
 }
 
 .sliderAndButton{
@@ -158,6 +163,7 @@ body{
 }
 
 /* navbar */
+
 .navbar-custom {
   background-color: #4C97D2;
   padding-left: 20px;
@@ -178,6 +184,9 @@ body{
   border-radius: 4px;
 }
 
+.l_header{
+  font-size: 200%;
+}
 /* title */
 .navbar-custom .navbar-brand {
   color: #ffffff;
