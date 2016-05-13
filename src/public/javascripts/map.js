@@ -453,9 +453,11 @@ define([
       //var FoundExtent = data[0].boundingbox;
       var placemark_lat = data.lat;
       var placemark_lon = data.lon;
-
+      
+      
       this._map.beforeRender(pan);
       this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+
     }
 
     else { // Use my location
