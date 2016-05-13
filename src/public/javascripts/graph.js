@@ -221,10 +221,11 @@ define(['graph'], function (graph) {
       xAxis: {
         categories: TimeArr,
         plotLines: [{
-          color: 'red', // Color value
+          color: '#F5F5F5', // Color value
+          fillOpacity: 0.01,
           dashStyle: 'solid', // Style of the plot line. Default to solid
-          value: timeindex-0.2,
-          width: 2 // Width of the line
+          value: timeindex,
+          width: 50 // Width of the line
         }]
       },
 
@@ -286,7 +287,7 @@ define(['graph'], function (graph) {
 
     console.log(this.options);
 
-    this.options.xAxis.plotLines[0].value = timeIndex-0.2;
+    this.options.xAxis.plotLines[0].value = timeIndex;
     
     this.chart = new Highcharts.Chart(this.options);
 
