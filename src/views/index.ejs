@@ -65,8 +65,36 @@
             });
 
             initApp(user.location, user.weather, user.time);
-			});
 
+            //Autocomplete for the Searchbar
+            var input = document.getElementById('CitySearch');
+            var awesomplete = new Awesomplete(input, {
+                minChars: 1,
+                maxItems: 5,
+                autoFirst: true,
+                filter: Awesomplete.FILTER_STARTSWITH
+            });
+
+            //Saving the name of the cities in an array
+            var list = [];
+                for(i=0; i<smhidata.length; i++) {
+
+                list[i] = smhidata[i].name;
+            }
+
+            awesomplete.list = list;
+
+            //This function runs when the Sök button is clicked
+            document.getElementById("SearchBtn").onclick = function(){
+                var AdresFalt = $("#CitySearch");
+
+                for(var i=0; i<smhidata.length; i++){
+                    if(AdresFalt.val() == smhidata[i].name) {
+                        updateLocation(i,'t',0);
+                    }
+                }   
+            }; 
+		});
 
         function runScript(e) {
             if (e.keyCode == 13) {
