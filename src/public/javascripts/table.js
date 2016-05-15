@@ -159,7 +159,7 @@ define([
       "<td style='width:20%'>" + formatGetTime(this._data[idx].timeseries[i].validTime) + "</td>" +
       "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'</td>" +
       "<td style='width:20%' class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); ><span class='minTemp'>" + this._data[idx].mintimeseries[i].t + "°</span> "+this._data[idx].timeseries[i].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[i].t + "°</span></td>" +
-      "<td style='width:20%' class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
+      "<td style='width:20%' class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].gust + " m/s</td>" +
       "<td style='width:20%' class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >"+this.snowOrRain(this._data[idx].timeseries[i])+"-"+ this._data[idx].maxtimeseries[i].pit +" mm</td>" +
       "<tr>");
     }
