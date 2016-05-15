@@ -187,6 +187,10 @@ body{
 .l_header{
   font-size: 200%;
 }
+
+.t_header{
+  font-size: 200%;
+}
 /* title */
 .navbar-custom .navbar-brand {
   color: #ffffff;
