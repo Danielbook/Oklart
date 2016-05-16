@@ -1,21 +1,24 @@
-.table {
+ .tableHead {
   margin:auto;
-}
+ }
+
+ .tableBody {
+  margin:auto;
+  overflow-y:scroll;
+  overflow-x:hide;
+  height:35vh;
+ }
 
 .currentLocation{
   background-color: #3DDF9E;
 }
 
 .activeCell{
-  background-color: red;
+  background-color: #bdbdbd;
 }
 
 .activeRow{
-  background-color: blue;
-}
-
-#tableBody{
-  overflow: auto;
+  background-color: #eeeeee;
 }
 
 th, td{
@@ -31,17 +34,17 @@ td.toggleable{
 }
 
 td.toggleable:hover {
-  background-color: #d3d3d2;
+  background-color: rgba(124,181, 236,0.3);
   cursor: pointer;
 
 }
 
 .minTemp{
-  color: blue;
+  color: #537FA3;
   font-size:8pt;
 }
 
 .maxTemp{
-  color: red;
+  color: #FC9200;
   font-size:8pt;
 }

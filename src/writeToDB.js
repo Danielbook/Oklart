@@ -106,6 +106,7 @@ function calcMinMax(data, k){
 
 					    res.on('end', function(){
 					    	console.log(sampleurl);
+					    	console.log(body);
 					    	var smhidata = JSON.parse(body);
 
     						for(var j = 0; j < data[idx].timeseries.length ; j++){

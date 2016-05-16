@@ -47,6 +47,7 @@ define([
     this._markerSource = "";
     this._markerVecLayer = "";
     this._time = 0;
+    this._par = 't';
 
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
@@ -76,6 +77,16 @@ define([
   Map.prototype.updateTime = function(time){
     this._time = time;
     this.updateLayers(this);
+  };
+
+  /**
+   * Updates the maps time
+   * @memberof Map
+   * @method updateTime
+   * @param time
+   */
+  Map.prototype.updatePar = function(par){
+    this._par = par;
   };
 
   /**
@@ -176,13 +187,16 @@ define([
     else if(wdp.pcat == 2) { // Snow and rain
       return "snow and rain";
     }
-    else if(wdp.pcat == 3) {
+    else if(wdp.pcat >= 3) {
       if(wdp.pit > 5) { // Heavy rain
         return "heavy rain";
       }
       else { // Rain
         return "rain";
       }
+    }
+    else{
+      return "midsummer";
     }
   };
 
@@ -243,8 +257,7 @@ define([
         var dataObject;
         for(var idx=0; idx < that._data.length; idx++){
             if( String(that._data[idx].name) == String(feature.getStyle().getText().getText())){
-              console.log("Time is: " + that._time);
-              updateLocation(idx,'t',that._time);
+              updateLocation(idx,that._par,that._time);
               dataObject=that._data[idx];
             }
         }
@@ -348,7 +361,6 @@ define([
     myLocationDiv.appendChild(goToMyLocationBtn);
 
     var handleGoToMyLocationBtn = function() {
-      console.log("hej");
       that.updateMap();
     };
 
@@ -440,9 +452,11 @@ define([
       //var FoundExtent = data[0].boundingbox;
       var placemark_lat = data.lat;
       var placemark_lon = data.lon;
-
+      
+      
       this._map.beforeRender(pan);
       this._map.getView().setCenter(ol.proj.transform([Number(placemark_lon), Number(placemark_lat)], 'EPSG:4326', 'EPSG:3857'));
+
     }
 
     else { // Use my location

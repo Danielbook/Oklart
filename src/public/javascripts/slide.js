@@ -16,6 +16,8 @@ define([
         this._data = smhidata;
         //this._sliderId = $("#bootslide");
 
+        this.firstSliderIndex = 0;
+
         this._slider = "";
 
         //This is a time handler. It prints current day and hour for the slider
@@ -40,11 +42,15 @@ define([
 
         this._slider = new Slider("#bootslide", {});
 
+        user.date[0] = this.dateHandler.getHours()+":00"; // sets user.time in index.ejs to current time.
+        user.date[1] = this.dateHandler.getDay();
+
+        this.firstSliderIndex = this.getIndexFromHours();
+
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("dag").innerHTML = this.weekday[this.dateHandler.getUTCDay()];
-
 
 
         var that = this;
@@ -81,17 +87,17 @@ define([
 
         playBtn.onclick = function(){
             var currValue = that._slider.getValue();
-            var size = 68;//that._slider.getAttribute("max");  
+            var size = that._slider.getAttribute("max");  
             pauseBtn.style.visibility = 'visible';
             playBtn.style.visibility = 'hidden';
 
 
             
-            var myVar = setInterval(myTimer, 500);
+            var myVar = setInterval(myTimer, 700);
 
             function myTimer() {
                 //break if end of slider
-                if (currValue >= size){ 
+                if (currValue >= size-1){ 
                     pauseBtn.style.visibility = 'hidden';
                     playBtn.style.visibility = 'visible';            
                     clearInterval(myVar);
@@ -105,7 +111,10 @@ define([
 
                 currValue++;
                 that._slider.setValue(currValue);
+
+                console.log("Update time to " + currValue);
                 updateTime(currValue);
+                _graph.updateTime(currValue);
 
                 that.dateHandler = that.getDate("Gävle", currValue );
                 that.setSliderDate(that.dateHandler);
@@ -119,6 +128,23 @@ define([
             }
         };
     };
+
+    Slide.prototype.getIndexFromHours = function() {
+
+        var index = 0;
+        var tempDate;
+        var currDate = this.dateHandler;
+
+        for( var i = 0; i < 70; i++){
+            tempDate = new Date(this._data[2].timeseries[i].validTime);
+            if(currDate == tempDate){
+                index = i;
+                break;
+            }
+        }
+        console.log("indexet : " + index);
+        return index;
+    }
 
     /**
      * Displays current time from slider values.
@@ -149,7 +175,7 @@ define([
      */
     Slide.prototype.getDate = function(position, timeIndex){
         var pos = position.toLowerCase();
-        var index = timeIndex;
+        var index = timeIndex + this.firstSliderIndex;
         var counter = 0;
 
         for(var i = 0; i < this._data.length; i++) {
