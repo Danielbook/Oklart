@@ -361,7 +361,6 @@ define([
     myLocationDiv.appendChild(goToMyLocationBtn);
 
     var handleGoToMyLocationBtn = function() {
-      console.log("hej");
       that.updateMap();
     };
 
