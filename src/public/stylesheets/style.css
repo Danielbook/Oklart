@@ -4,6 +4,7 @@ body{
 }
 
 .center{
+  padding: 10%;
   margin:auto;
 }
 
@@ -288,7 +289,6 @@ body{
   }
 
   .navbar h4 {
-    margin-top: 15px;
     color:white;
   }
 }
