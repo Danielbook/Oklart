@@ -40,11 +40,11 @@ td.toggleable:hover {
 }
 
 .minTemp{
-  color: blue;
+  color: #537FA3;
   font-size:8pt;
 }
 
 .maxTemp{
-  color: red;
+  color: #FC9200;
   font-size:8pt;
 }
