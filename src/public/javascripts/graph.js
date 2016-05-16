@@ -206,6 +206,9 @@ define(['graph'], function (graph) {
         type: Graphtype,
         renderTo: 'graph_div',
         events: {
+          mouseout: function() {
+            this.chart.tooltip.hide();
+          },
           click: function (e) {
             var index = Math.floor(e.xAxis[0].value + 0.5);
             that.updateTime(index);
