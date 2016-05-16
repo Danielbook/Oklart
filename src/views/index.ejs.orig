@@ -24,8 +24,12 @@
                 gpsLocation:[0,0],
                 location: 10,
                 weather:"t",
+<<<<<<< HEAD
                 time:2,
                 date:[]
+=======
+                time:1
+>>>>>>> a755d2a704076937cc427943f09ac76d144363cf
             };
 		//In this function our javascripts are accesable and instanses of the included objects can be created
 		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
