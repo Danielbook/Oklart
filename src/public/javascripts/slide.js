@@ -42,8 +42,7 @@ define([
 
         this._slider = new Slider("#bootslide", {});
 
-        var userHours = this.dateHandler.getHours()+":00"
-        user.date[0] = userHours; // sets user.time in index.ejs to current time.
+        user.date[0] = this.dateHandler.getHours()+":00"; // sets user.time in index.ejs to current time.
         user.date[1] = this.dateHandler.getDay();
 
         this.firstSliderIndex = this.getIndexFromHours();
@@ -52,7 +51,6 @@ define([
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("dag").innerHTML = this.weekday[this.dateHandler.getUTCDay()];
-
 
 
         var that = this;
@@ -146,7 +144,6 @@ define([
         }
         console.log("indexet : " + index);
         return index;
-
     }
 
     /**
@@ -178,7 +175,7 @@ define([
      */
     Slide.prototype.getDate = function(position, timeIndex){
         var pos = position.toLowerCase();
-        var index = timeIndex;
+        var index = timeIndex + this.firstSliderIndex;
         var counter = 0;
 
         for(var i = 0; i < this._data.length; i++) {
