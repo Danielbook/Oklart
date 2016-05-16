@@ -132,38 +132,110 @@ define([
    * @memberof Table
    * @function drawTable
    */
-  Table.prototype.drawTable = function(time, l) {
-    console.log("Draw table with indicies: " + l);
+  //Table.prototype.drawTable = function(time, l) {
+  //  console.log("Draw table with indicies: " + l);
+  //
+  //  for(var idx = 0; idx < l.length; idx++) {
+  //    $('#tableBody').append("<tr>" +
+  //      "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
+  //      "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
+  //      "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
+  //      "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
+  //      "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
+  //      "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
+  //      "</tr>");
+  //    if(this._data[l[idx]].name === this._currentLocation){
+  //      $(".location").addClass("currentLocation");
+  //    }
+  //  }
+  //};
 
-    for(var idx = 0; idx < l.length; idx++) {
-      $('#tableBody').append("<tr>" +
-        "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
-        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
-        "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
-        "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
-        "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
-        "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
-        "</tr>");
-      if(this._data[l[idx]].name === this._currentLocation){
-        $(".location").addClass("currentLocation");
-      }
-    }
-  };
-
+  /**
+   * Function to draw the table
+   * @memberof Table
+   * @function drawTimeTable
+   * @param time
+   * @param idx
+   */
   Table.prototype.drawTimeTable = function(time, idx) {
     var timespan = 24;
 
     for(var i = 0; i < timespan; i++){
       $('#tableBody').append("<tr>" +
       "<td>" + this._data[idx].timeseries[i].validTime + "</td>" +
-      "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'</td>" +
+      "<td>" + this.setDynamicIcon(this._data[idx].timeseries[i]) + "</td>" +
       "<td class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); >" + this._data[idx].timeseries[i].t + "</td>" +
-      "<td class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
-      "<td class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >" + this._data[idx].timeseries[i].pit + "</td>" +
+      "<td class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].pit + "</td>" +
+      "<td class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
       "<tr>");
     }
-  }
+  };
 
+  Table.prototype.setDynamicIcon = function(timeSeriesObject) {
+    //<img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'
+    var cloudCoverage = this.cloudCoverage(timeSeriesObject);
+    var rainIntensity = this.rainIntensity(timeSeriesObject);
+
+    return "<div style='position: relative;'> " +
+      "<img src='images/dynamic_icons/cloud/"+cloudCoverage+".png' style='height:40px; position: relative; top: 0; left: 0;'/> " +
+      "<img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='position: absolute; top: 0; left: 0;'/> " +
+    "</div>"
+
+  };
+
+  /**
+   * Function for cloud coverage, used in drawTimeTable
+   * @memberof Table
+   * @function cloudCoverage
+   * @param timeSeriesObject
+   * @returns {string} - src to correct image
+   */
+  Table.prototype.cloudCoverage = function(timeSeriesObject){
+    var cloudCoverage = timeSeriesObject.tcc;
+    if(cloudCoverage >= 8) { // total cloud coverage
+      return "total_cloud";
+    }
+    else if(cloudCoverage >= 6) { // heavy cloud coverage
+      return "heavy_cloud";
+    }
+    else if(cloudCoverage >= 4) { // medium cloud coverage
+      return "medium_cloud";
+    }
+    else if(cloudCoverage >= 1) { // medium cloud coverage
+      return "small_cloud";
+    }
+    return "no_cloud"; // Sunny
+  };
+
+  /**
+   * Function for rain coverage, used in drawTimeTable
+   * @memberof Table
+   * @function rainCoverage
+   * @param timeSeriesObject
+   * @returns {string} - src to correct image
+   */
+  Table.prototype.rainIntensity = function(timeSeriesObject){
+    var rainIntensity = timeSeriesObject.pit;
+    console.log(timeSeriesObject);
+    if(rainIntensity > 10) {
+      return "heavy_rain";
+    }
+    else if(rainIntensity > 2) {
+      return "medium_rain";
+    }
+    else if(rainIntensity > 0) {
+      return "small_rain";
+    }
+    return "no_rain";
+  };
+
+  /**
+   * Function to highlight columns in table
+   * @memberof Table
+   * @function highlightColumn
+   * @param par
+   * @param idx
+   */
   Table.prototype.highlightColumn = function(par, idx){
     $(".toggleable").removeClass( "activeRow" );
     $("." + par).addClass( "activeRow" );
@@ -171,7 +243,7 @@ define([
 
     $(".toggleable").removeClass( "activeCell" );
     $(".row"+ idx + "par" + par).addClass( "activeCell" );
-  }
+  };
 
   Table.prototype.updateTable = function(time, l) {
     $('#tableBody').html("");
