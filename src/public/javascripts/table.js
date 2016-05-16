@@ -165,8 +165,8 @@ define([
       "<td>" + this._data[idx].timeseries[i].validTime + "</td>" +
       "<td>" + this.setDynamicIcon(this._data[idx].timeseries[i]) + "</td>" +
       "<td class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); >" + this._data[idx].timeseries[i].t + "</td>" +
-      "<td class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].pit + "</td>" +
-      "<td class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
+      "<td class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].gust + "</td>" +
+      "<td class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >" + this._data[idx].timeseries[i].pit + "</td>" +
       "<tr>");
     }
   };
@@ -216,7 +216,6 @@ define([
    */
   Table.prototype.rainIntensity = function(timeSeriesObject){
     var rainIntensity = timeSeriesObject.pit;
-    console.log(timeSeriesObject);
     if(rainIntensity > 10) {
       return "heavy_rain";
     }
