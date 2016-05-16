@@ -93,6 +93,10 @@
                         updateLocation(i,'t',0);
                     }
                 }   
+
+                //remove popup
+                var element = document.getElementById('popup');
+                $(element).popover('destroy');
             }; 
 		});
 
@@ -105,7 +109,11 @@
                             
                         updateLocation(i,'t',0);
                     }
-                }                               
+                }    
+                //remove popup
+                var element = document.getElementById('popup');
+                $(element).popover('destroy');  
+                                         
             return false;
             }
         }
