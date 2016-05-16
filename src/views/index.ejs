@@ -22,9 +22,9 @@
 
         var user = {
                 gpsLocation:[0,0],
-                location: 0,
+                location: 10,
                 weather:"t",
-                time:2
+                time:1
             };
 		//In this function our javascripts are accesable and instanses of the included objects can be created
 		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
@@ -247,8 +247,8 @@
                                 
                                 <div class = "col-xs-11">
                                      <input id="bootslide" type="text" class="slider"
-                                             data-slider-min="1"
-                                             data-slider-max="22"
+                                             data-slider-min="0"
+                                             data-slider-max="23"
                                              data-slider-step="1"
                                              data-slider-value="1"
                                              data-slider-handle="square"
