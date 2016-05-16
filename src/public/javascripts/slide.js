@@ -16,6 +16,8 @@ define([
         this._data = smhidata;
         //this._sliderId = $("#bootslide");
 
+        this.firstSliderIndex = 0;
+
         this._slider = "";
 
         //This is a time handler. It prints current day and hour for the slider
@@ -39,6 +41,12 @@ define([
     Slide.prototype.initSlider = function(timeindex){
 
         this._slider = new Slider("#bootslide", {});
+
+        var userHours = this.dateHandler.getHours()+":00"
+        user.date[0] = userHours; // sets user.time in index.ejs to current time.
+        user.date[1] = this.dateHandler.getDay();
+
+        this.firstSliderIndex = this.getIndexFromHours();
 
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
@@ -122,6 +130,24 @@ define([
             }
         };
     };
+
+    Slide.prototype.getIndexFromHours = function() {
+
+        var index = 0;
+        var tempDate;
+        var currDate = this.dateHandler;
+
+        for( var i = 0; i < 70; i++){
+            tempDate = new Date(this._data[2].timeseries[i].validTime);
+            if(currDate == tempDate){
+                index = i;
+                break;
+            }
+        }
+        console.log("indexet : " + index);
+        return index;
+
+    }
 
     /**
      * Displays current time from slider values.

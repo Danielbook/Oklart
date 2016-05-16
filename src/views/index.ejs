@@ -24,7 +24,8 @@
                 gpsLocation:[0,0],
                 location: 0,
                 weather:"t",
-                time:2
+                time:2,
+                date:[]
             };
 		//In this function our javascripts are accesable and instanses of the included objects can be created
 		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
@@ -40,7 +41,7 @@
 
             _graph.initGraph(smhidata, user.location, user.weather, user.time);
 			_map.initMap(user);
-            _slider.initSlider(user.time);
+            _slider.initSlider(user.date);
 
 
             $( document ).ready(function() {
