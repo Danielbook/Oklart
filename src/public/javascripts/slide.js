@@ -91,7 +91,7 @@ define([
 
             function myTimer() {
                 //break if end of slider
-                if (currValue >= size){ 
+                if (currValue >= size-1){ 
                     pauseBtn.style.visibility = 'hidden';
                     playBtn.style.visibility = 'visible';            
                     clearInterval(myVar);
