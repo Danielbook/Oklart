@@ -25,6 +25,7 @@ function updateLocation(idx,par,time){
     $("#tableLocation").html(smhidata[idx].name);
     $(".l_header").html(smhidata[idx].name);
     $(".t_header").html(formatGetTime(smhidata[idx].timeseries[time+13].validTime));
+    $("#CitySearch").attr("placeholder", smhidata[idx].name);
 
     //Update components
     _graph.initGraph(smhidata, idx, par, time);

@@ -20,9 +20,7 @@
         var _slider;
         var smhidata;
 
-        var d = new Date(); // for now
-        console.log( d.getHours() ); // => 9
-        console.log()
+        var d = new Date(); // The time right now
 
         var user = {
                 gpsLocation:[0,0],
@@ -112,7 +110,7 @@
                 for(var i=0; i<smhidata.length; i++){
                     if(AdresFalt.val() == smhidata[i].name) {
                             
-                        updateLocation(i,'t',0);
+                        updateLocation(i,'t',d.getHours());
                     }
                 }    
                 //remove popup
@@ -178,15 +176,14 @@
                     <h4 class='t_header'>14:00</h4>
                 </div>
 
-                       <form class="navbar-form navbar-right" id="topBar" role="search">  
-                        <div class="form-group" id="searchForm">  
-                        <input type="text" class="form-control" placeholder="Sök efter stad" id="CitySearch" onkeypress="return runScript(event)">
+                <form class="navbar-form navbar-right" id="topBar" role="search">  
+                    <div class="form-group" id="searchForm">  
+                        <input type="text" class="form-control" placeholder="" id="CitySearch" onkeypress="return runScript(event)"/>
                         <button id="SearchBtn" type="button" class="btn btn-success">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-
                     </div>    
-               </form>  
+                </form>  
             </div>
         </div>
     </nav>
