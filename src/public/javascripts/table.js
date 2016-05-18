@@ -173,7 +173,7 @@ define([
 
     var tableIcons = "<div class='row'>";
 
-    if(maxTimeSeriesObject.pit > 0) {
+    if(timeSeriesObject.pit == 0 && maxTimeSeriesObject.pit > 0) {
       tableIcons += "<div class='row'><div class='col-xs-offset-5'><img id='rainDrop' src='images/dynamic_icons/rain/raindrop.png' style='height:20px;'/></div></div>";
     }
 
