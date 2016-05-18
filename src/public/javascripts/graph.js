@@ -102,7 +102,7 @@ define(['graph'], function (graph) {
     //var par = 'gust';
 
     //i up to how many hours we want to display. ~48 is max then it looks bad.
-    for(var i = 0; i < 24; i++){
+    for(var i = 13; i < 37; i++){
       var data = smhidata[locationindex].timeseries[i];
       var min = smhidata[locationindex].mintimeseries[i];
       var max = smhidata[locationindex].maxtimeseries[i];

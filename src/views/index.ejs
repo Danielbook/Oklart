@@ -20,11 +20,15 @@
         var _slider;
         var smhidata;
 
+        var d = new Date(); // for now
+        console.log( d.getHours() ); // => 9
+        console.log()
+
         var user = {
                 gpsLocation:[0,0],
                 location: 10,
                 weather:"t",
-                time:0,
+                time:d.getHours(),
                 date:[]
             };
 		//In this function our javascripts are accesable and instanses of the included objects can be created

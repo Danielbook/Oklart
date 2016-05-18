@@ -185,7 +185,7 @@ define([
             counter += 1;
         }
         //Creates a specified Date with correct City and time index
-        var temp = this._data[counter].timeseries[index].validTime;
+        var temp = this._data[counter].timeseries[index+13].validTime;
         var date = new Date(temp);
 
         //Specified date-array: specDate[hour, day];
