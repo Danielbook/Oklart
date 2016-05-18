@@ -168,10 +168,12 @@ define([
     //<img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'
     var cloudCoverage = this.cloudCoverage(timeSeriesObject);
     var rainIntensity = this.rainIntensity(timeSeriesObject);
+    var windIntensity = this.windIntensity(timeSeriesObject);
 
-    return "<div style='position: relative;'> " +
-      "<img src='images/dynamic_icons/cloud/"+cloudCoverage+".png' style='height:40px; position: relative; top: 0; left: 0;'/> " +
-      "<img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='position: absolute; top: 40px; left: 25px;'/> " +
+    return "<div> " +
+      "<div class='row'><img src='images/dynamic_icons/cloud/"+cloudCoverage+".png'/></div> " +
+      "<div class='row'><img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='margin-top:-70px;'/></div> " +
+      "<div class='row'><img src='images/dynamic_icons/wind/"+windIntensity+".png' style='margin-top:-90px; margin-left:-10px;'/></div> " +
     "</div>"
 
   };
@@ -201,24 +203,43 @@ define([
   };
 
   /**
-   * Function for rain coverage, used in drawTimeTable
+   * Function for rain intensity, used in drawTimeTable
    * @memberof Table
-   * @function rainCoverage
+   * @function rainIntensity
    * @param timeSeriesObject
    * @returns {string} - src to correct image
    */
   Table.prototype.rainIntensity = function(timeSeriesObject){
     var rainIntensity = timeSeriesObject.pit;
-    if(rainIntensity > 10) {
+    if(rainIntensity > 5) {
       return "heavy_rain";
     }
-    else if(rainIntensity > 2) {
+    else if(rainIntensity > 0.5) {
       return "medium_rain";
     }
     else if(rainIntensity > 0) {
       return "small_rain";
     }
     return "no_rain";
+  };
+
+ /**
+   * Function for wind intensity, used in drawTimeTable
+   * @memberof Table
+   * @function windIntensity
+   * @param timeSeriesObject
+   * @returns {string} - src to correct image
+   */
+  Table.prototype.windIntensity = function(timeSeriesObject){
+    var windIntensity = timeSeriesObject.gust;
+    console.log(windIntensity);
+    if(windIntensity > 8) {
+      return "large_wind";
+    }
+    else if(windIntensity > 3.4) {
+      return "small_wind";
+    }
+    return "no_wind";
   };
 
   /**
