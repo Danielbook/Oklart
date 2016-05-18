@@ -251,8 +251,7 @@ define([
    */
   Table.prototype.windIntensity = function(timeSeriesObject){
     var windIntensity = timeSeriesObject.gust;
-    console.log(windIntensity);
-    if(windIntensity > 8) {
+      if(windIntensity > 8) {
       return "large_wind";
     }
     else if(windIntensity > 3.4) {
