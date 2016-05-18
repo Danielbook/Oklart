@@ -21,6 +21,25 @@
   background-color: #eeeeee;
 }
 
+@-webkit-keyframes blinkin {
+ 0%   { opacity: 0.5; }
+ 100% { opacity: 1; }
+}
+@-moz-keyframes blinkin  {
+ 0%   { opacity: 0.5; }
+ 100% { opacity: 1; }
+}
+@-ms-keyframes blinkin  {
+ 0%   { opacity: 0.5; }
+ 100% { opacity: 1; }
+}
+
+#rainDrop{
+ -webkit-animation: blinkin 0.5s alternate infinite;
+ -moz-animation: blinkin 0.5s alternate infinite;
+ -ms-animation: blinkin 0.5s alternate infinite;
+}
+
 th, td{
   text-align: center;
 }

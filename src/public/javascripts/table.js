@@ -154,10 +154,10 @@ define([
     var timestart = 24;
     var timespan = 24;
 
-    for(var i = 0; i < timespan; i++){
+    for(var i = 0; i < timespan; i++) {
       $('#tableBody').append("<tr>" +
       "<td style='width:20%'>" + formatGetTime(this._data[idx].timeseries[i+13].validTime) + "</td>" +
-      "<td>"+this.setDynamicIcon(this._data[idx].timeseries[i+13])+"</td>" +
+      "<td>"+this.setDynamicIcon(this._data[idx].timeseries[i+13], this._data[idx].maxtimeseries[i+13])+"</td>" +
       "<td style='width:20%' class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); ><span class='minTemp'>" + this._data[idx].mintimeseries[i+13].t + "°</span> "+this._data[idx].timeseries[i+13].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[i+13].t + "°</span></td>" +
       "<td style='width:20%' class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i+13].gust + " m/s</td>" +
       "<td style='width:20%' class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >"+this.snowOrRain(this._data[idx].timeseries[i+13])+"-"+ this._data[idx].maxtimeseries[i+13].pit +" mm</td>" +
@@ -165,17 +165,24 @@ define([
     }
   };
 
-  Table.prototype.setDynamicIcon = function(timeSeriesObject) {
+  Table.prototype.setDynamicIcon = function(timeSeriesObject, maxTimeSeriesObject) {
     //<img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'
     var cloudCoverage = this.cloudCoverage(timeSeriesObject);
     var rainIntensity = this.rainIntensity(timeSeriesObject);
     var windIntensity = this.windIntensity(timeSeriesObject);
 
-    return "<div> " +
-      "<div class='row'><img src='images/dynamic_icons/cloud/"+cloudCoverage+".png'/></div> " +
+    var tableIcons = "<div class='row'>";
+
+    if(maxTimeSeriesObject.pit > 0) {
+      tableIcons += "<div class='row'><div class='col-xs-offset-5'><img id='rainDrop' src='images/dynamic_icons/rain/raindrop.png' style='height:20px;'/></div></div>";
+    }
+
+    tableIcons += "<div class='row'><img src='images/dynamic_icons/cloud/"+cloudCoverage+".png'/></div> " +
       "<div class='row'><img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='margin-top:-70px;'/></div> " +
       "<div class='row'><img src='images/dynamic_icons/wind/"+windIntensity+".png' style='margin-top:-90px; margin-left:-10px;'/></div> " +
-    "</div>"
+    "</div>";
+
+    return tableIcons
 
   };
 
