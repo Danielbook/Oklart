@@ -127,29 +127,34 @@ define([
     newLocation.addClass("currentLocation");
   };
 
+  ///**
+  // * Function to draw the table
+  // * @memberof Table
+  // * @function drawTable
+  // */
+  //Table.prototype.drawTable = function(time, l) {
+  //  console.log("Draw table with indicies: " + l);
+  //
+  //  for(var idx = 0; idx < l.length; idx++) {
+  //    $('#tableBody').append("<tr>" +
+  //      "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
+  //      "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
+  //      "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
+  //      "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
+  //      "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
+  //      "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
+  //      "</tr>");
+  //    if(this._data[l[idx]].name === this._currentLocation){
+  //      $(".location").addClass("currentLocation");
+  //    }
+  //  }
+  //};
+
   /**
    * Function to draw the table
    * @memberof Table
-   * @function drawTable
+   * @function drawTimeTable
    */
-  Table.prototype.drawTable = function(time, l) {
-    console.log("Draw table with indicies: " + l);
-
-    for(var idx = 0; idx < l.length; idx++) {
-      $('#tableBody').append("<tr>" +
-        "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
-        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
-        "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
-        "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
-        "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
-        "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
-        "</tr>");
-      if(this._data[l[idx]].name === this._currentLocation){
-        $(".location").addClass("currentLocation");
-      }
-    }
-  };
-
   Table.prototype.drawTimeTable = function(time, idx) {
     var timestart = 24;
     var timespan = 24;
@@ -165,8 +170,15 @@ define([
     }
   };
 
+  /**
+   * Function to set the dynamic icon
+   * @memberof Table
+   * @function setDynamicIcon
+   * @param timeSeriesObject - timeseries object
+   * @param maxTimeSeriesObject - mxtimeseries object
+   * @returns {string} - returns the correct image for the table
+   */
   Table.prototype.setDynamicIcon = function(timeSeriesObject, maxTimeSeriesObject) {
-    //<img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i])+".png'
     var cloudCoverage = this.cloudCoverage(timeSeriesObject);
     var rainIntensity = this.rainIntensity(timeSeriesObject);
     var windIntensity = this.windIntensity(timeSeriesObject);
@@ -183,7 +195,6 @@ define([
     "</div>";
 
     return tableIcons
-
   };
 
   /**
