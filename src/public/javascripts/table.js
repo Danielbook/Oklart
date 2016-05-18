@@ -127,29 +127,34 @@ define([
     newLocation.addClass("currentLocation");
   };
 
+  ///**
+  // * Function to draw the table
+  // * @memberof Table
+  // * @function drawTable
+  // */
+  //Table.prototype.drawTable = function(time, l) {
+  //  console.log("Draw table with indicies: " + l);
+  //
+  //  for(var idx = 0; idx < l.length; idx++) {
+  //    $('#tableBody').append("<tr>" +
+  //      "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
+  //      "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
+  //      "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
+  //      "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
+  //      "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
+  //      "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
+  //      "</tr>");
+  //    if(this._data[l[idx]].name === this._currentLocation){
+  //      $(".location").addClass("currentLocation");
+  //    }
+  //  }
+  //};
+
   /**
    * Function to draw the table
    * @memberof Table
-   * @function drawTable
+   * @function drawTimeTable
    */
-  Table.prototype.drawTable = function(time, l) {
-    console.log("Draw table with indicies: " + l);
-
-    for(var idx = 0; idx < l.length; idx++) {
-      $('#tableBody').append("<tr>" +
-        "<td id="+l[idx]+" class='location'>"+this._data[l[idx]].name+"</td>" + // Ort
-        "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[l[idx]].timeseries[time])+".png'</td>" + // Väder
-        "<td id="+l[idx]+"t onclick= updateLocation("+l[idx]+",'t',"+time+") class='toggleable'><span class='minTemp'>" + this._data[l[idx]].mintimeseries[time].t + "°</span> "+this._data[l[idx]].timeseries[time].t+"° <span class='maxTemp'>" + this._data[l[idx]].maxtimeseries[time].t + "°</span></td>" + // Temperatur
-        "<td id="+l[idx]+"pit onclick= updateLocation("+l[idx]+",'pit',"+time+") class='toggleable'>"+this.snowOrRain(this._data[l[idx]].timeseries[time])+"-"+ this._data[l[idx]].maxtimeseries[time].pit +" mm</td>" + // Nederbörd
-        "<td id="+l[idx]+"gust onclick= updateLocation("+l[idx]+",'gust',"+time+") class='toggleable'>"+this._data[l[idx]].timeseries[time].gust+" m/s " +
-        "<span style='-ms-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); -webkit-transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg); transform:rotate("+this._data[l[idx]].timeseries[time].wd+"deg)' class='glyphicon glyphicon glyphicon-arrow-right' aria-hidden='true'></span></td>" + // Vindhastighet
-        "</tr>");
-      if(this._data[l[idx]].name === this._currentLocation){
-        $(".location").addClass("currentLocation");
-      }
-    }
-  };
-
   Table.prototype.drawTimeTable = function(time, idx) {
     var timestart = 24;
     var timespan = 24;
@@ -160,13 +165,64 @@ define([
     for(var i = 0; i < timespan; i++){
       $('#tableBody').append("<tr>" +
       "<td style='width:20%'>" + formatGetTime(this._data[idx].timeseries[i+13].validTime) + "</td>" +
-      "<td><img style='height:30px' src='images/icons/"+this.weatherType(this._data[idx].timeseries[i+13])+".png'</td>" +
+      "<td>"+this.setDynamicIcon(this._data[idx].timeseries[i+13], this._data[idx].maxtimeseries[i+13])+"</td>" +
       "<td style='width:20%' class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); ><span class='minTemp'>" + this._data[idx].mintimeseries[i+13].t + "°</span> "+this._data[idx].timeseries[i+13].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[i+13].t + "°</span></td>" +
       "<td style='width:20%' class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i+13].gust + " m/s</td>" +
       "<td style='width:20%' class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >"+this.snowOrRain(this._data[idx].timeseries[i+13])+"-"+ this._data[idx].maxtimeseries[i+13].pit +" mm</td>" +
       "<tr>");
     }
-  }
+  };
+
+  /**
+   * Function to set the dynamic icon
+   * @memberof Table
+   * @function setDynamicIcon
+   * @param timeSeriesObject - timeseries object
+   * @param maxTimeSeriesObject - mxtimeseries object
+   * @returns {string} - returns the correct image for the table
+   */
+  Table.prototype.setDynamicIcon = function(timeSeriesObject, maxTimeSeriesObject) {
+    var cloudCoverage = this.cloudCoverage(timeSeriesObject);
+    var rainIntensity = this.rainIntensity(timeSeriesObject);
+    var windIntensity = this.windIntensity(timeSeriesObject);
+
+    var tableIcons = "<div class='row'>";
+
+    if(timeSeriesObject.pit == 0 && maxTimeSeriesObject.pit > 0) {
+      tableIcons += "<div class='row'><div class='col-xs-offset-5'><img id='rainDrop' src='images/dynamic_icons/rain/raindrop.png' style='height:20px;'/></div></div>";
+    }
+
+    tableIcons += "<div class='icon'><img src='images/dynamic_icons/cloud/"+cloudCoverage+".png'/></div> " +
+      "<div class='icon'><img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='margin-top:-70px;'/></div> " +
+      "<div class='icon'><img src='images/dynamic_icons/wind/"+windIntensity+".png' style='margin-top:-90px; margin-left:-10px;'/></div> " +
+    "</div>";
+
+    return tableIcons
+  };
+
+  /**
+   * Function for cloud coverage, used in drawTimeTable
+   * @memberof Table
+   * @function cloudCoverage
+   * @param timeSeriesObject
+   * @returns {string} - src to correct image
+   */
+  Table.prototype.cloudCoverage = function(timeSeriesObject){
+    var cloudCoverage = timeSeriesObject.tcc;
+    if(cloudCoverage >= 8) { // total cloud coverage
+      return "total_cloud";
+    }
+    else if(cloudCoverage >= 6) { // heavy cloud coverage
+      return "heavy_cloud";
+    }
+    else if(cloudCoverage >= 4) { // medium cloud coverage
+      return "medium_cloud";
+    }
+    else if(cloudCoverage >= 1) { // medium cloud coverage
+      return "small_cloud";
+    }
+    return "no_cloud"; // Sunny
+  };
 
   function clearHeaderListener(){
     $('#pit_header').off('click');
@@ -199,6 +255,52 @@ define([
     $('#pit_header').removeClass('activeHeader');
   }
 
+  /**
+   * Function for rain intensity, used in drawTimeTable
+   * @memberof Table
+   * @function rainIntensity
+   * @param timeSeriesObject
+   * @returns {string} - src to correct image
+   */
+  Table.prototype.rainIntensity = function(timeSeriesObject){
+    var rainIntensity = timeSeriesObject.pit;
+    if(rainIntensity > 5) {
+      return "heavy_rain";
+    }
+    else if(rainIntensity > 0.5) {
+      return "medium_rain";
+    }
+    else if(rainIntensity > 0) {
+      return "small_rain";
+    }
+    return "no_rain";
+  };
+
+ /**
+   * Function for wind intensity, used in drawTimeTable
+   * @memberof Table
+   * @function windIntensity
+   * @param timeSeriesObject
+   * @returns {string} - src to correct image
+   */
+  Table.prototype.windIntensity = function(timeSeriesObject){
+    var windIntensity = timeSeriesObject.gust;
+      if(windIntensity > 8) {
+      return "large_wind";
+    }
+    else if(windIntensity > 3.4) {
+      return "small_wind";
+    }
+    return "no_wind";
+  };
+
+  /**
+   * Function to highlight columns in table
+   * @memberof Table
+   * @function highlightColumn
+   * @param par
+   * @param idx
+   */
   Table.prototype.highlightColumn = function(par, idx){
     $('#'+par+'_header').addClass('activeHeader');
     
@@ -208,7 +310,7 @@ define([
 
     $(".toggleable").removeClass( "activeCell" );
     $(".row"+ idx + "par" + par).addClass( "activeCell" );
-  }
+  };
 
   Table.prototype.updateTable = function(time, l) {
     $('#tableBody').html("");
