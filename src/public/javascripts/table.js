@@ -151,15 +151,16 @@ define([
   };
 
   Table.prototype.drawTimeTable = function(time, idx) {
+    var timestart = 24;
     var timespan = 24;
 
     for(var i = 0; i < timespan; i++){
       $('#tableBody').append("<tr>" +
-      "<td style='width:20%'>" + formatGetTime(this._data[idx].timeseries[i].validTime) + "</td>" +
-      "<td>"+this.setDynamicIcon(this._data[idx].timeseries[i])+"</td>" +
-      "<td style='width:20%' class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); ><span class='minTemp'>" + this._data[idx].mintimeseries[i].t + "°</span> "+this._data[idx].timeseries[i].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[i].t + "°</span></td>" +
-      "<td style='width:20%' class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i].gust + " m/s</td>" +
-      "<td style='width:20%' class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >"+this.snowOrRain(this._data[idx].timeseries[i])+"-"+ this._data[idx].maxtimeseries[i].pit +" mm</td>" +
+      "<td style='width:20%'>" + formatGetTime(this._data[idx].timeseries[i+13].validTime) + "</td>" +
+      "<td>"+this.setDynamicIcon(this._data[idx].timeseries[i+13])+"</td>" +
+      "<td style='width:20%' class='toggleable t row"+i+"part' onclick=updateLocation("+idx+",'t',"+i+");_table.highlightColumn('t',"+i+"); ><span class='minTemp'>" + this._data[idx].mintimeseries[i+13].t + "°</span> "+this._data[idx].timeseries[i+13].t+"° <span class='maxTemp'>" + this._data[idx].maxtimeseries[i+13].t + "°</span></td>" +
+      "<td style='width:20%' class='toggleable gust row"+i+"pargust' onclick=updateLocation("+idx+",'gust',"+i+");_table.highlightColumn('gust',"+i+"); >" + this._data[idx].timeseries[i+13].gust + " m/s</td>" +
+      "<td style='width:20%' class='toggleable pit row"+i+"parpit' onclick=updateLocation("+idx+",'pit',"+i+");_table.highlightColumn('pit',"+i+"); >"+this.snowOrRain(this._data[idx].timeseries[i+13])+"-"+ this._data[idx].maxtimeseries[i+13].pit +" mm</td>" +
       "<tr>");
     }
   };
