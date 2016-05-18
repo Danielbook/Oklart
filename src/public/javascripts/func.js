@@ -9,7 +9,7 @@ function updateTime(time){
     user.time = time;
     _slider.setSliderValue(time);
     _map.updateTime(time);
-    $(".t_header").html(formatGetTime(smhidata[0].timeseries[time].validTime));
+    $(".t_header").html(formatGetTime(smhidata[0].timeseries[time+13].validTime));
 }
 
 function updateTable(time, idx){
@@ -24,7 +24,8 @@ function updateLocation(idx,par,time){
     //Update header
     $("#tableLocation").html(smhidata[idx].name);
     $(".l_header").html(smhidata[idx].name);
-    $(".t_header").html(formatGetTime(smhidata[idx].timeseries[time].validTime));
+    $(".t_header").html(formatGetTime(smhidata[idx].timeseries[time+13].validTime));
+    $("#CitySearch").attr("placeholder", smhidata[idx].name);
 
     //Update components
     _graph.initGraph(smhidata, idx, par, time);

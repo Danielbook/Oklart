@@ -21,6 +21,15 @@
   background-color: #eeeeee;
 }
 
+.header:hover{
+  cursor: pointer;
+  color: rgba(71, 152, 220, 0.4);;
+}
+
+.activeHeader{
+  color:rgb(71, 152, 220);
+}
+
 th, td{
   text-align: center;
 }

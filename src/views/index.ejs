@@ -20,11 +20,14 @@
         var _slider;
         var smhidata;
 
+        var d = new Date(); // The time right now
+
         var user = {
                 gpsLocation:[0,0],
-                location: 0,
+                location: 10,
                 weather:"t",
-                time:2
+                time:d.getHours(),
+                date:[]
             };
 		//In this function our javascripts are accesable and instanses of the included objects can be created
 		requirejs(['table', 'graph', 'map', 'slide'], function (Table, Graph, Map, Slide) {
@@ -40,7 +43,7 @@
 
             _graph.initGraph(smhidata, user.location, user.weather, user.time);
 			_map.initMap(user);
-            _slider.initSlider(user.time);
+            _slider.initSlider(user.date);
 
 
             $( document ).ready(function() {
@@ -107,7 +110,7 @@
                 for(var i=0; i<smhidata.length; i++){
                     if(AdresFalt.val() == smhidata[i].name) {
                             
-                        updateLocation(i,'t',0);
+                        updateLocation(i,'t',d.getHours());
                     }
                 }    
                 //remove popup
@@ -173,15 +176,14 @@
                     <h4 class='t_header'>14:00</h4>
                 </div>
 
-                       <form class="navbar-form navbar-right" id="topBar" role="search">  
-                        <div class="form-group" id="searchForm">  
-                        <input type="text" class="form-control" placeholder="Sök efter stad" id="CitySearch" onkeypress="return runScript(event)">
+                <form class="navbar-form navbar-right" id="topBar" role="search">  
+                    <div class="form-group" id="searchForm">  
+                        <input type="text" class="form-control" placeholder="" id="CitySearch" onkeypress="return runScript(event)"/>
                         <button id="SearchBtn" type="button" class="btn btn-success">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
-
                     </div>    
-               </form>  
+                </form>  
             </div>
         </div>
     </nav>
@@ -217,12 +219,12 @@
                             <div id="table_div table-responsive" class="table pageElement">
                                 <table class="table tableHead">
                                     <tr>
-                                        <th style="width:20%" id="tableLocation">Ort</th>
-                                        <th style="width:20%">Väder</th>
-                                        <th style="width:20%">Temperatur</th>
-                                        <th style="width:20%">Byvind</th>
-                                        <th style="width:20%">Nederbörd</th>
-                                        <th style="width:3px"></th>
+                                        <th class="header" style="width:20%" id="tableLocation">Ort</th>
+                                        <th class="header" style="width:20%">Väder</th>
+                                        <th class="header" style="width:20%" id="t_header">Temperatur</th>
+                                        <th class="header" style="width:20%" id="gust_header">Byvind</th>
+                                        <th class="header" style="width:20%" id="pit_header">Nederbörd</th>
+                                        <th class="header" style="width:3px"></th>
                                     </tr>
                                 </table>
                                 <hr style="margin-top:0; margin-bottom:0;">
@@ -247,20 +249,22 @@
                                 
                                 <div class = "col-xs-11">
                                      <input id="bootslide" type="text" class="slider"
-                                             data-slider-min="1"
-                                             data-slider-max="22"
+                                             data-slider-min="0"
+                                             data-slider-max="23"
                                              data-slider-step="1"
                                              data-slider-value="1"
                                              data-slider-handle="square"
+                                             data-slider-tooltip="hide"
                                              data-slider-tooltip-position="bottom"
                                       />
                                 </div>
                             </div>
-                            <div id="timeOutput">
-                                <output id="tid"></output>
+                            <div id="timeOutput" style="display:inline-block;width:50px;">
                                 <output id="dag"></output>
-                                <b id="idag"></b>
-                             </div>
+                            </div>
+                            <div id="timeOutput" style="display:inline-block;width:50px;">
+                                <output id="tid"></output>
+                            </div>
                         </div>
                     </div>
                 </div>

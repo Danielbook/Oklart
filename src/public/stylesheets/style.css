@@ -8,6 +8,12 @@ body{
   margin:auto;
 }
 
+.searchField{
+  width: 50vh;
+  height: 4vh;
+  text-indent: 1vh;
+}
+
 .loader {
   position: fixed;
   left: 0px;
@@ -143,7 +149,7 @@ body{
 .graph{
   width:100%;
   margin:auto; 
-  height:45vh;
+  height:44vh;
 }
 
 .slider{
