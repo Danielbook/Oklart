@@ -34,12 +34,21 @@
   color:rgb(71, 152, 220);
 }
 
+.iconContainer{
+  position: relative;
+  height: 30px;
+}
+
 .icon{
-  height: 15px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .icon img{
-  height: 50px;
+  height: 35px;
 }
 
 @-webkit-keyframes blinkin {
