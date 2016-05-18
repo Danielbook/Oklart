@@ -21,9 +21,13 @@
   background-color: #eeeeee;
 }
 
+.unclickable_header{
+  font-weight: 300;
+}
+
 .header:hover{
   cursor: pointer;
-  color: rgba(71, 152, 220, 0.4);;
+  color: rgba(71, 152, 220, 0.4);
 }
 
 .activeHeader{
