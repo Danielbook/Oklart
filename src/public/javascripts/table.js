@@ -154,6 +154,8 @@ define([
     var timestart = 24;
     var timespan = 24;
 
+    clearHeaderListener();
+    addHeaderListener(time,idx);
 
     for(var i = 0; i < timespan; i++){
       $('#tableBody').append("<tr>" +
@@ -166,7 +168,40 @@ define([
     }
   }
 
+  function clearHeaderListener(){
+    $('#pit_header').off('click');
+    $('#gust_header').off('click');
+    $('#t_header').off('click');
+
+  }
+
+  function addHeaderListener(time,idx){
+    clearHeaderHighlights();
+
+    $('#pit_header').on('click', function() {
+      updateLocation(idx, 'pit', time);
+      $('#pit_header').addClass('activeHeader');
+    });
+    $('#gust_header').on('click', function() {
+      updateLocation(idx, 'gust', time);
+      $('#gust_header').addClass('activeHeader');
+    });
+    $('#t_header').on('click', function() {
+      updateLocation(idx, 't', time);
+      $('#t_header').addClass('activeHeader');
+    });
+  }
+
+  function clearHeaderHighlights()
+  {
+    $('#t_header').removeClass('activeHeader');
+    $('#gust_header').removeClass('activeHeader');
+    $('#pit_header').removeClass('activeHeader');
+  }
+
   Table.prototype.highlightColumn = function(par, idx){
+    $('#'+par+'_header').addClass('activeHeader');
+    
     $(".toggleable").removeClass( "activeRow" );
     $("." + par).addClass( "activeRow" );
     $(".row"+ idx + "par" + par).removeClass('activeRow');
