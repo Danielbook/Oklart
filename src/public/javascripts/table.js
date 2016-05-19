@@ -186,12 +186,12 @@ define([
     var tableIcons = "<div class='row'>";
 
     if(timeSeriesObject.pit == 0 && maxTimeSeriesObject.pit > 0) {
-      tableIcons += "<div class='row'><div class='col-xs-offset-5'><img id='rainDrop' src='images/dynamic_icons/rain/raindrop.png' style='height:20px;'/></div></div>";
+      tableIcons += "<div class='row'><div class='col-xs-offset-5'><img id='rainDrop' src='images/dynamic_icons/rain/raindrop.png' style='height:15px;'/></div></div>";
     }
 
-    tableIcons += "<div class='row'><img src='images/dynamic_icons/cloud/"+cloudCoverage+".png'/></div> " +
-      "<div class='row'><img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='margin-top:-70px;'/></div> " +
-      "<div class='row'><img src='images/dynamic_icons/wind/"+windIntensity+".png' style='margin-top:-90px; margin-left:-10px;'/></div> " +
+    tableIcons += "<div class='row'><img src='images/dynamic_icons/cloud/"+cloudCoverage+".png' style='height:40px;'/></div> " +
+      "<div class='row'><img src='images/dynamic_icons/rain/"+rainIntensity+".png' style='height:40px; margin-top:-70px;'/></div> " +
+      "<div class='row'><img src='images/dynamic_icons/wind/"+windIntensity+".png' style='height:40px; margin-top:-90px; margin-left:-10px;'/></div> " +
     "</div>";
 
     return tableIcons
