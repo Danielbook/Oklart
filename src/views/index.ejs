@@ -53,7 +53,7 @@
 			//Creates objects for the components
             _table = new Table(smhidata);
 			_graph = new Graph(smhidata);
-			_map = new Map(smhidata, user);
+			_map = new Map(smhidata, _table);
             _slider = new Slide(smhidata);
 
             _graph.initGraph(smhidata, user.location, user.weather, user.time);

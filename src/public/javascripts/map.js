@@ -10,7 +10,7 @@ define([
    * @constructor Map
    * @param smhidata Data from smhi
    */
-  var Map = function(smhidata) {          //minx, miny,  maxx,  maxy
+  var Map = function(smhidata, _table) {          //minx, miny,  maxx,  maxy
     this._extent = ol.proj.transformExtent([7.25, 54.50, 25.00, 70.75], 'EPSG:4326', 'EPSG:3857');
 
     this._data = smhidata;
@@ -52,6 +52,9 @@ define([
     user.gpsLocation = this.getCurrentLocation();
     this.gpsLocation = user.gpsLocation;
     //console.log(user.gpsLocation);
+
+    this._table = _table;
+
   };
 
   /**
@@ -316,6 +319,9 @@ define([
         );
         var pointFeatureTemp = new ol.Feature(point);
 
+        //console.log(this._table.setDynamicIcon(this._data[idx].timeseries[this._time], this._data[idx].maxtimeseries[this._time]));
+
+        //var weatherIcon = this._table.setDynamicIcon(this._data[idx].timeseries[this._time], this._data[idx].maxtimeseries[this._time]);
         var weatherIcon = "./images/icons/" + that.weatherType(that._data[idx].timeseries[that._time]) + ".png";
 
         // Style for each temperature point
