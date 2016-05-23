@@ -102,7 +102,7 @@ define(['graph'], function (graph) {
     //var par = 'gust';
 
     //i up to how many hours we want to display. ~48 is max then it looks bad.
-    for(var i = 0; i < 24; i++){
+    for(var i = 13; i < 37; i++){
       var data = smhidata[locationindex].timeseries[i];
       var min = smhidata[locationindex].mintimeseries[i];
       var max = smhidata[locationindex].maxtimeseries[i];
@@ -154,11 +154,11 @@ define(['graph'], function (graph) {
     {
       seriesArr.push(
           {
-            name: 'Max',
+            name: 'Potentiell Nederbörd',
             data: MaxTempArr,
             type: 'column',
             lineWidth: 10,
-            linkedTo: ':previous',
+            //linkedTo: ':previous',
             color: Highcharts.getOptions().colors[0],
             zIndex: 0,
             pointPadding: 0.3,
@@ -184,7 +184,7 @@ define(['graph'], function (graph) {
             data: MinMaxArr,
             type: 'arearange',
             lineWidth: 0,
-            linkedTo: ':previous',
+            //linkedTo: ':previous',
             color: Highcharts.getOptions().colors[0],
             fillOpacity: 0.3,
             zIndex: 0,
@@ -209,6 +209,7 @@ define(['graph'], function (graph) {
           mouseout: function() {
             this.chart.tooltip.hide();
           },
+
           click: function (e) {
             var index = Math.floor(e.xAxis[0].value + 0.5);
             that.updateTime(index);
@@ -241,11 +242,13 @@ define(['graph'], function (graph) {
       tooltip: {
         crosshairs: true,
         shared: true,
+        snap: 0,
         valueSuffix: Suff
       },
 
       legend: {
-        enabled: true
+        enabled: true,
+
       },
       series: seriesArr,
       credits: {
@@ -253,6 +256,7 @@ define(['graph'], function (graph) {
       },
       plotOptions: {
         series: {
+          stickyTracking: false,
           animation:false
         },
         line: {
@@ -277,6 +281,7 @@ define(['graph'], function (graph) {
 
     //draw graph
     this.chart = new Highcharts.Chart(this.options);
+
   };
 
   /**
@@ -291,7 +296,7 @@ define(['graph'], function (graph) {
     console.log(this.options);
 
     this.options.xAxis.plotLines[0].value = timeIndex;
-    
+
     this.chart = new Highcharts.Chart(this.options);
 
   };

@@ -16,6 +16,8 @@ define([
         this._data = smhidata;
         //this._sliderId = $("#bootslide");
 
+        this.firstSliderIndex = 0;
+
         this._slider = "";
 
         //This is a time handler. It prints current day and hour for the slider
@@ -40,11 +42,15 @@ define([
 
         this._slider = new Slider("#bootslide", {});
 
+        user.date[0] = this.dateHandler.getHours()+":00"; // sets user.time in index.ejs to current time.
+        user.date[1] = this.dateHandler.getDay();
+
+        this.firstSliderIndex = this.getIndexFromHours();
+
         // Sets the current day and time
         this._slider.tooltipInner.innerText = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("tid").innerHTML = this.pad(this.dateHandler.getHours()) + ":00";
         document.getElementById("dag").innerHTML = this.weekday[this.dateHandler.getUTCDay()];
-
 
 
         var that = this;
@@ -123,6 +129,23 @@ define([
         };
     };
 
+    Slide.prototype.getIndexFromHours = function() {
+
+        var index = 0;
+        var tempDate;
+        var currDate = this.dateHandler;
+
+        for( var i = 0; i < 70; i++){
+            tempDate = new Date(this._data[2].timeseries[i].validTime);
+            if(currDate == tempDate){
+                index = i;
+                break;
+            }
+        }
+        console.log("indexet : " + index);
+        return index;
+    }
+
     /**
      * Displays current time from slider values.
      * @memberof Slide
@@ -152,7 +175,7 @@ define([
      */
     Slide.prototype.getDate = function(position, timeIndex){
         var pos = position.toLowerCase();
-        var index = timeIndex;
+        var index = timeIndex + this.firstSliderIndex;
         var counter = 0;
 
         for(var i = 0; i < this._data.length; i++) {
@@ -162,7 +185,7 @@ define([
             counter += 1;
         }
         //Creates a specified Date with correct City and time index
-        var temp = this._data[counter].timeseries[index].validTime;
+        var temp = this._data[counter].timeseries[index+13].validTime;
         var date = new Date(temp);
 
         //Specified date-array: specDate[hour, day];
