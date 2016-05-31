@@ -27,6 +27,7 @@ function updateLocation(idx,par,time){
     $(".t_header").html(formatGetTime(smhidata[idx].timeseries[time+13].validTime));
     $("#CitySearch").attr("placeholder", smhidata[idx].name);
 
+    console.log("index; " + idx);
     //Update components
     _graph.initGraph(smhidata, idx, par, time);
     _slider.setSliderValue(time);
