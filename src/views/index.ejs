@@ -75,8 +75,10 @@
                 minChars: 1,
                 maxItems: 5,
                 autoFirst: true,
-                filter: Awesomplete.FILTER_STARTSWITH
+                filter: Awesomplete.FILTER_STARTSWITH,
             });
+
+           
 
             //Saving the name of the cities in an array
             var list = [];
@@ -91,10 +93,13 @@
             document.getElementById("SearchBtn").onclick = function(){
                 var AdresFalt = $("#CitySearch");
 
+
                 for(var i=0; i<smhidata.length; i++){
                     if(AdresFalt.val() == smhidata[i].name) {
+                    
                         updateLocation(i,'t',0);
-                    }
+                         $("#CitySearch").val('');
+                          }
                 }   
 
                 //remove popup
@@ -103,13 +108,20 @@
             }; 
 		});
 
+     /*   document.querySelector('#CitySearch').addEventListener('awesomplete-selectcomplete', function(evt){
+                console.log(this.value);
+        }) */
+
         function runScript(e) {
             if (e.keyCode == 13) {
+             //   window.addEventListener("awesomplete-selectcomplete", function(e) {
+              //   $.fire(this.input, "awesomplete-selectcomplete");
                 var tb = document.getElementById("searchText");
                 var AdresFalt = $("#CitySearch");
                 for(var i=0; i<smhidata.length; i++){
                     if(AdresFalt.val() == smhidata[i].name) {
-                            
+                        updateLocation(i,'t',0);
+                        $("#CitySearch").val('');  
                         updateLocation(i,'t',d.getHours());
                     }
                 }    
@@ -118,8 +130,10 @@
                 $(element).popover('destroy');  
 
             return false;
+          //   });
             }
         }
+
 
         $(window).resize(function() {
             if( $(window).width() < 767 ) {
