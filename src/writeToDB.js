@@ -28,12 +28,12 @@ function createurls (l, k){
 				var lon = l[i].lon + dlon;
 				lon = lon.toFixed(3);
 
-				if(dlat == 0 && dlon == 0)
-					location.url =  "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
+				if(dlat == 0 && dlon == 0)//http://opendata-download-metfcst.smhi.se/api/category/pmp2g/version/2/geotype/point/lon/16.158/lat/58.5812/data.json
+					location.url =  "http://opendata-download-metfcst.smhi.se/api/category/pmp2g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/data.json";
 				else{
-					location.sampleurls[idx] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
+					location.sampleurls[idx] = "http://opendata-download-metfcst.smhi.se/api/category/pmp2g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/data.json";;
 					idx++;
-				}	
+				}
 			}
 		}
 
@@ -56,7 +56,7 @@ function pushtoDB(data){
 
  	myCollection.insert(data, function(err, result) {
 	    if(err){
-			throw err;	
+			throw err;
 			console.log("Something went wrong when inserting data to db");
 		}
 	        
@@ -75,11 +75,11 @@ function calcMinMax(data, k){
 		var idx = 0;
 		for(var dlat = -k ; dlat <= k ;dlat=dlat+k ){
 			for(var dlon = -k; dlon <= k; dlon=dlon+k){
-				var lat = data[i].lat + dlat;
+				var lat = data[i].geometry.coordinates[0][0] + dlat;
 				lat = lat.toFixed(3);
-				var lon = data[i].lon + dlon;
+				var lon = data[i].geometry.coordinates[0][1] + dlon;
 				lon = lon.toFixed(3);
-				sampleurlslist[i][idx] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/" + lon + "/data.json";
+				sampleurlslist[i][idx] = "http://opendata-download-metfcst.smhi.se/api/category/pmp2g/version/2/geotype/point/lon/" + lon + "/lat/" + lat + "/data.json";
 				idx++;
 			}
 		}
@@ -89,9 +89,8 @@ function calcMinMax(data, k){
 
 		function(sampleurls, out_callback){
 			var idx = sampleurlslist.indexOf(sampleurls);
-
-			data[idx].mintimeseries = JSON.parse(JSON.stringify(data[idx].timeseries));
-			data[idx].maxtimeseries = JSON.parse(JSON.stringify(data[idx].timeseries));
+			data[idx].mintimeseries = JSON.parse(JSON.stringify(data[idx].timeSeries));
+			data[idx].maxtimeseries = JSON.parse(JSON.stringify(data[idx].timeSeries));
 
 			async.each(sampleurls,
 				function(sampleurl,  callback){
@@ -107,31 +106,32 @@ function calcMinMax(data, k){
 					    res.on('end', function(){
 					    	console.log(sampleurl);
 					    	console.log(body);
-					    	var smhidata = JSON.parse(body);
 
-    						for(var j = 0; j < data[idx].timeseries.length ; j++){
-    							//console.log(data[idx].timeseries[j].t);
+							// var smhidata = JSON.parse(body);
 
-								var min = data[idx].mintimeseries[j];
-								var max = data[idx].maxtimeseries[j];
-
-								var res = smhidata.timeseries[j];
-								for (var property in res) {
-								    if (res.hasOwnProperty(property)) {
-
-								        if(min[property] > res[property]){
-								        	min[property] = res[property];
-								        }					        
-								        
-								        if(max[property] < res[property]){
-								        	max[property] = res[property];
-								        }
-								    }
-								}
-
-								// data[idx].mintimeseries[j] = JSON.parse(JSON.stringify(min));
-								// data[idx].maxtimeseries[j] = JSON.parse(JSON.stringify(max));
-							}
+    						// for(var j = 0; j < data[idx].timeseries.length ; j++){
+    						// 	//console.log(data[idx].timeseries[j].t);
+							//
+							// 	var min = data[idx].mintimeseries[j];
+							// 	var max = data[idx].maxtimeseries[j];
+							//
+							// 	var res = smhidata.timeseries[j];
+							// 	for (var property in res) {
+							// 	    if (res.hasOwnProperty(property)) {
+							//
+							// 	        if(min[property] > res[property]){
+							// 	        	min[property] = res[property];
+							// 	        }
+							//
+							// 	        if(max[property] < res[property]){
+							// 	        	max[property] = res[property];
+							// 	        }
+							// 	    }
+							// 	}
+							//
+							// 	// data[idx].mintimeseries[j] = JSON.parse(JSON.stringify(min));
+							// 	// data[idx].maxtimeseries[j] = JSON.parse(JSON.stringify(max));
+							// }
 
 							callback();
 						})
@@ -140,7 +140,7 @@ function calcMinMax(data, k){
 				function(err){
 					if(err){
 						console.log("Something went wrong 1");
-						throw err;	
+						throw err;
 					}
 					out_callback();
 				}
@@ -149,9 +149,9 @@ function calcMinMax(data, k){
 		function(err){
 			if(err){
 				console.log("Something went wrong 2");
-				throw err;	
+				throw err;
 			}
-			pushtoDB(data);
+			//pushtoDB(data);
 			console.log("I go here once");
 		}
 	);
@@ -163,7 +163,7 @@ var insertData = function (locations){
 	var data = new Array();
 
 	for(var i = 0; i < locations.length; i++){
-		urls[i] = "http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + locations[i].lat + "/lon/" + locations[i].lon + "/data.json";
+		urls[i] = "http://opendata-download-metfcst.smhi.se/api/category/pmp2g/version/2/geotype/point/lon/" + locations[i].lon + "/lat/" + locations[i].lat + "/data.json";
 		sampleurls[i] = new Array();
 	}
 
@@ -172,7 +172,7 @@ var insertData = function (locations){
   	  // 2nd param is the function that each item is passed to
 	  function(url, callback){
       // Call the http get async function and call callback when one datapoint has been inserted in db
-	    http.get(url, function(res){
+		http.get(url, function(res){
 	    var body = '';
 	    var location = locations[urls.indexOf(url)];
 
